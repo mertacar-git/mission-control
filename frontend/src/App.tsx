@@ -1,116 +1,1186 @@
-import {useEffect,useRef,useState,type ChangeEvent} from 'react';
-import {Activity,ArrowDownToLine,ArrowUpToLine,ChevronRight,Compass,Database,FileJson,MapPin,Pause,Play,Plus,Radio,RotateCcw,Square,Trash2,Wifi,X} from 'lucide-react';
-import {AreaChart,Area,XAxis,YAxis,CartesianGrid,Tooltip,ResponsiveContainer} from 'recharts';
-import {MapView} from './MapView';
-import {DemoVehicle,sampleRecording} from './demo';
-import {api,subscribe} from './api';
-import {analyze,download,frames,frameAt,eventsAt,toCSV} from './analysis';
-import {emptyTelemetry,newMission,validateMission,type Mission,type Recording,type Status,type Telemetry,type Action,type FlightEvent} from './types';
+import { parseRecording } from './recording';
+import { MissionEditor } from './components/MissionEditor';
+import { RecordingArchive } from './components/RecordingArchive';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import {
+  Activity,
+  ChevronRight,
+  Compass,
+  Database,
+  MapPin,
+  Pause,
+  Play,
+  Radio,
+  RotateCcw,
+  Square,
+  Wifi,
+  X,
+} from 'lucide-react';
+import { FlightChart } from './components/TelemetryChart';
+import { EventLog } from './components/EventLog';
+import { MissionReadiness } from './components/MissionReadiness';
+import { missionStage, routeLength } from './missionPresentation';
+import { MapView } from './MapView';
+import { DemoVehicle, sampleRecording } from './demo';
+import { api, subscribe } from './api';
+import {
+  analyze,
+  download,
+  frames,
+  frameAt,
+  eventsAt,
+  toCSV,
+} from './analysis';
+import {
+  emptyTelemetry,
+  newMission,
+  validateMission,
+  type Mission,
+  type Recording,
+  type Status,
+  type Telemetry,
+  type Action,
+  type FlightEvent,
+} from './types';
 
-type Page='mission'|'flight'|'recordings'|'analysis';
-const names={closed:'Bağlantı kapalı',connecting:'Bağlanıyor',connected:'Bağlı',stale:'Veri gecikmiş',disconnected:'Bağlantı kesildi'};
-const initialStatus:Status={state:'closed',telemetry:emptyTelemetry(),recording_id:null,mission:null,upload_verified:false,events:[],event_sequence:0,simulator_owned:false,simulator_revision:'—'};
-const actions:[Action,string][]=[['arm','Arm'],['start','Görevi başlat'],['hold','Beklet'],['resume','Devam et'],['return','Eve dön'],['land','İniş']];
-const localAvailable=['localhost','127.0.0.1'].includes(location.hostname);
-function readSaved<T>(key:string,fallback:T):T{try{return JSON.parse(localStorage.getItem(key)??'null')??fallback;}catch{return fallback;}}
-function value(number:number|null,unit='',digits=1){return number===null?'—':number.toFixed(digits)+(unit?' '+unit:'');}
-function stat(label:string,number:string,hint:string){return <div className="metric"><span>{label}</span><strong>{number}</strong><small>{hint}</small></div>;}
-function parseRecording(input:unknown):Recording {
-  const recording=input as Recording;
-  if(!recording||recording.schema_version!==1||!recording.session||!Array.isArray(recording.events)||recording.events.length>200000)throw Error('Kayıt sürümü veya olay listesi geçersiz.');
-  if(!['demo','sitl'].includes(recording.session.source)||typeof recording.session.id!=='string'||typeof recording.session.name!=='string')throw Error('Kayıt başlığı geçersiz.');
-  if(recording.session.mission)validateMission(recording.session.mission);
-  let previous=-Infinity;
-  for(const event of recording.events){if(typeof event.type!=='string'||!event.payload||!Number.isFinite(Date.parse(event.received_utc)))throw Error('Kayıt olayı geçersiz.');if(event.type==='telemetry'){const r=event.payload as unknown as Telemetry;if(!Number.isFinite(r.elapsed_s)||r.elapsed_s<previous)throw Error('Telemetri zamanı sıralı ve sonlu olmalıdır.');previous=r.elapsed_s;for(const field of ['latitude','longitude','relative_altitude_m','ground_speed_ms','battery_pct'] as const)if(r[field]!==null&&!Number.isFinite(r[field]))throw Error('Telemetri alanları sayısal veya null olmalıdır.');if(r.latitude!==null&&Math.abs(r.latitude)>90||r.longitude!==null&&Math.abs(r.longitude)>180)throw Error('Kayıt koordinatları geçersiz.');}}
-  return structuredClone(recording);
+type Page = 'mission' | 'flight' | 'recordings' | 'analysis';
+const names = {
+  closed: 'Bağlantı kapalı',
+  connecting: 'Bağlanıyor',
+  connected: 'Bağlı',
+  stale: 'Veri gecikmiş',
+  disconnected: 'Bağlantı kesildi',
+};
+const initialStatus: Status = {
+  state: 'closed',
+  telemetry: emptyTelemetry(),
+  recording_id: null,
+  mission: null,
+  upload_verified: false,
+  events: [],
+  event_sequence: 0,
+  simulator_owned: false,
+  simulator_revision: '—',
+};
+const actions: [Action, string][] = [
+  ['arm', 'Arm'],
+  ['start', 'Görevi başlat'],
+  ['hold', 'Beklet'],
+  ['resume', 'Devam et'],
+  ['return', 'Eve dön'],
+  ['land', 'İniş'],
+];
+const localAvailable = ['localhost', '127.0.0.1'].includes(location.hostname);
+function readSaved<T>(key: string, fallback: T): T {
+  try {
+    return JSON.parse(localStorage.getItem(key) ?? 'null') ?? fallback;
+  } catch {
+    return fallback;
+  }
 }
+function value(number: number | null, unit = '', digits = 1) {
+  return number === null
+    ? '—'
+    : number.toFixed(digits) + (unit ? ' ' + unit : '');
+}
+function stat(label: string, number: string, hint: string) {
+  return (
+    <div className="metric">
+      <span>{label}</span>
+      <strong>{number}</strong>
+      <small>{hint}</small>
+    </div>
+  );
+}
+export default function App() {
+  const [mission, setMission] = useState<Mission>(() => {
+    try {
+      return validateMission(readSaved('mc-draft-v1', newMission()));
+    } catch {
+      return newMission();
+    }
+  });
+  const [mode, setMode] = useState<'demo' | 'local'>('demo'),
+    [page, setPage] = useState<Page>('mission'),
+    [status, setStatus] = useState<Status>(initialStatus);
+  const [missions, setMissions] = useState<Mission[]>(() =>
+    readSaved('mc-missions-v1', []),
+  );
+  const [recordings, setRecordings] = useState<Recording[]>(() => {
+    const raw = readSaved<unknown>('mc-recordings-v1', []);
+    const data = (Array.isArray(raw) ? raw : []).flatMap((value) => {
+      try {
+        return [parseRecording(value)];
+      } catch {
+        return [];
+      }
+    });
+    return [
+      sampleRecording(newMission()),
+      ...data.filter((r) => r?.session?.id !== 'sample-demo-flight'),
+    ];
+  });
+  const [history, setHistory] = useState<Telemetry[]>([]),
+    [notice, setNotice] = useState(''),
+    [busy, setBusy] = useState(false),
+    [replay, setReplay] = useState<Recording | null>(null),
+    [replayTime, setReplayTime] = useState(0),
+    [playing, setPlaying] = useState(false),
+    [speed, setSpeed] = useState(1);
+  const [selected, setSelected] = useState<Recording | null>(null),
+    [altThreshold, setAltThreshold] = useState(80),
+    [batThreshold, setBatThreshold] = useState(20);
+  const demo = useRef(new DemoVehicle()),
+    fileMission = useRef<HTMLInputElement>(null),
+    fileRecording = useRef<HTMLInputElement>(null),
+    latest = useRef(status),
+    replayRef = useRef(replay);
+  const replayFrames = replay ? frames(replay) : [],
+    replayEnd = replayFrames.at(-1)?.elapsed_s ?? 0;
+  const shown = replay
+    ? (frameAt(replayFrames, replayTime) ??
+      emptyTelemetry(replay.session.source))
+    : status.telemetry;
+  const route = replay?.session.mission ?? mission;
+  const trace = replay
+    ? replayFrames.filter((r) => r.elapsed_s <= replayTime)
+    : history;
+  const editing = !busy && !replay && !status.telemetry.armed;
+  const uploadMatches =
+    status.upload_verified &&
+    status.mission !== null &&
+    JSON.stringify(status.mission) === JSON.stringify(mission);
+  const activeRecord = selected ?? replay ?? recordings[0] ?? null;
+  const report = activeRecord
+    ? analyze(activeRecord, altThreshold, batThreshold)
+    : null;
+  const chartRows = (
+    page === 'analysis' && activeRecord ? frames(activeRecord) : trace
+  ).slice(-1200);
 
-export default function App(){
-  const [mission,setMission]=useState<Mission>(()=>{try{return validateMission(readSaved('mc-draft-v1',newMission()));}catch{return newMission();}});
-  const [mode,setMode]=useState<'demo'|'local'>('demo'),[page,setPage]=useState<Page>('mission'),[status,setStatus]=useState<Status>(initialStatus);
-  const [missions,setMissions]=useState<Mission[]>(()=>readSaved('mc-missions-v1',[]));
-  const [recordings,setRecordings]=useState<Recording[]>(()=>{const data=readSaved<Recording[]>('mc-recordings-v1',[]);return [sampleRecording(newMission()),...data.filter(r=>r?.session?.id!=='sample-demo-flight')];});
-  const [history,setHistory]=useState<Telemetry[]>([]),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false),[replay,setReplay]=useState<Recording|null>(null),[replayTime,setReplayTime]=useState(0),[playing,setPlaying]=useState(false),[speed,setSpeed]=useState(1);
-  const [selected,setSelected]=useState<Recording|null>(null),[altThreshold,setAltThreshold]=useState(80),[batThreshold,setBatThreshold]=useState(20);
-  const demo=useRef(new DemoVehicle()),fileMission=useRef<HTMLInputElement>(null),fileRecording=useRef<HTMLInputElement>(null),latest=useRef(status),replayRef=useRef(replay);
-  const replayFrames=replay?frames(replay):[],replayEnd=replayFrames.at(-1)?.elapsed_s??0;
-  const shown=replay?(frameAt(replayFrames,replayTime)??emptyTelemetry(replay.session.source)):status.telemetry;
-  const route=replay?.session.mission??mission;
-  const trace=replay?replayFrames.filter(r=>r.elapsed_s<=replayTime):history;
-  const editing=!busy&&!replay&&!status.telemetry.armed;
-  const uploadMatches=status.upload_verified&&status.mission!==null&&JSON.stringify(status.mission)===JSON.stringify(mission);
-  const activeRecord=selected??replay??recordings[0]??null;
-  const report=activeRecord?analyze(activeRecord,altThreshold,batThreshold):null;
-  const chartRows=(page==='analysis'&&activeRecord?frames(activeRecord):trace).slice(-1200);
-
-  useEffect(()=>{latest.current=status;},[status]);useEffect(()=>{replayRef.current=replay;},[replay]);
-  useEffect(()=>{try{localStorage.setItem('mc-draft-v1',JSON.stringify(mission));}catch{setNotice('Görev tarayıcıya kaydedilemedi; JSON ile dışa aktarabilirsiniz.');}},[mission]);
-  function refreshDemo(){const state=demo.current.state;setStatus({...state,telemetry:{...state.telemetry},events:[...state.events]});}
-  function persistRecording(recording:Recording){setRecordings(previous=>{const next=[recording,...previous.filter(r=>r.session.id!==recording.session.id)];try{localStorage.setItem('mc-recordings-v1',JSON.stringify(next.filter(r=>r.session.id!=='sample-demo-flight')));}catch{setNotice('Tarayıcı kayıt alanı dolu; kaydı JSON ile dışa aktarın.');}return next;});setSelected(recording);}
-  useEffect(()=>{
-    if(mode!=='demo')return;
-    const timer=setInterval(()=>{const vehicle=demo.current;if(vehicle.state.state==='connected'){vehicle.tick(.5);refreshDemo();setHistory(previous=>[...previous,vehicle.state.telemetry].slice(-1800));}},500);
-    return ()=>clearInterval(timer);
-  },[mode]);
-  useEffect(()=>{
-    if(mode!=='local')return;
-    void api.missions().then(setMissions).catch(()=>{});
-    let disposed=false,lastSequence=0,ws:WebSocket|null=null;
-    const receive=(event:FlightEvent)=>{
-      if(disposed)return;
-      if(event.type==='snapshot'){const next=event.payload as unknown as Status;lastSequence=next.event_sequence;setStatus(next);return;}
-      if(event.sequence&&lastSequence&&event.sequence>lastSequence+1)setNotice('Canlı olay akışında boşluk var. Backend kayıtları ayrıca korunur.');
-      lastSequence=event.sequence??lastSequence;
-      if(event.type==='telemetry'){const t=event.payload as unknown as Telemetry;setStatus(previous=>({...previous,telemetry:t,state:t.connection}));setHistory(previous=>[...previous,t].slice(-1800));}
-      else{setStatus(previous=>({...previous,events:[...previous.events,event].slice(-100)}));void api.status().then(s=>{if(!disposed)setStatus(s);}).catch(()=>{});}
+  useEffect(() => {
+    latest.current = status;
+  }, [status]);
+  useEffect(() => {
+    replayRef.current = replay;
+  }, [replay]);
+  useEffect(() => {
+    try {
+      localStorage.setItem('mc-draft-v1', JSON.stringify(mission));
+    } catch {
+      setNotice(
+        'Görev tarayıcıya kaydedilemedi; JSON ile dışa aktarabilirsiniz.',
+      );
+    }
+  }, [mission]);
+  function refreshDemo() {
+    const state = demo.current.state;
+    setStatus({
+      ...state,
+      telemetry: { ...state.telemetry },
+      events: [...state.events],
+    });
+  }
+  function persistRecording(recording: Recording) {
+    setRecordings((previous) => {
+      const next = [
+        recording,
+        ...previous.filter((r) => r.session.id !== recording.session.id),
+      ];
+      try {
+        localStorage.setItem(
+          'mc-recordings-v1',
+          JSON.stringify(
+            next.filter((r) => r.session.id !== 'sample-demo-flight'),
+          ),
+        );
+      } catch {
+        setNotice('Tarayıcı kayıt alanı dolu; kaydı JSON ile dışa aktarın.');
+      }
+      return next;
+    });
+    setSelected(recording);
+  }
+  useEffect(() => {
+    if (mode !== 'demo') return;
+    const timer = setInterval(() => {
+      const vehicle = demo.current;
+      if (vehicle.state.state === 'connected') {
+        vehicle.tick(0.5);
+        refreshDemo();
+        setHistory((previous) =>
+          [...previous, vehicle.state.telemetry].slice(-1800),
+        );
+      }
+    }, 500);
+    return () => clearInterval(timer);
+  }, [mode]);
+  useEffect(() => {
+    if (mode !== 'local') return;
+    void api
+      .missions()
+      .then(setMissions)
+      .catch(() => {});
+    let disposed = false,
+      lastSequence = 0,
+      ws: WebSocket | null = null;
+    const receive = (event: FlightEvent) => {
+      if (disposed) return;
+      if (event.type === 'snapshot') {
+        const next = event.payload as unknown as Status;
+        lastSequence = next.event_sequence;
+        setStatus(next);
+        return;
+      }
+      if (event.sequence && lastSequence && event.sequence > lastSequence + 1)
+        setNotice(
+          'Canlı olay akışında boşluk var. Backend kayıtları ayrıca korunur.',
+        );
+      lastSequence = event.sequence ?? lastSequence;
+      if (event.type === 'telemetry') {
+        const t = event.payload as unknown as Telemetry;
+        setStatus((previous) => ({
+          ...previous,
+          telemetry: t,
+          state: t.connection,
+        }));
+        setHistory((previous) => [...previous, t].slice(-1800));
+      } else {
+        setStatus((previous) => ({
+          ...previous,
+          events: [...previous.events, event].slice(-100),
+        }));
+        void api
+          .status()
+          .then((s) => {
+            if (!disposed) setStatus(s);
+          })
+          .catch(() => {});
+      }
     };
-    const connectSocket=()=>{ws=subscribe(receive,()=>{if(!disposed)setNotice('Backend olay akışı kapalı; bağlantı durumunu kontrol edin.');});};
-    void api.status().then(s=>{if(!disposed){setStatus(s);connectSocket();}}).catch(()=>{if(!disposed)setNotice('Yerel backend bulunamadı. simulator/run-backend.sh ile başlatın.');});
-    const timer=setInterval(()=>{if(disposed)return;void api.status().then(s=>{if(!disposed)setStatus(s);}).catch(()=>{if(!disposed)setStatus(previous=>({...previous,state:'disconnected',telemetry:{...previous.telemetry,connection:'disconnected',position_fresh:false,latitude:null,longitude:null,relative_altitude_m:null,ground_speed_ms:null}}));});if(latest.current.state!=='closed')void api.renew().catch(()=>{});if(!ws||ws.readyState===WebSocket.CLOSED){connectSocket();}},2500);
-    return ()=>{disposed=true;clearInterval(timer);if(ws){ws.onclose=null;ws.onerror=null;ws.close();}};
-  },[mode]);
-  useEffect(()=>{if(!playing||!replay)return;const timer=setInterval(()=>setReplayTime(t=>{const next=Math.min(replayEnd,t+.1*speed);if(next>=replayEnd)setPlaying(false);return next;}),100);return ()=>clearInterval(timer);},[playing,replay,replayEnd,speed]);
-  async function perform(fn:()=>Promise<void>|void){setBusy(true);setNotice('');try{await fn();}catch(error){setNotice(error instanceof Error?error.message:String(error));}finally{setBusy(false);}}
-  function changeMode(next:'demo'|'local'){
-    if(next===mode)return;
-    if(status.state!=='closed'){setNotice('Mod değiştirmeden önce açık bağlantıyı kapatın.');return;}
-    if(next==='local'&&!localAvailable){setNotice('Yerel SITL modu için projeyi bilgisayarınızda çalıştırın. Bu public yayın yalnızca tarayıcı demosudur. README kurulum adımlarını içerir.');return;}
-    setReplay(null);setPlaying(false);setHistory([]);setStatus({...initialStatus,telemetry:emptyTelemetry(next==='local'?'sitl':'demo')});setMode(next);setNotice('');
+    const connectSocket = () => {
+      ws = subscribe(receive, () => {
+        if (!disposed)
+          setNotice(
+            'Backend olay akışı kapalı; bağlantı durumunu kontrol edin.',
+          );
+      });
+    };
+    void api
+      .status()
+      .then((s) => {
+        if (!disposed) {
+          setStatus(s);
+          connectSocket();
+        }
+      })
+      .catch(() => {
+        if (!disposed)
+          setNotice(
+            'Yerel backend bulunamadı. simulator/run-backend.sh ile başlatın.',
+          );
+      });
+    const timer = setInterval(() => {
+      if (disposed) return;
+      void api
+        .status()
+        .then((s) => {
+          if (!disposed) setStatus(s);
+        })
+        .catch(() => {
+          if (!disposed)
+            setStatus((previous) => ({
+              ...previous,
+              state: 'disconnected',
+              telemetry: {
+                ...previous.telemetry,
+                connection: 'disconnected',
+                position_fresh: false,
+                latitude: null,
+                longitude: null,
+                relative_altitude_m: null,
+                ground_speed_ms: null,
+              },
+            }));
+        });
+      if (latest.current.state !== 'closed') void api.renew().catch(() => {});
+      if (!ws || ws.readyState === WebSocket.CLOSED) {
+        connectSocket();
+      }
+    }, 2500);
+    return () => {
+      disposed = true;
+      clearInterval(timer);
+      if (ws) {
+        ws.onclose = null;
+        ws.onerror = null;
+        ws.close();
+      }
+    };
+  }, [mode]);
+  useEffect(() => {
+    if (!playing || !replay) return;
+    const timer = setInterval(
+      () =>
+        setReplayTime((t) => {
+          const next = Math.min(replayEnd, t + 0.1 * speed);
+          if (next >= replayEnd) setPlaying(false);
+          return next;
+        }),
+      100,
+    );
+    return () => clearInterval(timer);
+  }, [playing, replay, replayEnd, speed]);
+  async function perform(fn: () => Promise<void> | void) {
+    setBusy(true);
+    setNotice('');
+    try {
+      await fn();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
   }
-  async function connect(){await perform(async()=>{if(mode==='demo'){demo.current=new DemoVehicle();demo.current.connect();refreshDemo();setHistory([]);}else{const s=await api.connect();setStatus(s);setHistory([]);}});}
-  async function stopRecording(){
-    if(mode==='demo'){const r=demo.current.stopRecording();if(r)persistRecording(r);refreshDemo();}
-    else{const result=await api.stopRecording();if(result.id){const r=await api.recording(result.id);persistRecording(r);}setStatus(await api.status());}
+  function changeMode(next: 'demo' | 'local') {
+    if (next === mode) return;
+    if (status.state !== 'closed') {
+      setNotice('Mod değiştirmeden önce açık bağlantıyı kapatın.');
+      return;
+    }
+    if (next === 'local' && !localAvailable) {
+      setNotice(
+        'Yerel SITL modu için projeyi bilgisayarınızda çalıştırın. Bu public yayın yalnızca tarayıcı demosudur. README kurulum adımlarını içerir.',
+      );
+      return;
+    }
+    setReplay(null);
+    setPlaying(false);
+    setHistory([]);
+    setStatus({
+      ...initialStatus,
+      telemetry: emptyTelemetry(next === 'local' ? 'sitl' : 'demo'),
+    });
+    setMode(next);
+    setNotice('');
   }
-  async function disconnect(){await perform(async()=>{if(status.recording_id)await stopRecording();if(mode==='demo'){demo.current.disconnect();refreshDemo();}else setStatus(await api.disconnect());});}
-  async function saveMission(){await perform(async()=>{const checked=validateMission(mission);let saved=checked;if(mode==='local')saved=await api.save(checked);setMissions(previous=>{const next=[saved,...previous.filter(m=>m.id!==saved.id)];localStorage.setItem('mc-missions-v1',JSON.stringify(next));return next;});setNotice('Görev kaydedildi.');});}
-  async function uploadMission(){await perform(async()=>{const checked=validateMission(mission);if(mode==='demo'){demo.current.upload(checked);refreshDemo();}else{await api.save(checked);await api.upload(checked.id);setStatus(await api.status());}setNotice('Görev yükleme ve geri okuma doğrulandı'+(mode==='demo'?' · demo modeli.':'.'));});}
-  async function startRecording(){if(mode==='demo'){demo.current.startRecording(mission.name);refreshDemo();}else{await api.startRecording(mission.name);setStatus(await api.status());}}
-  async function command(action:Action){if(replayRef.current){setNotice('Tekrar oynatmada canlı komutlar kapalıdır.');return;}await perform(async()=>{if(action==='start'&&!status.recording_id)await startRecording();if(mode==='demo'){demo.current.command(action);refreshDemo();}else{await api.command(action);setStatus(await api.status());}if(action==='start')setPage('flight');});}
-  function editWaypoint(index:number,field:'latitude'|'longitude'|'altitude_m',v:number){setMission(previous=>({...previous,waypoints:previous.waypoints.map((point,i)=>i===index?{...point,[field]:v}:point)}));}
-  function addPoint(latitude=41.0082,longitude=28.9784){if(!editing)return;if(mission.waypoints.length>=50){setNotice('En fazla 50 rota noktası ekleyebilirsiniz.');return;}setMission(previous=>({...previous,waypoints:[...previous.waypoints,{latitude,longitude,altitude_m:previous.takeoff_altitude_m}]}));}
-  async function importFile(event:ChangeEvent<HTMLInputElement>,kind:'mission'|'recording'){const file=event.target.files?.[0];if(!file)return;await perform(async()=>{if(file.size>20_000_000)throw Error('Dosya 20 MB sınırını aşıyor.');const json=JSON.parse(await file.text());if(kind==='mission'){if(!editing)throw Error('Görev düzenleme kilitli.');setMission(validateMission(json));setNotice('Görev JSON dosyası yüklendi.');}else{const r=parseRecording(json);persistRecording(r);setPage('recordings');setNotice('Kayıt içe aktarıldı.');}});event.target.value='';}
-  async function loadLocalRecordings(){await perform(async()=>{const infos=await api.recordings();const loaded=await Promise.all(infos.map(info=>api.recording(info.id)));setRecordings(previous=>[...loaded,...previous.filter(r=>!loaded.some(s=>s.session.id===r.session.id))]);});}
-  function openReplay(recording:Recording){setReplay(recording);setSelected(recording);setPlaying(false);setReplayTime(frames(recording)[0]?.elapsed_s??0);setPage('flight');setNotice('Tekrar oynatma açık. Canlı komutlar devre dışı; arka plandaki simülatör kendiliğinden durdurulmaz.');}
-  const events=replay?eventsAt(replay,replayTime):status.events;
+  async function connect() {
+    await perform(async () => {
+      if (mode === 'demo') {
+        demo.current = new DemoVehicle();
+        demo.current.connect();
+        refreshDemo();
+        setHistory([]);
+      } else {
+        const s = await api.connect();
+        setStatus(s);
+        setHistory([]);
+      }
+    });
+  }
+  async function stopRecording() {
+    if (mode === 'demo') {
+      const r = demo.current.stopRecording();
+      if (r) persistRecording(r);
+      refreshDemo();
+    } else {
+      const result = await api.stopRecording();
+      if (result.id) {
+        const r = await api.recording(result.id);
+        persistRecording(r);
+      }
+      setStatus(await api.status());
+    }
+  }
+  async function disconnect() {
+    await perform(async () => {
+      if (status.recording_id) await stopRecording();
+      if (mode === 'demo') {
+        demo.current.disconnect();
+        refreshDemo();
+      } else setStatus(await api.disconnect());
+      setHistory([]);
+    });
+  }
+  async function saveMission() {
+    await perform(async () => {
+      const checked = validateMission(mission);
+      let saved = checked;
+      if (mode === 'local') saved = await api.save(checked);
+      setMissions((previous) => {
+        const next = [saved, ...previous.filter((m) => m.id !== saved.id)];
+        localStorage.setItem('mc-missions-v1', JSON.stringify(next));
+        return next;
+      });
+      setNotice('Görev kaydedildi.');
+    });
+  }
+  async function uploadMission() {
+    await perform(async () => {
+      const checked = validateMission(mission);
+      if (mode === 'demo') {
+        demo.current.upload(checked);
+        refreshDemo();
+      } else {
+        await api.save(checked);
+        await api.upload(checked.id);
+        setStatus(await api.status());
+      }
+      setNotice(
+        'Görev yükleme ve geri okuma doğrulandı' +
+          (mode === 'demo' ? ' · demo modeli.' : '.'),
+      );
+    });
+  }
+  async function startRecording() {
+    if (mode === 'demo') {
+      demo.current.startRecording(mission.name);
+      refreshDemo();
+    } else {
+      await api.startRecording(mission.name);
+      setStatus(await api.status());
+    }
+  }
+  async function command(action: Action) {
+    if (replayRef.current) {
+      setNotice('Tekrar oynatmada canlı komutlar kapalıdır.');
+      return;
+    }
+    await perform(async () => {
+      if (action === 'start' && !status.recording_id) await startRecording();
+      if (mode === 'demo') {
+        demo.current.command(action);
+        refreshDemo();
+      } else {
+        await api.command(action);
+        setStatus(await api.status());
+      }
+      if (action === 'start') setPage('flight');
+    });
+  }
+  function editWaypoint(
+    index: number,
+    field: 'latitude' | 'longitude' | 'altitude_m',
+    v: number,
+  ) {
+    setMission((previous) => ({
+      ...previous,
+      waypoints: previous.waypoints.map((point, i) =>
+        i === index ? { ...point, [field]: v } : point,
+      ),
+    }));
+  }
+  function addPoint(latitude = 41.0082, longitude = 28.9784) {
+    if (!editing) return;
+    if (mission.waypoints.length >= 50) {
+      setNotice('En fazla 50 rota noktası ekleyebilirsiniz.');
+      return;
+    }
+    setMission((previous) => ({
+      ...previous,
+      waypoints: [
+        ...previous.waypoints,
+        { latitude, longitude, altitude_m: previous.takeoff_altitude_m },
+      ],
+    }));
+  }
+  async function importFile(
+    event: ChangeEvent<HTMLInputElement>,
+    kind: 'mission' | 'recording',
+  ) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    await perform(async () => {
+      if (file.size > 20_000_000) throw Error('Dosya 20 MB sınırını aşıyor.');
+      const json = JSON.parse(await file.text());
+      if (kind === 'mission') {
+        if (!editing) throw Error('Görev düzenleme kilitli.');
+        setMission(validateMission(json));
+        setNotice('Görev JSON dosyası yüklendi.');
+      } else {
+        const r = parseRecording(json);
+        persistRecording(r);
+        setPage('recordings');
+        setNotice('Kayıt içe aktarıldı.');
+      }
+    });
+    event.target.value = '';
+  }
+  async function loadLocalRecordings() {
+    await perform(async () => {
+      const infos = await api.recordings();
+      const loaded = await Promise.all(
+        infos.map((info) => api.recording(info.id)),
+      );
+      setRecordings((previous) => [
+        ...loaded,
+        ...previous.filter(
+          (r) => !loaded.some((s) => s.session.id === r.session.id),
+        ),
+      ]);
+    });
+  }
+  function openReplay(recording: Recording) {
+    setReplay(recording);
+    setSelected(recording);
+    setPlaying(false);
+    setReplayTime(frames(recording)[0]?.elapsed_s ?? 0);
+    setPage('flight');
+    setNotice(
+      'Tekrar oynatma açık. Canlı komutlar devre dışı; arka plandaki simülatör kendiliğinden durdurulmaz.',
+    );
+  }
+  const events = replay ? eventsAt(replay, replayTime) : status.events;
 
-  return <div className="app-shell"><aside className="sidebar"><a className="brand" href="https://mertacar-git.github.io/portfolio/"><span className="brand-mark"><Compass size={22}/></span><span>MISSION<br/><b>CONTROL</b></span></a><div className="sidebar-label">ÇALIŞMA ALANI</div><nav>{([['mission','Görev planlama',MapPin],['flight','Uçuş takibi',Activity],['recordings','Uçuş kayıtları',Database],['analysis','Uçuş analizi',Compass]] as const).map(([id,label,Icon])=><button key={id} className={page===id?'active':''} onClick={()=>setPage(id)}><Icon size={17}/>{label}{page===id&&<ChevronRight size={15}/>}</button>)}</nav><div className="sidebar-bottom"><div className="source-label">YAZILIM × HAVACILIK</div><p>Bir görevi planla.<br/>Uçuşu gözle.<br/>Sonucu incele.</p><a href="https://github.com/mertacar-git/mission-control" target="_blank" rel="noreferrer">Kaynak kodu & kurulum ↗</a><span>v1.0 · ArduCopter 4.6.3</span></div></aside>
-    <div className="main-area"><header className="topbar"><div className="breadcrumb">Laboratuvar <ChevronRight size={13}/> <strong>Mission Control</strong></div><div className="top-actions"><div className="mode-picker"><button className={mode==='demo'?'selected':''} onClick={()=>changeMode('demo')}>Demo</button><button className={mode==='local'?'selected':''} onClick={()=>changeMode('local')}>Yerel SITL</button></div><span className={'connection '+status.state}><i/>{names[status.state]}</span></div></header>
-    <main><section className="title-row"><div><div className="eyebrow">{replay?'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA':mode==='demo'?'TARAYICI DEMOSU / SİMÜLE VERİ':'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}</div><h1>{page==='mission'?'Görevini planla. Uçuşu izle.':page==='flight'?'Uçuş kontrol merkezi':page==='recordings'?'Her uçuşun bir kaydı var.':'Uçuşu verilerle değerlendir.'}</h1><p>{mode==='demo'?'Donanım veya hesap gerekmez. Bu modda MAVLink bağlantısı kurulmaz.':'Backend ve yalnızca uygulamanın başlattığı SITL oturumu kullanılır.'}</p></div><div className="connection-actions">{status.state==='closed'?<button className="primary" disabled={busy||!!replay} onClick={()=>void connect()}><Wifi size={16}/>{mode==='demo'?'Demoya bağlan':'SITL başlat & bağlan'}</button>:<button className="secondary" disabled={busy||!!replay} onClick={()=>void disconnect()}><X size={16}/>Bağlantıyı kapat</button>}</div></section>
-      {notice&&<div className="notice" role="status"><Radio size={16}/><span>{notice}</span><button aria-label="Bildirimi kapat" onClick={()=>setNotice('')}><X size={15}/></button></div>}
-      <div className="metrics">{stat('EVE GÖRE İRTİFA',value(shown.relative_altitude_m,'m'),'Mutlak irtifa değildir')}{stat('YER HIZI',value(shown.ground_speed_ms,'m/s'),'Havaya göre hız değildir')}{stat('BATARYA',value(shown.battery_pct,'%',0),value(shown.battery_voltage_v,'V',2))}{stat('UÇUŞ MODU',shown.flight_mode??'—',shown.armed===null?'Durum bilinmiyor':shown.armed?'ARMED · uçuşa hazır':mode==='local'?(shown.navigation_ready?'DISARMED · EKF hazır':'DISARMED · EKF bekleniyor'):'DISARMED')}</div>
-      {replay&&<section className="replay-bar panel"><div><strong>{replay.session.name}</strong><span>{replay.session.source==='sitl'?'Gerçek SITL kaydı':'Demo kaydı'} · canlı komutlar kapalı</span></div><button className="icon-button" aria-label={playing?'Oynatmayı duraklat':'Kaydı oynat'} onClick={()=>setPlaying(!playing)}>{playing?<Pause size={18}/>:<Play size={18}/>}</button><input aria-label="Kayıt zaman çizelgesi" type="range" min={replayFrames[0]?.elapsed_s??0} max={replayEnd} step="0.1" value={replayTime} onChange={e=>setReplayTime(Number(e.target.value))}/><span>{Math.max(0,replayTime-(replayFrames[0]?.elapsed_s??0)).toFixed(1)} / {Math.max(0,replayEnd-(replayFrames[0]?.elapsed_s??0)).toFixed(1)} s</span><select aria-label="Oynatma hızı" value={speed} onChange={e=>setSpeed(Number(e.target.value))}><option value=".5">0,5×</option><option value="1">1×</option><option value="2">2×</option></select><button className="secondary small" onClick={()=>{setReplay(null);setPlaying(false);setNotice('');}}>Canlı görünüme dön</button></section>}
-      {(page==='mission'||page==='flight')&&<div className="workspace"><div className="workspace-main"><MapView mission={route} telemetry={shown} trace={trace} editing={editing&&page==='mission'} onAdd={addPoint} onMove={(index,lat,lon)=>setMission(previous=>({...previous,waypoints:previous.waypoints.map((w,i)=>i===index?{...w,latitude:lat,longitude:lon}:w)}))}/>
-        <section className="panel flight-actions"><div><span className="eyebrow">GÖREV YÜRÜTME</span><h2>{replay?'Kayıt görünümü':status.upload_verified?'Görev yüklendi · geri okuma doğrulandı':'Görev henüz yüklenmedi'}</h2></div><div className="command-buttons">{actions.map(([action,label])=><button key={action} className={action==='start'?'primary small':'secondary small'} disabled={busy||!!replay||status.state!=='connected'||action==='arm'&&shown.armed===true||action==='start'&&(!uploadMatches||shown.armed!==true)||action==='arm'&&mode==='local'&&!shown.navigation_ready||['hold','resume','return','land'].includes(action)&&shown.armed!==true} onClick={()=>void command(action)}>{action==='start'?<Play size={14}/>:action==='hold'?<Pause size={14}/>:action==='return'?<RotateCcw size={14}/>:null}{label}</button>)}</div><p>Komut kabulü ve telemetride gözlenen durum ayrı izlenir. Başlatma sırasında uçuş kaydı otomatik açılır.</p></section>
-        <section className="panel chart-panel"><div className="panel-head"><div><span className="eyebrow">TELEMETRİ / SON ÖRNEKLER</span><h2>İrtifa ve yer hızı</h2></div><span className="muted">{shown.source==='demo'?'Demo verisi':'SITL ölçümü'}</span></div><FlightChart rows={chartRows}/></section>
-      </div><div className="workspace-side">{page==='mission'&&!replay?<section className="panel editor"><div className="panel-head"><div><span className="eyebrow">GÖREV DÜZENLEYİCİSİ</span><h2>Rota noktaları</h2></div><span className="count">{mission.waypoints.length} nokta</span></div><label>Görev adı<input value={mission.name} maxLength={100} disabled={!editing} onChange={e=>setMission({...mission,name:e.target.value})}/></label><label>Kalkış irtifası · eve göre m<input type="number" min={5} max={120} value={mission.takeoff_altitude_m} disabled={!editing} onChange={e=>setMission({...mission,takeoff_altitude_m:Number(e.target.value)})}/></label><div className="waypoint-list">{mission.waypoints.map((point,index)=><div className="waypoint-row" key={index}><div className="waypoint-title"><span>NOKTA {index+1}</span><button className="icon-button" aria-label={`Nokta ${index+1} sil`} disabled={!editing||mission.waypoints.length===1} onClick={()=>setMission({...mission,waypoints:mission.waypoints.filter((_,i)=>i!==index)})}><Trash2 size={14}/></button></div><div className="coordinate-inputs"><label>Enlem<input aria-label={`Nokta ${index+1} enlem`} type="number" step=".00001" value={point.latitude} disabled={!editing} onChange={e=>editWaypoint(index,'latitude',Number(e.target.value))}/></label><label>Boylam<input aria-label={`Nokta ${index+1} boylam`} type="number" step=".00001" value={point.longitude} disabled={!editing} onChange={e=>editWaypoint(index,'longitude',Number(e.target.value))}/></label><label className="altitude-input">İrtifa · m<input aria-label={`Nokta ${index+1} irtifa`} type="number" min={5} max={120} value={point.altitude_m} disabled={!editing} onChange={e=>editWaypoint(index,'altitude_m',Number(e.target.value))}/></label></div></div>)}</div><button className="secondary full" disabled={!editing} onClick={()=>addPoint()}><Plus size={15}/>Nokta ekle</button><div className="editor-actions"><button className="secondary" disabled={!editing} onClick={()=>void saveMission()}><Database size={15}/>Kaydet</button><button className="primary" disabled={!editing||status.state!=='connected'} onClick={()=>void uploadMission()}><ArrowUpToLine size={15}/>Görevi yükle</button></div><div className="file-actions"><button disabled={!editing} onClick={()=>fileMission.current?.click()}>JSON içe aktar</button><button onClick={()=>{try{download('mission.json',JSON.stringify(validateMission(mission),null,2));}catch(e){setNotice(String(e));}}}>JSON dışa aktar</button></div>{missions.length>0&&<label>Kayıtlı görev<select disabled={!editing} value="" onChange={e=>{const m=missions.find(m=>m.id===e.target.value);if(m)setMission(structuredClone(m));}}><option value="">Görev seçin…</option>{missions.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}</select></label>}</section>:<section className="panel editor"><span className="eyebrow">UÇUŞ OTURUMU</span><h2>{route.name}</h2><p>{route.waypoints.length} rota noktası · {route.takeoff_altitude_m} m kalkış</p><div className="session-facts"><span>Geçen süre<strong>{shown.elapsed_s.toFixed(1)} s</strong></span><span>Görev indeksi<strong>{shown.mission_index??'—'}</strong></span><span>Konum<strong>{shown.position_fresh?'Güncel':'Gecikmiş / bilinmiyor'}</strong></span><span>Heartbeat yaşı<strong>{value(shown.heartbeat_age_s,'s')}</strong></span></div></section>}
-        <section className="panel event-panel"><div className="panel-head"><h2>Olay günlüğü</h2><span className="muted">{events.length}</span></div><div className="event-list">{events.length===0?<p className="muted">Bağlantı ve görev olayları burada görünecek.</p>:[...events].reverse().slice(0,20).map((event,index)=><div className="event" key={event.sequence??index}><i className={event.type==='command'?'blue':''}/><div><strong>{eventLabel(event)}</strong><small>{new Date(event.received_utc).toLocaleTimeString('tr-TR')}</small></div></div>)}</div></section>
-      </div></div>}
-      {page==='recordings'&&<section className="panel recordings-panel"><div className="panel-head"><div><span className="eyebrow">UÇUŞ ARŞİVİ</span><h2>Kayıtlar ve tekrar oynatma</h2></div><div className="row-actions"><button className="secondary small" onClick={()=>fileRecording.current?.click()}><FileJson size={15}/>Kayıt içe aktar</button>{mode==='local'&&<button className="secondary small" disabled={busy} onClick={()=>void loadLocalRecordings()}>Backend kayıtlarını getir</button>}</div></div><p className="muted">Örnek kayıt demo modelinden üretilmiştir. SITL kayıtları gerçek simülatör telemetrisini içerir.</p><div className="recording-grid">{recordings.map(r=><article className="recording-card" key={r.session.id}><span className={'recording-source '+r.session.source}>{r.session.source==='sitl'?'SITL KAYDI':'DEMO KAYDI'}</span><h3>{r.session.name}</h3><p>{frames(r).length} örnek · {analyze(r).duration_s.toFixed(1)} s</p><span className="muted">{new Date(r.session.started_utc).toLocaleString('tr-TR')}</span><div><button className="primary small" onClick={()=>openReplay(r)}><Play size={14}/>Oynat</button><button className="secondary small" onClick={()=>{setSelected(r);setPage('analysis');}}>Analiz</button><button className="icon-button" aria-label={`${r.session.name} JSON indir`} onClick={()=>download('flight-session.json',JSON.stringify(r,null,2))}><ArrowDownToLine size={17}/></button></div></article>)}</div></section>}
-      {page==='analysis'&&<><section className="panel analysis-head"><div><span className="eyebrow">KAYIT ANALİZİ</span><h2>{activeRecord?.session.name??'Bir kayıt seçin'}</h2><p>Yalnızca gözlenen, güncel ölçümler kullanılır. Veri boşlukları uçuş izinde birleştirilmez.</p></div><div className="thresholds"><label>İrtifa eşiği · m<input type="number" value={altThreshold} onChange={e=>setAltThreshold(Number.isFinite(Number(e.target.value))?Math.max(0,Math.min(120,Number(e.target.value))):80)}/></label><label>Batarya eşiği · %<input type="number" min={0} max={100} value={batThreshold} onChange={e=>setBatThreshold(Number.isFinite(Number(e.target.value))?Math.max(0,Math.min(100,Number(e.target.value))):20)}/></label></div></section>{report&&<><div className="metrics analysis-metrics">{stat('KAYIT SÜRESİ',value(report.duration_s,'s'),'Örnek zamanları arası')}{stat('EN YÜKSEK İRTİFA',value(report.peak_relative_altitude_m,'m'),'Eve göre irtifa')}{stat('GÖZLENEN MESAFE',value(report.observed_ground_distance_m,'m'),'Gecikmiş örnekler hariç')}{stat('ROTA SAPMASI',value(report.max_route_deviation_m,'m'),'Planlanan parçalara uzaklık')}</div><section className="panel chart-panel"><FlightChart rows={chartRows}/></section><section className="panel report-details"><div><span>İrtifa uyarısı<strong>{report.altitude_alert_samples} örnek</strong></span><span>Batarya uyarısı<strong>{report.battery_alert_samples} örnek</strong></span><span>Veri boşluğu (&gt;3 s)<strong>{report.recording_gaps}</strong></span><span>Batarya değişimi<strong>{value(report.battery_used_percentage_points,'yüzde puan')}</strong></span></div><p className="muted">Rota sapması kısa görevler için yerel düzlem yaklaşımıdır; kalkış noktası görev parçalarına dahil değildir. Yer hızı ve eve göre irtifa farklı referanslardaki ölçümlerle karıştırılmaz.</p><div className="row-actions"><button className="primary small" onClick={()=>download('flight-report.json',JSON.stringify({...report,thresholds:{max_altitude_m:altThreshold,min_battery_pct:batThreshold}},null,2))}>Rapor JSON indir</button><button className="secondary small" onClick={()=>download('flight-telemetry.csv',toCSV(frames(activeRecord!)),'text/csv')}>Telemetri CSV indir</button><button className="secondary small" onClick={()=>openReplay(activeRecord!)}>Kaydı oynat</button></div></section></>}</>}
-      <footer><span><i className={status.recording_id?'record-dot':''}/>{status.recording_id?'Uçuş kaydı açık':'Uçuş kaydı kapalı'}</span><div>{status.state==='connected'&&!replay&&<button disabled={busy} onClick={()=>void perform(()=>status.recording_id?stopRecording():startRecording())}>{status.recording_id?<Square size={12}/>:<Radio size={12}/>} {status.recording_id?'Kaydı durdur':'Kayıt başlat'}</button>}<a href="https://github.com/mertacar-git/mission-control" target="_blank" rel="noreferrer">Model, kurulum ve doğrulama ↗</a></div><span>Mert Açar · Mission Control</span></footer>
-      <input className="hidden" type="file" accept="application/json,.json" ref={fileMission} onChange={e=>void importFile(e,'mission')} aria-label="Görev JSON dosyası"/><input className="hidden" type="file" accept="application/json,.json" ref={fileRecording} onChange={e=>void importFile(e,'recording')} aria-label="Uçuş kaydı JSON dosyası"/>
-    </main></div></div>;
+  return (
+    <div className="app-shell">
+      <aside className="sidebar">
+        <a className="brand" href="https://mertacar-git.github.io/portfolio/">
+          <span className="brand-mark">
+            <Compass size={22} />
+          </span>
+          <span>
+            MISSION
+            <br />
+            <b>CONTROL</b>
+          </span>
+        </a>
+        <div className="sidebar-label">ÇALIŞMA ALANI</div>
+        <nav>
+          {(
+            [
+              ['mission', 'Görev planlama', MapPin],
+              ['flight', 'Uçuş takibi', Activity],
+              ['recordings', 'Uçuş kayıtları', Database],
+              ['analysis', 'Uçuş analizi', Compass],
+            ] as const
+          ).map(([id, label, Icon]) => (
+            <button
+              key={id}
+              className={page === id ? 'active' : ''}
+              onClick={() => setPage(id)}
+            >
+              <Icon size={17} />
+              {label}
+              {page === id && <ChevronRight size={15} />}
+            </button>
+          ))}
+        </nav>
+        <div className="sidebar-bottom">
+          <div className="source-label">OPERASYON ALANI</div>
+          <p>
+            Tek araç. Tek görev.
+            <br />
+            Planlama, izleme ve analiz.
+          </p>
+          <a
+            href="https://github.com/mertacar-git/mission-control"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Kaynak kodu & kurulum ↗
+          </a>
+          <span>v1.1 · ArduCopter 4.6.3</span>
+        </div>
+      </aside>
+      <div className="main-area">
+        <header className="topbar">
+          <div className="breadcrumb">
+            Çalışma alanı <ChevronRight size={13} />{' '}
+            <strong>Mission Control</strong>
+          </div>
+          <div className="top-actions">
+            <div className="mode-picker">
+              <button
+                className={mode === 'demo' ? 'selected' : ''}
+                onClick={() => changeMode('demo')}
+              >
+                Demo
+              </button>
+              <button
+                className={mode === 'local' ? 'selected' : ''}
+                onClick={() => changeMode('local')}
+              >
+                Yerel SITL
+              </button>
+            </div>
+            <span className={'connection ' + status.state}>
+              <i />
+              {names[status.state]}
+            </span>
+          </div>
+        </header>
+        <main>
+          <section className="title-row">
+            <div>
+              <div className="eyebrow">
+                {replay
+                  ? 'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA'
+                  : mode === 'demo'
+                    ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
+                    : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
+              </div>
+              <h1>
+                {page === 'mission'
+                  ? 'Görev planlama'
+                  : page === 'flight'
+                    ? 'Uçuş kontrol merkezi'
+                    : page === 'recordings'
+                      ? 'Uçuş arşivi'
+                      : 'Uçuş analizi'}
+              </h1>
+              <p>
+                {mode === 'demo'
+                  ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
+                  : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
+              </p>
+            </div>
+            <div className="connection-actions">
+              {!replay && status.state === 'closed' && (
+                <button
+                  className="secondary"
+                  onClick={() =>
+                    openReplay(
+                      recordings.find(
+                        (r) => r.session.id === 'sample-demo-flight',
+                      ) ?? recordings[0],
+                    )
+                  }
+                >
+                  <Play size={15} />
+                  Örnek uçuşu incele
+                </button>
+              )}
+              {status.state === 'closed' ? (
+                <button
+                  className="primary"
+                  disabled={busy || !!replay}
+                  onClick={() => void connect()}
+                >
+                  <Wifi size={16} />
+                  {mode === 'demo' ? 'Demoya bağlan' : 'SITL başlat & bağlan'}
+                </button>
+              ) : (
+                <button
+                  className="secondary"
+                  disabled={busy || !!replay}
+                  onClick={() => void disconnect()}
+                >
+                  <X size={16} />
+                  Bağlantıyı kapat
+                </button>
+              )}
+            </div>
+          </section>
+          {notice && (
+            <div className="notice" role="status">
+              <Radio size={16} />
+              <span>{notice}</span>
+              <button
+                aria-label="Bildirimi kapat"
+                onClick={() => setNotice('')}
+              >
+                <X size={15} />
+              </button>
+            </div>
+          )}
+          {(page === 'mission' || page === 'flight') && (
+            <>
+              {page === 'mission' && status.state === 'closed' && !replay ? (
+                <>
+                  <div className="telemetry-caption">
+                    <span>GÖREV ÖZETİ</span>
+                    <span>Henüz araca gönderilmedi</span>
+                  </div>
+                  <div className="metrics">
+                    {stat(
+                      'ROTA NOKTASI',
+                      String(mission.waypoints.length),
+                      'Sıralı görev noktaları',
+                    )}
+                    {stat(
+                      'PLANLANAN MESAFE',
+                      routeLength(mission).toFixed(0) + ' m',
+                      'Başlangıç noktası dahil',
+                    )}
+                    {stat(
+                      'KALKIŞ İRTİFASI',
+                      mission.takeoff_altitude_m + ' m',
+                      'Eve göre planlanan irtifa',
+                    )}
+                    {stat('GÖREV SONU', 'İniş', 'Son rota noktasında')}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="telemetry-caption">
+                    <span>
+                      <i className={replay ? 'replay-dot' : 'live-dot'} />
+                      {replay ? 'KAYITTAN TELEMETRİ' : 'ARAÇ TELEMETRİSİ'}
+                    </span>
+                    <span>
+                      {replay
+                        ? replay.session.name
+                        : status.recording_id
+                          ? '● Uçuş kaydı alınıyor'
+                          : 'Kayıt beklemede'}
+                    </span>
+                  </div>
+                  <div className="metrics">
+                    {stat(
+                      'EVE GÖRE İRTİFA',
+                      value(shown.relative_altitude_m, 'm'),
+                      'm · eve göre',
+                    )}
+                    {stat(
+                      'YER HIZI',
+                      value(shown.ground_speed_ms, 'm/s'),
+                      'm/s · yer referansı',
+                    )}
+                    {stat(
+                      'BATARYA',
+                      value(shown.battery_pct, '%', 0),
+                      value(shown.battery_voltage_v, 'V', 2),
+                    )}
+                    {stat(
+                      'UÇUŞ MODU',
+                      shown.flight_mode ?? '—',
+                      shown.armed === null
+                        ? 'Durum bilinmiyor'
+                        : shown.armed
+                          ? 'ARMED · motorlar açık'
+                          : mode === 'local'
+                            ? shown.navigation_ready
+                              ? 'DISARMED · EKF hazır'
+                              : 'DISARMED · EKF bekleniyor'
+                            : 'DISARMED',
+                    )}
+                  </div>
+                </>
+              )}
+            </>
+          )}
+          {replay && (
+            <section className="replay-bar panel">
+              <div>
+                <strong>{replay.session.name}</strong>
+                <span>
+                  {replay.session.source === 'sitl'
+                    ? 'Gerçek SITL kaydı'
+                    : 'Demo kaydı'}{' '}
+                  · canlı komutlar kapalı
+                </span>
+              </div>
+              <button
+                className="icon-button"
+                aria-label={playing ? 'Oynatmayı duraklat' : 'Kaydı oynat'}
+                onClick={() => setPlaying(!playing)}
+              >
+                {playing ? <Pause size={18} /> : <Play size={18} />}
+              </button>
+              <input
+                aria-label="Kayıt zaman çizelgesi"
+                type="range"
+                min={replayFrames[0]?.elapsed_s ?? 0}
+                max={replayEnd}
+                step="0.1"
+                value={replayTime}
+                onChange={(e) => setReplayTime(Number(e.target.value))}
+              />
+              <span>
+                {Math.max(
+                  0,
+                  replayTime - (replayFrames[0]?.elapsed_s ?? 0),
+                ).toFixed(1)}{' '}
+                /{' '}
+                {Math.max(
+                  0,
+                  replayEnd - (replayFrames[0]?.elapsed_s ?? 0),
+                ).toFixed(1)}{' '}
+                s
+              </span>
+              <select
+                aria-label="Oynatma hızı"
+                value={speed}
+                onChange={(e) => setSpeed(Number(e.target.value))}
+              >
+                <option value=".5">0,5×</option>
+                <option value="1">1×</option>
+                <option value="2">2×</option>
+              </select>
+              <button
+                className="secondary small"
+                onClick={() => {
+                  setReplay(null);
+                  setPlaying(false);
+                  setNotice('');
+                }}
+              >
+                Canlı görünüme dön
+              </button>
+            </section>
+          )}
+          {(page === 'mission' || page === 'flight') && (
+            <div
+              className={
+                'workspace ' +
+                (page === 'flight' ? 'flight-workspace' : 'planning-workspace')
+              }
+            >
+              <div className="workspace-main">
+                <MapView
+                  mission={route}
+                  telemetry={shown}
+                  trace={trace}
+                  editing={editing && page === 'mission'}
+                  onAdd={addPoint}
+                  onMove={(index, lat, lon) =>
+                    setMission((previous) => ({
+                      ...previous,
+                      waypoints: previous.waypoints.map((w, i) =>
+                        i === index
+                          ? { ...w, latitude: lat, longitude: lon }
+                          : w,
+                      ),
+                    }))
+                  }
+                />
+                <section className="panel flight-actions">
+                  <div>
+                    <span className="eyebrow">UÇUŞ KONTROLLERİ</span>
+                    <h2>
+                      {replay
+                        ? 'Kayıt inceleniyor'
+                        : missionStage(shown, route.waypoints.length)}
+                    </h2>
+                  </div>
+                  <div className="command-buttons">
+                    {actions.map(([action, label]) => (
+                      <button
+                        key={action}
+                        className={
+                          action === 'start'
+                            ? 'primary small'
+                            : 'secondary small'
+                        }
+                        disabled={
+                          busy ||
+                          !!replay ||
+                          status.state !== 'connected' ||
+                          (action === 'arm' && shown.armed === true) ||
+                          (action === 'start' &&
+                            (!uploadMatches ||
+                              shown.armed !== true ||
+                              shown.flight_mode === 'AUTO')) ||
+                          (action === 'arm' &&
+                            mode === 'local' &&
+                            !shown.navigation_ready) ||
+                          (['hold', 'resume', 'return', 'land'].includes(
+                            action,
+                          ) &&
+                            shown.armed !== true)
+                        }
+                        onClick={() => void command(action)}
+                      >
+                        {action === 'start' ? (
+                          <Play size={14} />
+                        ) : action === 'hold' ? (
+                          <Pause size={14} />
+                        ) : action === 'return' ? (
+                          <RotateCcw size={14} />
+                        ) : null}
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <p>
+                    Komut kabulü ve telemetride gözlenen durum ayrı izlenir.
+                    Başlatma sırasında uçuş kaydı otomatik açılır.
+                  </p>
+                </section>
+                <section className="panel chart-panel">
+                  <div className="panel-head">
+                    <div>
+                      <span className="eyebrow">TELEMETRİ / SON ÖRNEKLER</span>
+                      <h2>İrtifa ve yer hızı</h2>
+                    </div>
+                    <span className="muted">
+                      {shown.source === 'demo' ? 'Demo verisi' : 'SITL ölçümü'}
+                    </span>
+                  </div>
+                  <FlightChart rows={chartRows} />
+                </section>
+              </div>
+              <div className="workspace-side">
+                {!replay && (
+                  <MissionReadiness
+                    status={status}
+                    matches={uploadMatches}
+                    local={mode === 'local'}
+                  />
+                )}
+                {page === 'mission' && !replay ? (
+                  <MissionEditor
+                    mission={mission}
+                    missions={missions}
+                    setMission={setMission}
+                    editing={editing}
+                    connected={status.state === 'connected'}
+                    editWaypoint={editWaypoint}
+                    addPoint={addPoint}
+                    saveMission={saveMission}
+                    uploadMission={uploadMission}
+                    onImport={() => fileMission.current?.click()}
+                    setNotice={setNotice}
+                  />
+                ) : (
+                  <section className="panel editor">
+                    <span className="eyebrow">UÇUŞ OTURUMU</span>
+                    <h2>{route.name}</h2>
+                    <p>
+                      {route.waypoints.length} rota noktası ·{' '}
+                      {route.takeoff_altitude_m} m kalkış
+                    </p>
+                    <div className="session-facts">
+                      <span>
+                        Geçen süre
+                        <strong>{shown.elapsed_s.toFixed(1)} s</strong>
+                      </span>
+                      <span>
+                        Görev indeksi
+                        <strong>{shown.mission_index ?? '—'}</strong>
+                      </span>
+                      <span>
+                        Konum
+                        <strong>
+                          {shown.position_fresh
+                            ? 'Güncel'
+                            : 'Gecikmiş / bilinmiyor'}
+                        </strong>
+                      </span>
+                      <span>
+                        Heartbeat yaşı
+                        <strong>{value(shown.heartbeat_age_s, 's')}</strong>
+                      </span>
+                    </div>
+                  </section>
+                )}
+                <EventLog events={events} />
+              </div>
+            </div>
+          )}
+          {page === 'recordings' && (
+            <RecordingArchive
+              recordings={recordings}
+              local={mode === 'local'}
+              busy={busy}
+              onImport={() => fileRecording.current?.click()}
+              onLoad={loadLocalRecordings}
+              onReplay={openReplay}
+              onAnalyze={(recording) => {
+                setSelected(recording);
+                setPage('analysis');
+              }}
+            />
+          )}
+          {page === 'analysis' && (
+            <>
+              <section className="panel analysis-head">
+                <div>
+                  <span className="eyebrow">KAYIT ANALİZİ</span>
+                  <h2>{activeRecord?.session.name ?? 'Bir kayıt seçin'}</h2>
+                  <p>
+                    Yalnızca gözlenen, güncel ölçümler kullanılır. Veri
+                    boşlukları uçuş izinde birleştirilmez.
+                  </p>
+                </div>
+                <div className="thresholds">
+                  <label>
+                    İrtifa eşiği · m
+                    <input
+                      type="number"
+                      value={altThreshold}
+                      onChange={(e) =>
+                        setAltThreshold(
+                          Number.isFinite(Number(e.target.value))
+                            ? Math.max(0, Math.min(120, Number(e.target.value)))
+                            : 80,
+                        )
+                      }
+                    />
+                  </label>
+                  <label>
+                    Batarya eşiği · %
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={batThreshold}
+                      onChange={(e) =>
+                        setBatThreshold(
+                          Number.isFinite(Number(e.target.value))
+                            ? Math.max(0, Math.min(100, Number(e.target.value)))
+                            : 20,
+                        )
+                      }
+                    />
+                  </label>
+                </div>
+              </section>
+              {report && (
+                <>
+                  <div className="metrics analysis-metrics">
+                    {stat(
+                      'KAYIT SÜRESİ',
+                      value(report.duration_s, 's'),
+                      'Örnek zamanları arası',
+                    )}
+                    {stat(
+                      'EN YÜKSEK İRTİFA',
+                      value(report.peak_relative_altitude_m, 'm'),
+                      'Eve göre irtifa',
+                    )}
+                    {stat(
+                      'GÖZLENEN MESAFE',
+                      value(report.observed_ground_distance_m, 'm'),
+                      'Gecikmiş örnekler hariç',
+                    )}
+                    {stat(
+                      'ROTA SAPMASI',
+                      value(report.max_route_deviation_m, 'm'),
+                      'Planlanan parçalara uzaklık',
+                    )}
+                  </div>
+                  <section className="panel chart-panel">
+                    <FlightChart rows={chartRows} />
+                  </section>
+                  <section className="panel report-details">
+                    <div>
+                      <span>
+                        İrtifa uyarısı
+                        <strong>{report.altitude_alert_samples} örnek</strong>
+                      </span>
+                      <span>
+                        Batarya uyarısı
+                        <strong>{report.battery_alert_samples} örnek</strong>
+                      </span>
+                      <span>
+                        Veri boşluğu (&gt;3 s)
+                        <strong>{report.recording_gaps}</strong>
+                      </span>
+                      <span>
+                        Batarya değişimi
+                        <strong>
+                          {value(
+                            report.battery_used_percentage_points,
+                            'yüzde puan',
+                          )}
+                        </strong>
+                      </span>
+                    </div>
+                    <p className="muted">
+                      Rota sapması kısa görevler için yerel düzlem yaklaşımıdır;
+                      kalkış noktası görev parçalarına dahil değildir. Yer hızı
+                      ve eve göre irtifa farklı referanslardaki ölçümlerle
+                      karıştırılmaz.
+                    </p>
+                    <div className="row-actions">
+                      <button
+                        className="primary small"
+                        onClick={() =>
+                          download(
+                            'flight-report.json',
+                            JSON.stringify(
+                              {
+                                ...report,
+                                thresholds: {
+                                  max_altitude_m: altThreshold,
+                                  min_battery_pct: batThreshold,
+                                },
+                              },
+                              null,
+                              2,
+                            ),
+                          )
+                        }
+                      >
+                        Rapor JSON indir
+                      </button>
+                      <button
+                        className="secondary small"
+                        onClick={() =>
+                          download(
+                            'flight-telemetry.csv',
+                            toCSV(frames(activeRecord!)),
+                            'text/csv',
+                          )
+                        }
+                      >
+                        Telemetri CSV indir
+                      </button>
+                      <button
+                        className="secondary small"
+                        onClick={() => openReplay(activeRecord!)}
+                      >
+                        Kaydı oynat
+                      </button>
+                    </div>
+                  </section>
+                </>
+              )}
+            </>
+          )}
+          <footer>
+            <span>
+              <i className={status.recording_id ? 'record-dot' : ''} />
+              {status.recording_id ? 'Uçuş kaydı açık' : 'Uçuş kaydı kapalı'}
+            </span>
+            <div>
+              {status.state === 'connected' && !replay && (
+                <button
+                  disabled={busy}
+                  onClick={() =>
+                    void perform(() =>
+                      status.recording_id ? stopRecording() : startRecording(),
+                    )
+                  }
+                >
+                  {status.recording_id ? (
+                    <Square size={12} />
+                  ) : (
+                    <Radio size={12} />
+                  )}{' '}
+                  {status.recording_id ? 'Kaydı durdur' : 'Kayıt başlat'}
+                </button>
+              )}
+              <a
+                href="https://github.com/mertacar-git/mission-control"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Model, kurulum ve doğrulama ↗
+              </a>
+            </div>
+            <span>Mert Açar · Mission Control</span>
+          </footer>
+          <input
+            className="hidden"
+            type="file"
+            accept="application/json,.json"
+            ref={fileMission}
+            onChange={(e) => void importFile(e, 'mission')}
+            aria-label="Görev JSON dosyası"
+          />
+          <input
+            className="hidden"
+            type="file"
+            accept="application/json,.json"
+            ref={fileRecording}
+            onChange={(e) => void importFile(e, 'recording')}
+            aria-label="Uçuş kaydı JSON dosyası"
+          />
+        </main>
+      </div>
+    </div>
+  );
 }
-function eventLabel(event:FlightEvent){const p=event.payload;if(event.type==='command')return `${p.action} · ${p.status==='requested'?'istendi':p.status==='acknowledged'?'kabul edildi':p.status==='observed'?'telemetride gözlendi':p.status==='timed_out'?'zaman aşımı':p.status==='not_observed'?'henüz gözlenmedi':'başarısız'}${p.error?' · '+p.error:''}`;if(event.type==='connection')return names[p.state as keyof typeof names]??String(p.state);if(event.type==='mission_transfer')return 'Görev aktarımı · '+String(p.status);if(event.type==='mission_progress')return 'Rota noktasına ulaşıldı · '+p.reached_index;if(event.type==='recording')return p.status==='started'?'Uçuş kaydı başladı':'Uçuş kaydı durduruldu';return String(p.text??event.type);}
-function FlightChart({rows}:{rows:Telemetry[]}){return <div className="chart">{rows.length===0?<div className="chart-empty"><Activity size={28}/><span>Bağlantı açıldığında telemetri burada çizilecek.</span></div>:<ResponsiveContainer width="100%" height="100%"><AreaChart data={rows} margin={{top:12,right:18,left:-18,bottom:0}}><defs><linearGradient id="altFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#71dfbe" stopOpacity={.25}/><stop offset="100%" stopColor="#71dfbe" stopOpacity={0}/></linearGradient></defs><CartesianGrid stroke="#24354c" strokeDasharray="3 5"/><XAxis dataKey="elapsed_s" type="number" domain={['dataMin','dataMax']} tick={{fill:'#94a8c4',fontSize:10}} tickFormatter={v=>Number(v).toFixed(0)+' s'}/><YAxis yAxisId="alt" tick={{fill:'#94a8c4',fontSize:10}} unit=" m"/><YAxis yAxisId="speed" orientation="right" tick={{fill:'#76b6ff',fontSize:10}} unit=" m/s"/><Tooltip contentStyle={{background:'#122035',border:'1px solid #30445c',borderRadius:8}} labelFormatter={v=>Number(v).toFixed(1)+' s'}/><Area isAnimationActive={false} yAxisId="alt" name="Eve göre irtifa (m)" type="linear" dataKey="relative_altitude_m" stroke="#71dfbe" fill="url(#altFill)" connectNulls={false}/><Area isAnimationActive={false} yAxisId="speed" name="Yer hızı (m/s)" type="linear" dataKey="ground_speed_ms" stroke="#76b6ff" fill="transparent" connectNulls={false}/></AreaChart></ResponsiveContainer>}</div>;}

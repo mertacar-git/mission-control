@@ -6,9 +6,18 @@ Plan a mission, fly one virtual UAV, watch telemetry, record the flight, replay 
 
 React + TypeScript + Leaflet + Recharts frontend, FastAPI + SQLite backend, and an app-owned ArduCopter SITL process speaking MAVLink. The interface is Turkish; code and documentation are English.
 
-![Replay with live commands disabled](docs/media/replay.jpg)
+![Mission workspace and coordinate editor](docs/media/mission-planner.jpg)
 
 [Watch the walkthrough video](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4) — captured SITL replay views and report.
+
+
+## Operator workspace · UI 1.1
+
+The interface uses a map-first workspace with a focused coordinate editor, route distance and explicit preflight readiness. Disconnected planning displays **planned** values; connected operation displays **measured** telemetry. An unavailable reading is never replaced by a planned value. Mission stages account for the different SITL/browser mission indices and never declare successful completion from a disarmed heartbeat alone.
+
+Flight archives support name search and demo/SITL source filtering. Playback shows command and vehicle events without flooding the visible log with telemetry rows; the complete telemetry still remains in the recording. Repeated start actions are disabled while AUTO is observed. Map controls include metric scale and route fitting, including grid-only mode.
+
+Presentation code is separated into editor, archive, readiness, event-log and chart components. The chart library loads on demand; the initial JavaScript bundle is about 355 kB (110 kB gzip), with a separate chart chunk. Frontend verification includes 22 tests, TypeScript compilation and browser checks of planning, controls, archive filters and isolated replay.
 
 ## Two distinct modes
 
