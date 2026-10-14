@@ -8,6 +8,8 @@ React + TypeScript + Leaflet + Recharts frontend, FastAPI + SQLite backend, and 
 
 ![Replay with live commands disabled](docs/media/replay.jpg)
 
+[Watch the walkthrough video](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4) — captured SITL replay views and report.
+
 ## Two distinct modes
 
 The public GitHub Pages **Demo** runs entirely in your browser with a deterministic kinematic vehicle model. It does **not** connect to MAVLink, a backend or a physical aircraft. Missions and demo recordings use local browser storage. An example recording is available immediately.

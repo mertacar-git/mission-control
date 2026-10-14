@@ -8,10 +8,10 @@ Local environment: Windows host, Ubuntu 24.04 WSL, Python 3.12, ArduCopter `Copt
 
 The initial integration attempt revealed that valid GPS coordinates alone do not imply a healthy EKF position estimate. The application now tracks `EKF_STATUS_REPORT` navigation readiness and checks it before arm; the runner waits for estimator readiness. All five scenarios subsequently passed together.
 
-Backend: 20 unit/API/protocol tests. Frontend: 12 model/replay/analysis tests and a successful TypeScript/Vite production build. Protocol tests include duplicate/out-of-order requests, invalid indices, incomplete/rejected transfers, bounded timeout retries and acknowledgment versus observation. These scripted tests supplement the real simulator runs.
+Backend: 22 unit/API/protocol tests. Frontend: 14 model/replay/analysis tests and a successful TypeScript/Vite production build. Protocol tests include duplicate/out-of-order requests, invalid indices, incomplete/rejected transfers, bounded timeout retries and acknowledgment versus observation. These scripted tests supplement the real simulator runs.
 
 Reproduce with `python -m tests.integration_runner` from `backend/`, using the installed runtime virtual environment. It starts its own process, writes results here, captures failure context on failure, then stops its process. The optional GitHub Actions workflow repeats the tests from a clean Ubuntu setup and retains artifacts.
 
-Browser checks cover demo flight/recording, replay command isolation, timeline/speed controls, analysis, grid-only route display and desktop/mobile layouts. Media in `../media` are captured application views, not design mockups. The walkthrough video shows the browser demo/replay and is explicitly distinct from SITL verification.
+Browser checks cover demo flight/recording, replay command isolation, timeline/speed controls, analysis, grid-only route display and desktop/mobile layouts. Media in `../media` are captured application views, not design mockups. The walkthrough video is a sequence of captured browser views of an actual SITL recording and its report; seeking is accelerated for presentation.
 
 References: [MAVLink mission protocol](https://mavlink.io/en/services/mission.html), [pinned ArduCopter release](https://github.com/ArduPilot/ardupilot/releases/tag/Copter-4.6.3).

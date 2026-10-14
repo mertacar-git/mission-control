@@ -3,7 +3,7 @@ import {MapContainer,TileLayer,Polyline,Marker,Popup,useMap,useMapEvents} from '
 import L from 'leaflet';
 import {HOME,type Mission,type Telemetry} from './types';
 function Events({add,enabled}:{add:(latitude:number,longitude:number)=>void;enabled:boolean}){useMapEvents({click:event=>{if(enabled)add(event.latlng.lat,event.latlng.lng);}});return null;}
-function Fit({mission}:{mission:Mission}){const map=useMap();useEffect(()=>{const points:[number,number][]=[[HOME.latitude,HOME.longitude],...mission.waypoints.map(w=>[w.latitude,w.longitude] as [number,number])];map.fitBounds(L.latLngBounds(points),{padding:[45,45],maxZoom:17});},[map,mission.waypoints]);return null;}
+function Fit({mission}:{mission:Mission}){const map=useMap();useEffect(()=>{const points:[number,number][]=[[HOME.latitude,HOME.longitude],...mission.waypoints.map(w=>[w.latitude,w.longitude] as [number,number])];map.fitBounds(L.latLngBounds(points),{padding:[45,45],maxZoom:19});},[map,mission.waypoints]);return null;}
 export function MapView({mission,telemetry,trace,editing,onAdd,onMove}:{mission:Mission;telemetry:Telemetry;trace:Telemetry[];editing:boolean;onAdd:(latitude:number,longitude:number)=>void;onMove:(index:number,latitude:number,longitude:number)=>void}){
   const [tiles,setTiles]=useState(true),[tileErrors,setTileErrors]=useState(0);
   const route=mission.waypoints.map(w=>[w.latitude,w.longitude] as [number,number]);

@@ -4,6 +4,13 @@ export const distance=(a:Waypoint|{latitude:number;longitude:number},b:Waypoint|
   return 2*6371000*Math.asin(Math.min(1,Math.sqrt(Math.sin(dlat/2)**2+Math.cos(a.latitude*rad)*Math.cos(b.latitude*rad)*Math.sin(dlon/2)**2)));
 };
 export function frames(recording:Recording):Telemetry[]{return recording.events.filter(e=>e.type==='telemetry').map(e=>e.payload as unknown as Telemetry);}
+export function eventsAt(recording:Recording,seconds:number){
+  const first=frames(recording)[0];
+  if(!first)return [];
+  // elapsed_s starts at connection, not recording start; align both clocks using a recorded sample.
+  const cutoff=Date.parse(first.received_utc)+(seconds-first.elapsed_s)*1000;
+  return recording.events.filter(event=>Date.parse(event.received_utc)<=cutoff);
+}
 export function frameAt(rows:Telemetry[],seconds:number):Telemetry|null {
   if(!rows.length)return null;
   let left=0,right=rows.length-1;

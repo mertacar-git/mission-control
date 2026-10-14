@@ -16,6 +16,22 @@ def manager():
     result.link=SimpleNamespace(mav=SimpleNamespace(mission_count_send=lambda *args:None))
     return result
 
+def test_initial_position_is_not_presented_before_navigation_readiness():
+    client=manager();client.field_times['position']=time.monotonic()
+    client.telemetry.latitude=0;client.telemetry.longitude=0
+    assert client.snapshot()['latitude'] is None
+    client.telemetry.navigation_ready=True
+    assert client.snapshot()['latitude']==0
+    client.store.close()
+
+def test_connection_loss_blanks_even_recent_measurements():
+    client=manager();client.state=ConnectionState.DISCONNECTED
+    client.field_times={'position':time.monotonic(),'speed':time.monotonic(),'battery':time.monotonic()}
+    client.telemetry.battery_pct=90;client.telemetry.ground_speed_ms=4
+    result=client.snapshot()
+    assert result['ground_speed_ms'] is None and result['battery_pct'] is None
+    client.store.close()
+
 async def test_duplicate_and_out_of_order_requests_are_idempotent():
     client=manager(); plan=mission(); items=mission_items(plan)
     replies=iter([message('MISSION_REQUEST_INT',seq=i) for i in [0,1,1,3,2]]+[message('MISSION_ACK',type=M.MAV_MISSION_ACCEPTED)])

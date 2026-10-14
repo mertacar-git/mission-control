@@ -77,13 +77,14 @@ class MAVLinkManager:
         result.received_utc=utc_now();result.elapsed_s=max(0,now-self.started) if self.started else 0
         result.connection=self.state
         result.heartbeat_age_s=now-self.last_heartbeat if self.last_heartbeat is not None else None
-        result.position_fresh=now-self.field_times.get('position',-math.inf)<3 and self.state==ConnectionState.CONNECTED
+        result.position_fresh=now-self.field_times.get('position',-math.inf)<3 and self.state==ConnectionState.CONNECTED and result.navigation_ready
         if not result.position_fresh:
             result.latitude=result.longitude=result.relative_altitude_m=None
         if now-self.field_times.get('speed',-math.inf)>=3: result.ground_speed_ms=None
         if now-self.field_times.get('battery',-math.inf)>=5: result.battery_pct=result.battery_voltage_v=None
         if self.state!=ConnectionState.CONNECTED:
             result.flight_mode=result.armed=None;result.navigation_ready=False
+            result.ground_speed_ms=result.battery_pct=result.battery_voltage_v=None
         return result.model_dump()
 
     async def connect(self,speedup=1):

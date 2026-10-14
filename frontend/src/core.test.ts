@@ -1,7 +1,7 @@
 import {describe,it,expect} from 'vitest';
 import {newMission,validateMission,emptyTelemetry,type Recording} from './types';
 import {DemoVehicle,sampleRecording} from './demo';
-import {analyze,frames,frameAt,toCSV,distance,deviation} from './analysis';
+import {analyze,frames,frameAt,eventsAt,toCSV,distance,deviation} from './analysis';
 
 describe('mission contracts',()=>{
   it('rejects invalid altitude, coordinates and version',()=>{
@@ -20,6 +20,13 @@ describe('demo flight state machine',()=>{
   it('reference flight samples are reproducible',()=>{const mission=newMission(),a=frames(sampleRecording(mission)),b=frames(sampleRecording(mission));expect(a).toEqual(b);});
 });
 describe('replay and reporting',()=>{
+  it('aligns event time when recording starts after connection',()=>{
+    const r:Recording={schema_version:1,session:{id:'x',name:'x',source:'sitl',started_utc:'2026-10-15T00:01:00Z',ended_utc:null},events:[
+      {type:'telemetry',received_utc:'2026-10-15T00:01:01Z',payload:{...emptyTelemetry('sitl'),received_utc:'2026-10-15T00:01:01Z',elapsed_s:61}},
+      {type:'command',received_utc:'2026-10-15T00:01:10Z',payload:{status:'observed'}}]};
+    expect(eventsAt(r,62)).toHaveLength(1);expect(eventsAt(r,70)).toHaveLength(2);
+  });
+  it('rejects invalid report thresholds',()=>{expect(()=>analyze(sampleRecording(newMission()),80,101)).toThrow();});
   it('does not interpolate missing measurements across gaps',()=>{const rows=[{...emptyTelemetry(),elapsed_s:0,latitude:41,longitude:29,relative_altitude_m:20,position_fresh:true},{...emptyTelemetry(),elapsed_s:10,latitude:42,longitude:30,relative_altitude_m:30,position_fresh:true}];expect(frameAt(rows,5)?.latitude).toBeNull();expect(frameAt(rows,5)?.connection).toBe('stale');expect(frameAt(rows,10)?.latitude).toBe(42);expect(frameAt(rows,-1)).toBeNull();});
   it('empty report preserves unknown values',()=>{const r:Recording={schema_version:1,session:{id:'x',name:'x',source:'demo',started_utc:'2026-10-15T00:00:00Z',ended_utc:null},events:[]};expect(analyze(r).peak_relative_altitude_m).toBeNull();expect(analyze(r).battery_used_percentage_points).toBeNull();});
   it('CSV leaves null values empty',()=>{const csv=toCSV([emptyTelemetry()]);expect(csv).not.toContain('null');expect(csv).not.toContain('undefined');expect(csv.split('\n')).toHaveLength(2);});
