@@ -1,0 +1,29 @@
+name: Real SITL acceptance
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      MISSION_RUNTIME: /opt/mission-control
+    steps:
+      - uses: actions/checkout@v5
+      - name: Prepare Ubuntu build dependencies
+        run: sudo bash simulator/setup.sh
+      - name: Build pinned ArduCopter firmware
+        run: bash simulator/setup.sh
+      - name: Install backend
+        run: /opt/mission-control/venv/bin/pip install -r backend/requirements.txt
+      - name: Execute real simulator scenarios
+        working-directory: backend
+        run: /opt/mission-control/venv/bin/python -m tests.integration_runner
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sitl-verification
+          path: |
+            docs/verification
+            backend/.runtime/integration/**/sitl.log

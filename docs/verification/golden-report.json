@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "samples": 26,
+  "duration_s": 12.81422696300001,
+  "peak_relative_altitude_m": 10.013,
+  "peak_ground_speed_ms": 4.4,
+  "battery_used_percentage_points": 11.0,
+  "observed_ground_distance_m": 37.2550235200953,
+  "max_route_deviation_m": 22.261224314448718,
+  "recording_gaps": 0,
+  "altitude_alert_samples": 0,
+  "battery_alert_samples": 0,
+  "thresholds": {
+    "max_altitude_m": 80,
+    "min_battery_pct": 20
+  },
+  "notes": "Altitude is relative to home; speed is ground speed. Route deviation uses a local tangent-plane approximation to mission segments. Gaps >3 s are excluded from distance integration; stale positions are not treated as new measurements."
+}
