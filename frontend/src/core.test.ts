@@ -63,8 +63,11 @@ describe('demo flight state machine', () => {
     for (let i = 0; i < 15; i++) d.tick(0.5);
     d.command('hold');
     const position = { ...d.position };
+    const altitude = d.state.telemetry.relative_altitude_m;
     for (let i = 0; i < 10; i++) d.tick(0.5);
     expect(d.position).toEqual(position);
+    expect(d.state.telemetry.flight_mode).toBe('BRAKE');
+    expect(d.state.telemetry.relative_altitude_m).toBe(altitude);
     d.command('resume');
     d.tick(1);
     expect(d.position).not.toEqual(position);

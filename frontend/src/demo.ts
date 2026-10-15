@@ -75,7 +75,7 @@ export class DemoVehicle {
         throw Error('Önce görevi yükleyin ve arm edin.');
       this.phase = 'AUTO';
       this.progress = 0;
-    } else if (action === 'hold') this.phase = 'LOITER';
+    } else if (action === 'hold') this.phase = 'BRAKE';
     else if (action === 'resume') {
       if (!this.armed || !this.state.upload_verified)
         throw Error('Devam ettirilecek aktif görev yok.');

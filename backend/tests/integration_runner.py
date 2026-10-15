@@ -95,7 +95,16 @@ async def main():
         async def hold_return():
             await manager.upload(test_mission('Hold/return'));await arm(manager);await manager.command('start')
             await wait_for(manager,lambda s:(s['relative_altitude_m'] or 0)>7,40,'takeoff')
-            await manager.command('hold');await wait_for(manager,lambda s:s['flight_mode']=='LOITER',10,'hold')
+            await manager.command('hold');await wait_for(manager,lambda s:s['flight_mode']=='BRAKE',10,'hold')
+            # A mode ACK alone missed the old LOITER/default-throttle descent.
+            # Require actual altitude retention for a sustained hold interval.
+            held_altitude=manager.snapshot()['relative_altitude_m']
+            hold_started=time.monotonic()
+            while time.monotonic()-hold_started<5:
+                await asyncio.sleep(0.25)
+                snapshot=manager.snapshot()
+                assert snapshot['armed'] is True and snapshot['flight_mode']=='BRAKE'
+                assert snapshot['relative_altitude_m'] is not None and snapshot['relative_altitude_m']>=held_altitude-1.5, snapshot
             await manager.command('resume');await wait_for(manager,lambda s:s['flight_mode']=='AUTO',10,'resume')
             await manager.command('return');await wait_for(manager,lambda s:s['flight_mode']=='RTL',10,'return')
             await wait_for(manager,lambda s:s['armed'] is False,100,'return landing')

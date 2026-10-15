@@ -40,6 +40,9 @@ describe('operator presentation', () => {
   });
   it('shows hold and return before interpreting mission indices', () => {
     expect(
+      missionStage({ ...active, flight_mode: 'BRAKE', mission_index: 2 }, 3),
+    ).toBe('Görev bekletiliyor');
+    expect(
       missionStage({ ...active, flight_mode: 'LOITER', mission_index: 2 }, 3),
     ).toBe('Görev bekletiliyor');
     expect(

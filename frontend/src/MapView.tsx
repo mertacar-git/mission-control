@@ -1,3 +1,4 @@
+import { validCoordinate } from './missionDraft';
 import { useEffect, useState, useRef } from 'react';
 import {
   MapContainer,
@@ -30,9 +31,9 @@ function Fit({ mission }: { mission: Mission }) {
   useEffect(() => {
     const points: [number, number][] = [
       [HOME.latitude, HOME.longitude],
-      ...mission.waypoints.map(
-        (w) => [w.latitude, w.longitude] as [number, number],
-      ),
+      ...mission.waypoints
+        .filter(validCoordinate)
+        .map((w) => [w.latitude, w.longitude] as [number, number]),
     ];
     map.fitBounds(L.latLngBounds(points), { padding: [45, 45], maxZoom: 20 });
   }, [map, mission.waypoints]);
@@ -61,10 +62,12 @@ function MapTools({ mission }: { mission: Mission }) {
           map.fitBounds(
             L.latLngBounds([
               [HOME.latitude, HOME.longitude],
-              ...mission.waypoints.map(
-                (point) =>
-                  [point.latitude, point.longitude] as [number, number],
-              ),
+              ...mission.waypoints
+                .filter(validCoordinate)
+                .map(
+                  (point) =>
+                    [point.latitude, point.longitude] as [number, number],
+                ),
             ]),
             { padding: [65, 65], maxZoom: 20 },
           );
@@ -76,7 +79,26 @@ function MapTools({ mission }: { mission: Mission }) {
     </div>
   );
 }
+function SelectedFocus({
+  point,
+}: {
+  point: { latitude: number; longitude: number } | null;
+}) {
+  const map = useMap();
+  useEffect(() => {
+    if (point && validCoordinate(point))
+      map.setView(
+        [point.latitude, point.longitude],
+        Math.max(18, map.getZoom()),
+        { animate: false },
+      );
+  }, [map, point]);
+  return null;
+}
 export function MapView({
+  selectedIndex,
+  focusPoint,
+  onSelect,
   mission,
   telemetry,
   trace,
@@ -84,6 +106,9 @@ export function MapView({
   onAdd,
   onMove,
 }: {
+  selectedIndex: number | null;
+  focusPoint: { latitude: number; longitude: number } | null;
+  onSelect: (index: number) => void;
   mission: Mission;
   telemetry: Telemetry;
   trace: Telemetry[];
@@ -93,9 +118,12 @@ export function MapView({
 }) {
   const [tiles, setTiles] = useState(true),
     [tileErrors, setTileErrors] = useState(0);
-  const route = mission.waypoints.map(
-    (w) => [w.latitude, w.longitude] as [number, number],
+  const validPoints = mission.waypoints.flatMap((point, index) =>
+    validCoordinate(point) ? [{ point, index }] : [],
   );
+  const route = mission.waypoints
+    .filter(validCoordinate)
+    .map((w) => [w.latitude, w.longitude] as [number, number]);
   // Null samples split observed traces; a lost connection is never bridged by a line.
   const segments: [number, number][][] = [];
   let current: [number, number][] = [];
@@ -151,6 +179,7 @@ export function MapView({
           />
         )}
         <Fit mission={mission} />
+        <SelectedFocus point={focusPoint} />
         <MapTools mission={mission} />
         <Events add={onAdd} enabled={editing} />
         <Marker
@@ -164,10 +193,12 @@ export function MapView({
         >
           <Popup>Simülatör başlangıç noktası · eve göre irtifa referansı</Popup>
         </Marker>
-        <Polyline
-          positions={[[HOME.latitude, HOME.longitude], ...route]}
-          pathOptions={{ color: '#3f6fd3', weight: 3, dashArray: '6 7' }}
-        />
+        {validPoints.length === mission.waypoints.length && (
+          <Polyline
+            positions={[[HOME.latitude, HOME.longitude], ...route]}
+            pathOptions={{ color: '#3f6fd3', weight: 3, dashArray: '6 7' }}
+          />
+        )}
         {segments.map((segment, i) => (
           <Polyline
             key={i}
@@ -175,18 +206,23 @@ export function MapView({
             pathOptions={{ color: '#71dfbe', weight: 3 }}
           />
         ))}
-        {mission.waypoints.map((point, index) => (
+        {validPoints.map(({ point, index }) => (
           <Marker
             key={index}
             position={[point.latitude, point.longitude]}
             draggable={editing}
+            bubblingMouseEvents={false}
             icon={L.divIcon({
-              className: 'waypoint-pin',
+              className:
+                'waypoint-pin' + (selectedIndex === index ? ' selected' : ''),
               html: String(index + 1),
               iconSize: [28, 28],
               iconAnchor: [14, 14],
             })}
             eventHandlers={{
+              click: () => {
+                if (editing) onSelect(index);
+              },
               dragend: (event) => {
                 const position = event.target.getLatLng();
                 onMove(index, position.lat, position.lng);
@@ -232,6 +268,12 @@ export function MapView({
             : 'Görev düzenleme kilitli.'}
         </span>
       </div>
+      {validPoints.length !== mission.waypoints.length && (
+        <p className="inline-note" role="status">
+          Geçersiz koordinatlar haritada gösterilmez; yüklemeden önce editörde
+          düzeltin.
+        </p>
+      )}
       {tileErrors >= 6 && (
         <p className="inline-note">
           Döşemeler yüklenemedi; koordinat düzenleyicisi ve vektör rota görünümü

@@ -5,27 +5,27 @@
     {
       "scenario": "mission upload/readback and rejected commands",
       "status": "passed",
-      "duration_s": 0.39
+      "duration_s": 0.38
     },
     {
       "scenario": "mission execution, recording, replay data and report",
       "status": "passed",
-      "duration_s": 13.1
+      "duration_s": 13.15
     },
     {
       "scenario": "heartbeat loss, recovery and reconnect",
       "status": "passed",
-      "duration_s": 25.52
+      "duration_s": 25.75
     },
     {
       "scenario": "hold, resume and return-to-home",
       "status": "passed",
-      "duration_s": 10.21
+      "duration_s": 15.2
     },
     {
       "scenario": "configured low-battery RTL and landing",
       "status": "passed",
-      "duration_s": 26.29
+      "duration_s": 26.32
     }
   ]
 }

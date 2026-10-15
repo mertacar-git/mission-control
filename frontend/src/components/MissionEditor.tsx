@@ -1,9 +1,21 @@
+import { useState, useEffect, useRef } from 'react';
+import { ArrowUp, ArrowDown, Undo2, Redo2 } from 'lucide-react';
+import { MissionReview } from './MissionReview';
 import type { Dispatch, SetStateAction } from 'react';
 import { Plus, Trash2, Database, ArrowUpToLine } from 'lucide-react';
 import { download } from '../analysis';
 import { routeLength } from '../missionPresentation';
 import { validateMission, type Mission } from '../types';
 type Props = {
+  selectedIndex: number;
+  onSelect: (index: number) => void;
+  onReorder: (from: number, to: number) => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  busy: boolean;
+  source: 'demo' | 'local';
   mission: Mission;
   missions: Mission[];
   setMission: Dispatch<SetStateAction<Mission>>;
@@ -16,11 +28,20 @@ type Props = {
   ) => void;
   addPoint: () => void;
   saveMission: () => Promise<void>;
-  uploadMission: () => Promise<void>;
+  uploadMission: (approved: Mission) => Promise<void>;
   onImport: () => void;
   setNotice: (message: string) => void;
 };
 export function MissionEditor({
+  selectedIndex,
+  onSelect,
+  onReorder,
+  undo,
+  redo,
+  canUndo,
+  canRedo,
+  busy,
+  source,
   mission,
   missions,
   setMission,
@@ -33,6 +54,21 @@ export function MissionEditor({
   onImport,
   setNotice,
 }: Props) {
+  const [review, setReview] = useState<Mission | null>(null);
+  const list = useRef<HTMLDivElement>(null),
+    rows = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    const container = list.current,
+      row = rows.current[selectedIndex];
+    if (
+      container &&
+      row &&
+      (row.offsetTop < container.scrollTop ||
+        row.offsetTop + row.offsetHeight >
+          container.scrollTop + container.clientHeight)
+    )
+      container.scrollTo({ top: row.offsetTop, behavior: 'smooth' });
+  }, [selectedIndex]);
   return (
     <section className="panel editor">
       <div className="panel-head">
@@ -41,6 +77,25 @@ export function MissionEditor({
           <h2>Rota noktaları</h2>
         </div>
         <span className="count">{mission.waypoints.length} nokta</span>
+      </div>
+      <div className="draft-tools">
+        <button
+          className="secondary small"
+          disabled={!editing || !canUndo}
+          onClick={undo}
+        >
+          <Undo2 size={15} />
+          Geri al
+        </button>
+        <button
+          className="secondary small"
+          disabled={!editing || !canRedo}
+          onClick={redo}
+        >
+          <Redo2 size={15} />
+          Yinele
+        </button>
+        <span>Son 100 değişiklik</span>
       </div>
       <div className="route-summary">
         <span>
@@ -84,24 +139,62 @@ export function MissionEditor({
           }
         />
       </label>
-      <div className="waypoint-list">
+      <div className="waypoint-list" ref={list}>
         {mission.waypoints.map((point, index) => (
-          <div className="waypoint-row" key={index}>
+          <div
+            className={
+              'waypoint-row ' + (selectedIndex === index ? 'selected' : '')
+            }
+            key={index}
+            ref={(node) => {
+              rows.current[index] = node;
+            }}
+            onFocusCapture={() => {
+              if (selectedIndex !== index) onSelect(index);
+            }}
+          >
             <div className="waypoint-title">
-              <span>NOKTA {index + 1}</span>
               <button
-                className="icon-button"
-                aria-label={`Nokta ${index + 1} sil`}
-                disabled={!editing || mission.waypoints.length === 1}
-                onClick={() =>
-                  setMission({
-                    ...mission,
-                    waypoints: mission.waypoints.filter((_, i) => i !== index),
-                  })
-                }
+                className="waypoint-select"
+                aria-label={`Nokta ${index + 1} seç`}
+                aria-pressed={selectedIndex === index}
+                onClick={() => onSelect(index)}
               >
-                <Trash2 size={14} />
+                NOKTA {index + 1}
               </button>
+              <div className="waypoint-controls">
+                <button
+                  className="icon-button"
+                  aria-label={`Nokta ${index + 1} yukarı taşı`}
+                  disabled={!editing || index === 0}
+                  onClick={() => onReorder(index, index - 1)}
+                >
+                  <ArrowUp size={15} />
+                </button>
+                <button
+                  className="icon-button"
+                  aria-label={`Nokta ${index + 1} aşağı taşı`}
+                  disabled={!editing || index === mission.waypoints.length - 1}
+                  onClick={() => onReorder(index, index + 1)}
+                >
+                  <ArrowDown size={15} />
+                </button>
+                <button
+                  className="icon-button"
+                  aria-label={`Nokta ${index + 1} sil`}
+                  disabled={!editing || mission.waypoints.length === 1}
+                  onClick={() =>
+                    setMission({
+                      ...mission,
+                      waypoints: mission.waypoints.filter(
+                        (_, i) => i !== index,
+                      ),
+                    })
+                  }
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
             </div>
             <div className="coordinate-inputs">
               <label>
@@ -168,7 +261,7 @@ export function MissionEditor({
         <button
           className="primary"
           disabled={!editing || !connected}
-          onClick={() => void uploadMission()}
+          onClick={() => setReview(structuredClone(mission))}
         >
           <ArrowUpToLine size={15} />
           Görevi yükle
@@ -212,6 +305,21 @@ export function MissionEditor({
             ))}
           </select>
         </label>
+      )}
+      {review && (
+        <MissionReview
+          mission={review}
+          source={source}
+          connected={connected}
+          editing={editing}
+          busy={busy}
+          matches={JSON.stringify(review) === JSON.stringify(mission)}
+          onClose={() => setReview(null)}
+          onConfirm={async () => {
+            await uploadMission(review);
+            setReview(null);
+          }}
+        />
       )}
     </section>
   );

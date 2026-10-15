@@ -1366,3 +1366,166 @@ footer button {
     max-height: 360px;
   }
 }
+.draft-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  flex-wrap: wrap;
+}
+.draft-tools > span {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 10px;
+}
+.waypoint-list {
+  position: relative;
+}
+.waypoint-row.selected {
+  border-color: #a7edc3;
+  box-shadow: inset 3px 0 #a7edc3;
+  background: #172820;
+}
+.waypoint-select {
+  padding: 6px 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  background: transparent;
+  text-align: left;
+}
+.waypoint-controls {
+  display: flex;
+  gap: 2px;
+}
+.waypoint-pin.selected {
+  background: #d4f7a5 !important;
+  color: #112319 !important;
+  border-color: #f2ffd9 !important;
+  box-shadow:
+    0 0 0 6px #d4f7a54d,
+    0 2px 8px #0008 !important;
+}
+.mission-review {
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid #566d82;
+  border-radius: 12px;
+  width: min(620px, calc(100vw - 28px));
+  padding: 26px;
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+  box-shadow: 0 24px 100px #0009;
+}
+.mission-review::backdrop {
+  background: #050b14c9;
+  backdrop-filter: blur(5px);
+}
+.review-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 18px;
+}
+.review-heading h2 {
+  font-size: 23px;
+  margin-top: 8px;
+}
+.review-mission-name {
+  font-size: 17px;
+  margin: 20px 0 10px;
+}
+.review-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px 0;
+  margin-top: 18px;
+  border-block: 1px solid var(--border);
+}
+.review-facts > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.review-facts strong {
+  display: block;
+  color: var(--text);
+  font:
+    21px 'IBM Plex Mono',
+    monospace;
+  margin-top: 9px;
+}
+.review-route {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+  max-height: 270px;
+  overflow: auto;
+}
+.review-route li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.review-route svg {
+  color: var(--mint);
+  flex-shrink: 0;
+}
+.review-route strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+}
+.review-route small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font:
+    11px 'IBM Plex Mono',
+    monospace;
+}
+.review-number {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid #536d85;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font:
+    11px 'IBM Plex Mono',
+    monospace;
+}
+.review-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+.review-error {
+  border: 1px solid #9f6c56;
+  background: #3b251f;
+  color: #ffd8c5;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .mission-review {
+    padding: 20px;
+  }
+  .review-facts strong {
+    font-size: 18px;
+  }
+  .review-actions > button {
+    flex: 1;
+  }
+  .waypoint-controls .icon-button {
+    min-width: 34px;
+    min-height: 34px;
+  }
+}

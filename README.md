@@ -2,22 +2,26 @@
 
 Plan a mission, fly one virtual UAV, watch telemetry, record the flight, replay it and export a report.
 
-**[Browser demo](https://mertacar-git.github.io/mission-control/)** · **[Portfolio](https://mertacar-git.github.io/portfolio/)** · [Verification evidence](docs/verification/README.md)
+**[Browser demo](https://mertacar-git.github.io/mission-control/)** · **[Portfolio](https://mertacar-git.github.io/portfolio/)** · [Engineering case study](docs/CASE_STUDY.md) · [Verification evidence](docs/verification/README.md)
 
 React + TypeScript + Leaflet + Recharts frontend, FastAPI + SQLite backend, and an app-owned ArduCopter SITL process speaking MAVLink. The interface is Turkish; code and documentation are English.
 
-![Mission workspace and coordinate editor](docs/media/mission-planner.jpg)
+![Mission workspace and coordinate editor](docs/media/mission-planner-v12.png)
 
-[Watch the walkthrough video](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4) — captured SITL replay views and report.
+[Watch the captioned walkthrough](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4) · [Chapters and recording method](docs/media/walkthrough.md).
 
 
-## Operator workspace · UI 1.1
+## Operator workspace · UI 1.2
+
+Move complete waypoints up/down, select the same point on the map and in the editor, and undo/redo the last 100 changes. Upload opens an explicit review of a fixed snapshot, showing source, coordinates, takeoff altitude and final landing. Invalid missions or an unavailable connection block confirmation. Upload still requires full backend readback verification.
+
+The evening review also caught an actual flight-control defect: LOITER obeyed the simulator's low throttle input and descended. Hold now uses **BRAKE**, which does not accept pilot input. The real SITL acceptance test checks sustained altitude retention as well as the observed mode. See the [workflow review](docs/PRODUCT_REVIEW.md) and [case study](docs/CASE_STUDY.md).
 
 The interface uses a map-first workspace with a focused coordinate editor, route distance and explicit preflight readiness. Disconnected planning displays **planned** values; connected operation displays **measured** telemetry. An unavailable reading is never replaced by a planned value. Mission stages account for the different SITL/browser mission indices and never declare successful completion from a disarmed heartbeat alone.
 
 Flight archives support name search and demo/SITL source filtering. Playback shows command and vehicle events without flooding the visible log with telemetry rows; the complete telemetry still remains in the recording. Repeated start actions are disabled while AUTO is observed. Map controls include metric scale and route fitting, including grid-only mode.
 
-Presentation code is separated into editor, archive, readiness, event-log and chart components. The chart library loads on demand; the initial JavaScript bundle is about 355 kB (110 kB gzip), with a separate chart chunk. Frontend verification includes 22 tests, TypeScript compilation and browser checks of planning, controls, archive filters and isolated replay.
+Presentation code is separated into editor, review, archive, readiness, event-log and chart components. The chart library loads on demand; the initial JavaScript bundle is about 363 kB (112 kB gzip), with a separate chart chunk. Frontend verification includes 30 tests, TypeScript compilation and browser checks of planning, controls, archive filters and isolated replay.
 
 ## Two distinct modes
 
@@ -65,9 +69,9 @@ Leave the WSL backend running and open **http://127.0.0.1:8000**. The local fron
 
 ## Workflow
 
-1. Edit coordinates numerically or add/drag route points on the map. Save missions or import/export mission JSON.
-2. Connect, upload and read back the full mission. Editing and upload are locked while armed.
-3. Arm and start. Recording opens automatically on start; stop/save it after landing. Hold uses LOITER, resume uses AUTO, return uses RTL, and landing uses LAND.
+1. Edit coordinates numerically or add/drag route points on the map. Reorder points, undo/redo edits, save missions or import/export mission JSON.
+2. Connect, review the upload snapshot, then confirm and read back the full mission. Editing and upload are locked while armed.
+3. Arm and start. Recording opens automatically on start; stop/save it after landing. Hold uses BRAKE, resume uses AUTO, return uses RTL, and landing uses LAND.
 4. Open **Uçuş kayıtları** and select **Oynat**. Pause, seek and select 0.5×/1×/2×. All live command controls are disabled during replay. Replay does not stop a live vehicle running in the background.
 5. Select **Analiz** for altitude/speed charts, battery change, threshold alerts, observed distance and planned-route deviation. Export versioned JSON or CSV.
 

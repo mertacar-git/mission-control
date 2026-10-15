@@ -206,7 +206,7 @@ class MAVLinkManager:
                     if not self.upload_verified or not self.telemetry.armed: raise RuntimeError('Arm and upload a verified mission before starting.')
                     await self.set_mode('AUTO')
                     await self.command_long(M.MAV_CMD_MISSION_START,[0,0,0,0,0,0,0])
-                elif action=='hold': await self.set_mode('LOITER')
+                elif action=='hold': await self.set_mode('BRAKE')
                 elif action=='resume':
                     if not self.upload_verified or not self.telemetry.armed: raise RuntimeError('There is no active armed mission to resume.')
                     await self.set_mode('AUTO')
@@ -224,7 +224,7 @@ class MAVLinkManager:
                 await self.emit('command',dict(id=identifier,action=action,status='failed',error=str(exc)));raise
 
     async def observe_commands(self):
-        modes={'start':'AUTO','hold':'LOITER','resume':'AUTO','return':'RTL','land':'LAND'}
+        modes={'start':'AUTO','hold':'BRAKE','resume':'AUTO','return':'RTL','land':'LAND'}
         for identifier,observation in tuple(self.observations.items()):
             action=observation['action']
             matched=self.state==ConnectionState.CONNECTED and (self.telemetry.armed is True if action=='arm' else self.telemetry.flight_mode==modes[action])

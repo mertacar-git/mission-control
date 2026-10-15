@@ -67,7 +67,7 @@ async def test_acknowledgment_is_distinct_from_observation_and_expires():
     client=manager();client.telemetry.flight_mode='AUTO'
     client.observations={'one':dict(action='hold',deadline=time.monotonic()+15)}
     await client.observe_commands();assert client.observations and not client.events
-    client.telemetry.flight_mode='LOITER';await client.observe_commands()
+    client.telemetry.flight_mode='BRAKE';await client.observe_commands()
     assert client.events[-1]['payload']['status']=='observed' and not client.observations
     client.observations={'two':dict(action='land',deadline=0)}
     await client.observe_commands()

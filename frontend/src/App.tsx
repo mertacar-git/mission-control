@@ -1,3 +1,4 @@
+import { useMissionDraft, moveWaypoint } from './missionDraft';
 import { parseRecording } from './recording';
 import { MissionEditor } from './components/MissionEditor';
 import { RecordingArchive } from './components/RecordingArchive';
@@ -93,13 +94,36 @@ function stat(label: string, number: string, hint: string) {
   );
 }
 export default function App() {
-  const [mission, setMission] = useState<Mission>(() => {
-    try {
-      return validateMission(readSaved('mc-draft-v1', newMission()));
-    } catch {
-      return newMission();
-    }
-  });
+  const { mission, setMission, undo, redo, canUndo, canRedo } = useMissionDraft(
+    () => {
+      try {
+        return validateMission(readSaved('mc-draft-v1', newMission()));
+      } catch {
+        return newMission();
+      }
+    },
+  );
+  const [selectedWaypoint, setSelectedWaypoint] = useState(0);
+  const [mapFocus, setMapFocus] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  function selectWaypoint(index: number) {
+    setSelectedWaypoint(index);
+    const point = mission.waypoints[index];
+    if (point)
+      setMapFocus({ latitude: point.latitude, longitude: point.longitude });
+  }
+  function reorderWaypoint(from: number, to: number) {
+    if (!editing) return;
+    setMission((previous) => moveWaypoint(previous, from, to));
+    setSelectedWaypoint(to);
+  }
+  useEffect(() => {
+    setSelectedWaypoint((index) =>
+      Math.max(0, Math.min(index, mission.waypoints.length - 1)),
+    );
+  }, [mission.waypoints.length]);
   const [mode, setMode] = useState<'demo' | 'local'>('demo'),
     [page, setPage] = useState<Page>('mission'),
     [status, setStatus] = useState<Status>(initialStatus);
@@ -415,9 +439,11 @@ export default function App() {
       setNotice('Görev kaydedildi.');
     });
   }
-  async function uploadMission() {
-    await perform(async () => {
-      const checked = validateMission(mission);
+  async function uploadMission(approved?: Mission) {
+    setBusy(true);
+    setNotice('');
+    try {
+      const checked = validateMission(approved ?? mission);
       if (mode === 'demo') {
         demo.current.upload(checked);
         refreshDemo();
@@ -430,7 +456,12 @@ export default function App() {
         'Görev yükleme ve geri okuma doğrulandı' +
           (mode === 'demo' ? ' · demo modeli.' : '.'),
       );
-    });
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : String(error));
+      throw error;
+    } finally {
+      setBusy(false);
+    }
   }
   async function startRecording() {
     if (mode === 'demo') {
@@ -580,7 +611,7 @@ export default function App() {
           >
             Kaynak kodu & kurulum ↗
           </a>
-          <span>v1.1 · ArduCopter 4.6.3</span>
+          <span>v1.2 · ArduCopter 4.6.3</span>
         </div>
       </aside>
       <div className="main-area">
@@ -829,6 +860,11 @@ export default function App() {
             >
               <div className="workspace-main">
                 <MapView
+                  selectedIndex={
+                    replay || page !== 'mission' ? null : selectedWaypoint
+                  }
+                  focusPoint={replay ? null : mapFocus}
+                  onSelect={selectWaypoint}
                   mission={route}
                   telemetry={shown}
                   trace={trace}
@@ -921,6 +957,15 @@ export default function App() {
                 )}
                 {page === 'mission' && !replay ? (
                   <MissionEditor
+                    selectedIndex={selectedWaypoint}
+                    onSelect={selectWaypoint}
+                    onReorder={reorderWaypoint}
+                    undo={undo}
+                    redo={redo}
+                    canUndo={canUndo}
+                    canRedo={canRedo}
+                    busy={busy}
+                    source={mode}
                     mission={mission}
                     missions={missions}
                     setMission={setMission}

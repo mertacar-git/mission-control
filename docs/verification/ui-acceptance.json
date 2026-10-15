@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-15",
+  "release": "1.2.0",
+  "frontend_bundle": "index-CiPquTO9.js",
+  "source": "sitl",
+  "simulator_speedup": 1,
+  "session_id": "77357acb-9ce1-471e-894b-78142605b762",
+  "checks": [
+    "waypoint reorder/undo/redo",
+    "map/editor shared selection without insertion",
+    "invalid latitude blocks review confirmation",
+    "review snapshot upload/readback",
+    "arm/start via UI",
+    "BRAKE hold",
+    "SIGSTOP stale/disconnected, commands disabled",
+    "SIGCONT recovery/resume",
+    "route completion/landing/disarm",
+    "archive replay pause/seek/0.5x/2x, live controls disabled",
+    "report and JSON/CSV exports",
+    "390x844 layout, no horizontal overflow, modal fits"
+  ],
+  "hold_connected_min_altitude_m": 9.963,
+  "hold_connected_max_altitude_m": 10.001,
+  "null_altitude_samples": 32,
+  "frontend_tests": 30,
+  "backend_tests": 22,
+  "sitl_scenarios": 5,
+  "note": "UI actions and geometry inspected in browser; API exports saved separately. Earlier LOITER defect retained in hold-regression.json."
+}

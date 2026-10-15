@@ -14,7 +14,8 @@ export function missionStage(
 ): string {
   if (telemetry.connection !== 'connected') return 'Bağlantı bekleniyor';
   if (telemetry.armed !== true) return 'Motorlar kapalı';
-  if (telemetry.flight_mode === 'LOITER') return 'Görev bekletiliyor';
+  if (['LOITER', 'BRAKE'].includes(telemetry.flight_mode ?? ''))
+    return 'Görev bekletiliyor';
   if (telemetry.flight_mode === 'RTL') return 'Eve dönüş';
   if (telemetry.flight_mode === 'LAND') return 'İniş';
   if (telemetry.flight_mode !== 'AUTO') return 'Başlatma için hazır';
