@@ -345,7 +345,8 @@ export default function App() {
               },
             }));
         });
-      if (latest.current.state !== 'closed') void api.renew().catch(() => {});
+      if (latest.current.state !== 'closed')
+        void api.renew().catch(() => api.claim().catch(() => {}));
       if (!ws || ws.readyState === WebSocket.CLOSED) {
         connectSocket();
       }

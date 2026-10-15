@@ -56,6 +56,7 @@ export const api = {
   connect: (speedup = 1) => request<Status>('/connection', 'POST', { speedup }),
   disconnect: () => request<Status>('/connection', 'DELETE'),
   renew: () => request('/control/renew', 'POST'),
+  claim: () => request('/control/claim', 'POST'),
   save: (mission: Mission) => request<Mission>('/missions', 'POST', mission),
   missions: () => request<Mission[]>('/missions'),
   upload: (id: string) =>

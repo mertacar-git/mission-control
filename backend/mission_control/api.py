@@ -28,16 +28,29 @@ class EmulatorRequest(StrictModel):
 
 def create_app(database=None,manager_factory=MAVLinkManager):
     root=Path(__file__).resolve().parents[2]
-    store=Store(database or root/'.runtime/mission-control.sqlite3')
-    manager=manager_factory(store)
-    scenarios=ScenarioRunner(manager,store)
-    emulator=Emulator(store)
+    resources={}
+    def initialize():
+        if not resources:
+            database_store=Store(database or root/'.runtime/mission-control.sqlite3')
+            vehicle=manager_factory(database_store)
+            resources.update(store=database_store,manager=vehicle,
+                scenarios=ScenarioRunner(vehicle,database_store),emulator=Emulator(database_store))
+    class Resource:
+        def __init__(self,name):object.__setattr__(self,'name',name)
+        def __getattr__(self,key):
+            initialize();return getattr(resources[self.name],key)
+        def __setattr__(self,key,value):
+            initialize();setattr(resources[self.name],key,value)
+    store,manager,scenarios,emulator=(Resource(name) for name in ('store','manager','scenarios','emulator'))
     @asynccontextmanager
     async def lifespan(app):
-        yield
-        await emulator.stop()
-        await scenarios.close()
-        await manager.disconnect();store.close()
+        initialize()
+        try:yield
+        finally:
+            await emulator.stop()
+            await scenarios.close()
+            await manager.disconnect();store.close()
+            resources.clear()
     app=FastAPI(title='Mission Control',version='1.7.0',lifespan=lifespan)
     app.state.manager=manager;app.state.store=store
     origins=['http://localhost:5173','http://127.0.0.1:5173','http://localhost:8000','http://127.0.0.1:8000']
@@ -90,6 +103,12 @@ def create_app(database=None,manager_factory=MAVLinkManager):
         try: manager.require_control(x_control_session)
         except PermissionError as exc: raise translate(exc)
         return dict(status='renewed')
+    @app.post('/api/v1/control/claim')
+    def claim(x_control_session:str=Header(...)):
+        if scenarios.active:raise HTTPException(409,'An automatic experiment owns control.')
+        try:manager.claim(x_control_session)
+        except PermissionError as exc:raise translate(exc)
+        return dict(status='claimed',**manager.status())
     @app.get('/api/v1/missions')
     def missions(): return store.missions()
     @app.get('/api/v1/scenarios')
