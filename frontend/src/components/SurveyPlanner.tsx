@@ -1,4 +1,5 @@
 import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
+import { RouteComparison } from './RouteComparison';
 import {
   defaultPlanning,
   examplePlanning,
@@ -24,6 +25,7 @@ export function SurveyPlanner({
   editing,
   onFocus,
   onPreview,
+  local = false,
 }: {
   mission: Mission;
   setMission: Dispatch<SetStateAction<Mission>>;
@@ -32,10 +34,12 @@ export function SurveyPlanner({
   editing: boolean;
   onFocus: (p: Coordinate) => void;
   onPreview: (points: Waypoint[] | null) => void;
+  local?: boolean;
 }) {
   const [preview, setPreview] = useState<{
       signature: string;
       result: SurveyPreview;
+      heading: number;
     } | null>(null),
     [notice, setNotice] = useState('');
   const p = mission.planning,
@@ -66,7 +70,7 @@ export function SurveyPlanner({
           <span className="eyebrow">ALAN GÖREVİ / PLANLAMA KONTROLÜ</span>
           <h2>Alan tarama</h2>
         </div>
-        <span className="recording-source">v1.3</span>
+        <span className="recording-source">Alan + rota</span>
       </div>
       {!p ? (
         <>
@@ -227,7 +231,7 @@ export function SurveyPlanner({
               onClick={() => {
                 try {
                   const result = generateSurvey(mission);
-                  setPreview({ signature, result });
+                  setPreview({ signature, result, heading: p.heading_deg });
                   setNotice('');
                 } catch (e) {
                   setPreview(null);
@@ -265,6 +269,14 @@ export function SurveyPlanner({
               Alan planlamasını kaldır
             </button>
           </div>
+          <RouteComparison
+            mission={mission}
+            editing={editing}
+            local={local}
+            onSelect={(result, heading) =>
+              setPreview({ signature, result, heading })
+            }
+          />
           {preview && !current && (
             <p className="inline-note" role="status">
               Görev veya ayarlar değişti; önizlemeyi yeniden üretin. Uygulanmış
@@ -290,6 +302,8 @@ export function SurveyPlanner({
                     ...m,
                     takeoff_altitude_m: p.altitude_m,
                     waypoints: current.waypoints,
+                    generation: current.generation,
+                    planning: { ...p, heading_deg: preview!.heading },
                   }));
                   setLayer('waypoints');
                   setPreview(null);

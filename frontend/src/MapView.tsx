@@ -50,7 +50,11 @@ function Fit({ mission }: { mission: Mission }) {
         .filter(validCoordinate)
         .map((p) => [p.latitude, p.longitude] as [number, number]),
     ];
-    map.fitBounds(L.latLngBounds(points), { padding: [45, 45], maxZoom: 20 });
+    map.fitBounds(L.latLngBounds(points), {
+      padding: [45, 45],
+      maxZoom: 20,
+      animate: false,
+    });
   }, [
     map,
     mission.waypoints,
@@ -95,7 +99,7 @@ function MapTools({ mission }: { mission: Mission }) {
                 .filter(validCoordinate)
                 .map((p) => [p.latitude, p.longitude] as [number, number]),
             ]),
-            { padding: [45, 45], maxZoom: 20 },
+            { padding: [45, 45], maxZoom: 20, animate: false },
           );
         }}
       >
@@ -225,6 +229,9 @@ export function MapView({
         </div>
       )}
       <MapContainer
+        zoomAnimation={false}
+        markerZoomAnimation={false}
+        fadeAnimation={false}
         center={[HOME.latitude, HOME.longitude]}
         zoom={16}
         className="map"

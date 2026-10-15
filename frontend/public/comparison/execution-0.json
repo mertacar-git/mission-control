@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "source": "sitl",
+  "mission_id": "comparison-0",
+  "corridor_half_width_m": 5,
+  "provenance_valid": true,
+  "legs": [
+    {
+      "index": 0,
+      "kind": "connector",
+      "planned_m": 13.46291201774651,
+      "samples": 12,
+      "observed_s": 5.616769370999464,
+      "max_deviation_m": 0.38875978997073385,
+      "mean_speed_ms": 2.0597637323512537,
+      "observed_corridor_m": 11.632903793389877,
+      "turn_peak_deviation_m": 0.7107243677545352,
+      "turn_speed_change_ms": -0.10024115887676333
+    },
+    {
+      "index": 1,
+      "kind": "survey",
+      "planned_m": 44.99999999975744,
+      "samples": 20,
+      "observed_s": 9.701031753999814,
+      "max_deviation_m": 0.7107243677545352,
+      "mean_speed_ms": 4.250385098218777,
+      "observed_corridor_m": 42.431984008043074,
+      "turn_peak_deviation_m": 0.24584319228173435,
+      "turn_speed_change_ms": 0.09651925448181631
+    },
+    {
+      "index": 2,
+      "kind": "connector",
+      "planned_m": 32.499999999932356,
+      "samples": 17,
+      "observed_s": 8.17594288500004,
+      "max_deviation_m": 0.269917257747003,
+      "mean_speed_ms": 3.6198062493557566,
+      "observed_corridor_m": 30.807313703822672,
+      "turn_peak_deviation_m": 0.3407369693096065,
+      "turn_speed_change_ms": -0.6005096175690791
+    },
+    {
+      "index": 3,
+      "kind": "connector",
+      "planned_m": 2.4999999998039577,
+      "samples": 4,
+      "observed_s": 1.529495952000616,
+      "max_deviation_m": 0.3407369693096065,
+      "mean_speed_ms": 0.9671508139685947,
+      "observed_corridor_m": 1.5858883232180288,
+      "turn_peak_deviation_m": 0.3407369693096065,
+      "turn_speed_change_ms": -0.15540507258897607
+    },
+    {
+      "index": 4,
+      "kind": "survey",
+      "planned_m": 14.999999999919147,
+      "samples": 10,
+      "observed_s": 4.5951755369997045,
+      "max_deviation_m": 0.7103520820028031,
+      "mean_speed_ms": 2.675880241809973,
+      "observed_corridor_m": 12.843014027414624,
+      "turn_peak_deviation_m": 0.8599726339377964,
+      "turn_speed_change_ms": -0.13157405969497038
+    },
+    {
+      "index": 5,
+      "kind": "connector",
+      "planned_m": 15.000000000016179,
+      "samples": 9,
+      "observed_s": 4.082129191000604,
+      "max_deviation_m": 0.8599726339377964,
+      "mean_speed_ms": 3.1417746068903183,
+      "observed_corridor_m": 12.468942056395877,
+      "turn_peak_deviation_m": 0.8266141563446858,
+      "turn_speed_change_ms": -0.21289954555623636
+    },
+    {
+      "index": 6,
+      "kind": "survey",
+      "planned_m": 14.999999999919147,
+      "samples": 12,
+      "observed_s": 5.61792542799958,
+      "max_deviation_m": 0.2767722555474421,
+      "mean_speed_ms": 2.2742870568222933,
+      "observed_corridor_m": 12.861285709637087,
+      "turn_peak_deviation_m": null,
+      "turn_speed_change_ms": null
+    }
+  ],
+  "observed_survey_fraction": 0.9084837832728274
+}

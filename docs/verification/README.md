@@ -1,3 +1,16 @@
+# v1.7 route and computer-emulator evidence
+
+- `comparison/candidates.json`: twelve deterministic heading candidates and generated mission provenance, independently validated by Python tests.
+- `comparison/flight-0.json` and `flight-90.json`: actual Copter-4.6.3 flights at 1× and WPNAV_SPEED=500 cm/s; paired `execution-*.json` files are independent Python reports.
+- `emulator/results.json`: actual separate-process loopback UDP nominal/mixed/sensor-gap/restart tests and explicit cancellation cleanup. Each recording retains raw datagrams and receiver decisions. This is synthetic software telemetry, not SITL or hardware-sensor evidence.
+- `emulator/ui-run.json`: a mixed-profile run started through the browser UI; raw recording retained.
+- `prototype/golden-vectors.json` (repository root): fixed packet used with the portable C++ decoder.
+- Current unit suite: **69 frontend and 58 backend tests**. The existing seven SITL scenarios and three fault experiments remain in acceptance; the two new paired flights bring the SITL workflow to twelve, plus five emulator subprocess/UDP checks.
+
+[Method](../ROUTE_EXPERIMENTS.md) · [Protocol](../COMPUTER_EMULATOR.md) · [Release](../RELEASE_V17.md).
+
+---
+
 # v1.4 fault experiment evidence
 
 `scenarios/scenario-runs.json` contains three real Copter-4.6.3 experiments and links by session identity to `heartbeat_loss.json`, `low_battery.json` and `gps_loss.json` in the same directory. Identical fixtures are published under `frontend/public/verification` for browser inspection. These are actual app-owned SITL runs at 4×, not synthetic demo flights. Each check includes observed telemetry or the explicit command-rejection result.

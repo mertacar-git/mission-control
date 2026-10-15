@@ -22,6 +22,7 @@ class Store:
                 CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY AUTOINCREMENT, session_id TEXT NOT NULL, type TEXT NOT NULL, received_utc TEXT NOT NULL, payload TEXT NOT NULL);
                 CREATE INDEX IF NOT EXISTS events_session_idx ON events(session_id,id);
                 CREATE TABLE IF NOT EXISTS scenario_runs(id TEXT PRIMARY KEY, body TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS emulator_runs(id TEXT PRIMARY KEY, body TEXT NOT NULL);
             ''')
         # Interrupted recordings are closed at last persisted event, never labeled complete.
         with self.db:
@@ -31,6 +32,21 @@ class Store:
             if run['status']=='running':
                 run.update(status='interrupted',ended_utc=utc_now(),error='Backend restarted before completion; result is not a pass.')
                 self.save_scenario(run)
+        for run in self.emulator_runs():
+            if run['status']=='running':
+                run.update(status='interrupted',ended_utc=utc_now(),error='Backend restarted before completion.')
+                self.save_emulator(run)
+
+    def save_emulator(self,run):
+        with self.lock,self.db:self.db.execute('INSERT OR REPLACE INTO emulator_runs VALUES(?,?)',(run['id'],json.dumps(run,allow_nan=False)))
+
+    def emulator_runs(self):
+        with self.lock:return [json.loads(r['body']) for r in self.db.execute('SELECT body FROM emulator_runs ORDER BY rowid DESC LIMIT 100')]
+
+    def emulator_run(self,identifier):
+        with self.lock:row=self.db.execute('SELECT body FROM emulator_runs WHERE id=?',(identifier,)).fetchone()
+        if row is None:raise KeyError(identifier)
+        return json.loads(row['body'])
 
     def save_scenario(self, run):
         with self.lock, self.db:

@@ -1,10 +1,37 @@
-import { lazy, Suspense } from 'react';
+import { Component, lazy, Suspense, type ReactNode } from 'react';
 import { Activity } from 'lucide-react';
 import type { Telemetry } from '../types';
 
 const Plot = lazy(() =>
   import('./FlightChart').then((module) => ({ default: module.FlightChart })),
 );
+
+// A deployment may remove an old lazy chunk while an existing tab remains open.
+class ChartBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? (
+      <div className="chart">
+        <div className="chart-empty" role="alert">
+          <p>
+            Grafik açılamadı. Güncel sürümü yüklemek için sayfayı yenileyin.
+          </p>
+          <button className="secondary small" onClick={() => location.reload()}>
+            Sayfayı yenile
+          </button>
+        </div>
+      </div>
+    ) : (
+      this.props.children
+    );
+  }
+}
 
 export function FlightChart({
   rows,
@@ -23,16 +50,18 @@ export function FlightChart({
       </div>
     );
   return (
-    <Suspense
-      fallback={
-        <div className="chart">
-          <div className="chart-empty" role="status">
-            Grafik hazırlanıyor…
+    <ChartBoundary>
+      <Suspense
+        fallback={
+          <div className="chart">
+            <div className="chart-empty" role="status">
+              Grafik hazırlanıyor…
+            </div>
           </div>
-        </div>
-      }
-    >
-      <Plot rows={rows} cursor={cursor} />
-    </Suspense>
+        }
+      >
+        <Plot rows={rows} cursor={cursor} />
+      </Suspense>
+    </ChartBoundary>
   );
 }

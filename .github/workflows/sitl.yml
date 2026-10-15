@@ -23,6 +23,12 @@ jobs:
       - name: Execute replayable fault experiments
         working-directory: backend
         run: /opt/mission-control/venv/bin/python -m tests.scenario_runner
+      - name: Fly paired route headings at real time
+        working-directory: backend
+        run: /opt/mission-control/venv/bin/python -m tests.comparison_runner
+      - name: Verify owned subprocess UDP emulator
+        working-directory: backend
+        run: /opt/mission-control/venv/bin/python -m tests.emulator_runner
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -31,3 +37,4 @@ jobs:
             docs/verification
             backend/.runtime/integration/**/sitl.log
             backend/.runtime/scenarios/**/sitl.log
+            backend/.runtime/comparison/**/sitl.log

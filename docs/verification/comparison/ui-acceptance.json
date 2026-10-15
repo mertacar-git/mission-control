@@ -1,0 +1,25 @@
+{
+  "release": "1.7.0",
+  "browser": "Opera Chromium extension",
+  "checks": {
+    "twelve_candidates_computed_in_worker": true,
+    "recommendation_heading_deg": 15,
+    "local_backend_validation_of_candidates": true,
+    "a_b_overlay_headings_deg": [0,90],
+    "preview_kept_existing_waypoint_coordinates": true,
+    "apply_changed_heading_to_90": true,
+    "undo_restored_original_waypoint_coordinates": true,
+    "paired_real_sitl_records_loaded_in_analysis": true,
+    "observed_corridor_percent_displayed": [90.8,90.9],
+    "browser_started_separate_udp_emulator": true,
+    "emulator_mixed_profile_counters": {"received":22,"accepted":16,"out_of_order":1,"duplicates":3,"corrupt":2,"sequence_missing":8},
+    "emulator_start_disabled_in_emulator_replay": true,
+    "emulator_seek_to_end": true,
+    "mobile": {"viewport_width":390,"viewport_height":844,"content_width":375,"route_comparison":true,"execution_comparison":true,"emulator_replay":true},
+    "viewport_reset": true,
+    "missing_chart_chunk_shows_recovery_instead_of_blank_page": true,
+    "restored_chart_chunk_and_reload_recovers": true
+  },
+  "screenshots": ["../../media/route-comparison-v17.png","../../media/flight-comparison-v17.png","../../media/emulator-v17.png","../../media/flight-comparison-mobile-v17.png","../../media/emulator-mobile-v17.png"],
+  "limits": "Browser download destination is not asserted. Actual report/packet data and export generators were verified separately. No physical board or sensor was used."
+}

@@ -1,5 +1,13 @@
 # Mission Control: from route editing to inspectable flight evidence
 
+## v1.7: compare hypotheses against execution, then exercise the telemetry boundary
+
+Heading comparison evaluates a bounded deterministic candidate set with explicit speed/turn assumptions. The worker remains cancellable and local candidates pass independent Shapely validation. Application is an explicit undoable step; an estimate is never presented as measured flight time.
+
+Two actual 1× SITL flights over the same L-shaped area demonstrate frozen-mission execution analysis. Mission indices disambiguate nearby parallel lines. Reports expose observed intervals, missing data, turn windows and a sample-based corridor-length lower bound instead of claiming complete camera coverage. The browser and Python independently reproduce execution reports from actual recordings. [Method and evidence](ROUTE_EXPERIMENTS.md).
+
+A separate Python sender/UDP receiver then tests the binary telemetry boundary: CRC, missing/repeated/late packets, unavailable sensors and a real sender-process restart. These recordings have source `emulator` and an independent store/replay path. A C++ decoder consumes the same golden packet as Python, preparing a future board transport adapter without claiming unbuilt hardware validation. [Protocol and handoff](COMPUTER_EMULATOR.md).
+
 ## v1.4: falsifiable experiments and incident context
 
 The laboratory exposes three fixed, reproducible fault experiments instead of generic control knobs. Real Copter-4.6.3 runs verify receiver staleness/recovery, configured battery RTL and GPS-loss EKF LAND. A parameter ACK is never a behavioral pass: voltage, fix type, mode and disarm are checked separately. Reports persist failure reasons and interrupted runs in SQLite. Cancelling waits for owned-process cleanup; a subsequent experiment starts with a fresh isolated EEPROM.

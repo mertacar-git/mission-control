@@ -1,0 +1,18 @@
+[
+  {
+    "heading_deg": 0,
+    "status": "passed",
+    "session_id": "daaa2770-04cd-4f70-b041-8fedd32e1ea8",
+    "speedup": 1,
+    "wpnav_speed_cms": 500,
+    "firmware_revision": "92b0cd788ec29406f26c6f9c31d5ceedbd1cc538"
+  },
+  {
+    "heading_deg": 90,
+    "status": "passed",
+    "session_id": "bdeedd15-7087-429e-9762-90bc9509cf5c",
+    "speedup": 1,
+    "wpnav_speed_cms": 500,
+    "firmware_revision": "92b0cd788ec29406f26c6f9c31d5ceedbd1cc538"
+  }
+]

@@ -27,6 +27,7 @@ class Waypoint(Coordinate):
     altitude_m: float = Field(ge=5, le=120)
 
 class Mission(StrictModel):
+    generation: 'Generation | None' = None
     schema_version: Literal[1,2] = 2
     planning: Planning | None = None
     id: str = Field(default_factory=lambda: str(uuid4()), min_length=1, max_length=80)
@@ -36,10 +37,23 @@ class Mission(StrictModel):
 
     @model_validator(mode='after')
     def migrate(self):
-        if self.schema_version==1 and self.planning is not None:
+        if self.schema_version==1 and (self.planning is not None or self.generation is not None):
             raise ValueError('Version 1 cannot contain planning metadata.')
         self.schema_version=2
         return self
+
+class Generation(StrictModel):
+    waypoints: list[Waypoint] = Field(min_length=1,max_length=50)
+    takeoff_altitude_m: float = Field(ge=5,le=120)
+    survey_leg_indices: list[int] = Field(max_length=50)
+
+    @model_validator(mode='after')
+    def indices(self):
+        if len(set(self.survey_leg_indices))!=len(self.survey_leg_indices) or any(i<1 or i>=len(self.waypoints) for i in self.survey_leg_indices):
+            raise ValueError('Survey legs must be unique waypoint-to-waypoint segment indices.')
+        return self
+
+Mission.model_rebuild()
 
 class ConnectionState(StrEnum):
     CLOSED = 'closed'

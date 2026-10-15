@@ -23,6 +23,11 @@ export interface Waypoint extends Coordinate {
   altitude_m: number;
 }
 export interface Mission {
+  generation?: {
+    waypoints: Waypoint[];
+    takeoff_altitude_m: number;
+    survey_leg_indices: number[];
+  } | null;
   schema_version: 1 | 2;
   planning?: Planning | null;
   id: string;
@@ -205,10 +210,39 @@ export function validateMission(input: unknown): Mission {
     )
       throw Error('Tarama ayarları veya görev sınırları geçersiz.');
   }
+  if (m.generation != null) {
+    const g = m.generation;
+    if (
+      m.schema_version !== 2 ||
+      !g ||
+      !Array.isArray(g.waypoints) ||
+      g.waypoints.length < 1 ||
+      g.waypoints.length > 50 ||
+      !Number.isFinite(g.takeoff_altitude_m) ||
+      g.takeoff_altitude_m < 5 ||
+      g.takeoff_altitude_m > 120 ||
+      g.waypoints.some(
+        (w) =>
+          !w ||
+          ![w.latitude, w.longitude, w.altitude_m].every(Number.isFinite) ||
+          Math.abs(w.latitude) > 90 ||
+          Math.abs(w.longitude) > 180 ||
+          w.altitude_m < 5 ||
+          w.altitude_m > 120,
+      ) ||
+      !Array.isArray(g.survey_leg_indices) ||
+      new Set(g.survey_leg_indices).size !== g.survey_leg_indices.length ||
+      g.survey_leg_indices.some(
+        (i) => !Number.isInteger(i) || i < 1 || i >= g.waypoints.length,
+      )
+    )
+      throw Error('Tarama üretim bilgisi geçersiz.');
+  }
   return {
     ...structuredClone(m),
     schema_version: 2,
     planning: m.planning ? structuredClone(m.planning) : null,
+    generation: m.generation ? structuredClone(m.generation) : null,
   };
 }
 
@@ -216,7 +250,12 @@ export function validateMission(input: unknown): Mission {
 // preserving array order while normalizing legacy version/nullable metadata.
 export function missionFingerprint(mission: Mission): string {
   return JSON.stringify(
-    { ...mission, schema_version: 2, planning: mission.planning ?? null },
+    {
+      ...mission,
+      schema_version: 2,
+      planning: mission.planning ?? null,
+      generation: mission.generation ?? null,
+    },
     (_key, value) =>
       value && typeof value === 'object' && !Array.isArray(value)
         ? Object.fromEntries(

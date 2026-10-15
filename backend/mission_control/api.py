@@ -5,12 +5,14 @@ from fastapi import FastAPI,HTTPException,Header,Request,WebSocket,WebSocketDisc
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response,FileResponse
 from pydantic import BaseModel,Field
-from .models import Mission,ConnectionRequest,CommandRequest
+from .models import Mission,ConnectionRequest,CommandRequest,StrictModel
 from .store import Store
 from .mavlink import MAVLinkManager
 from .analysis import report
 from .planning import validate_planning
 from .scenarios import ScenarioRunner
+from .execution import execution_report
+from .emulator import Emulator
 from typing import Literal
 
 class ScenarioRequest(BaseModel):
@@ -19,17 +21,24 @@ class ScenarioRequest(BaseModel):
 class RecordingRequest(BaseModel):
     name: str = Field(default='SITL uçuş kaydı',min_length=1,max_length=100)
 
+class EmulatorRequest(StrictModel):
+    profile: Literal['nominal','loss','corruption','reorder','mixed','sensor_gap','restart']='mixed'
+    seed: int = Field(default=42,ge=0,le=2147483647,strict=True)
+    duration_s: int = Field(default=10,ge=5,le=60,strict=True)
+
 def create_app(database=None,manager_factory=MAVLinkManager):
     root=Path(__file__).resolve().parents[2]
     store=Store(database or root/'.runtime/mission-control.sqlite3')
     manager=manager_factory(store)
     scenarios=ScenarioRunner(manager,store)
+    emulator=Emulator(store)
     @asynccontextmanager
     async def lifespan(app):
         yield
+        await emulator.stop()
         await scenarios.close()
         await manager.disconnect();store.close()
-    app=FastAPI(title='Mission Control',version='1.4.0',lifespan=lifespan)
+    app=FastAPI(title='Mission Control',version='1.7.0',lifespan=lifespan)
     app.state.manager=manager;app.state.store=store
     origins=['http://localhost:5173','http://127.0.0.1:5173','http://localhost:8000','http://127.0.0.1:8000']
     app.add_middleware(CORSMiddleware,allow_origins=origins,allow_methods=['GET','POST','DELETE'],allow_headers=['Content-Type','X-Control-Session'])
@@ -46,7 +55,24 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     def translate(exc):
         return HTTPException(409,str(exc))
     @app.get('/api/v1/health')
-    def health(): return dict(status='ok',version='1.4.0',transport='owned-sitl-only')
+    def health(): return dict(status='ok',version='1.7.0',transport='owned-sitl-only')
+    @app.get('/api/v1/emulator')
+    def emulator_status():return emulator.status()
+    @app.post('/api/v1/emulator')
+    async def start_emulator(body:EmulatorRequest,x_control_session:str=Header(...)):
+        if not 1<=len(x_control_session)<=100:raise HTTPException(422,'Invalid session token.')
+        try:return emulator.start(x_control_session,body.profile,body.seed,body.duration_s)
+        except (RuntimeError,ValueError) as exc:raise translate(exc)
+    @app.post('/api/v1/emulator/stop')
+    async def stop_emulator(x_control_session:str=Header(...)):
+        if emulator.owner!=x_control_session:raise HTTPException(409,'Another session owns the emulator.')
+        await emulator.stop();return emulator.status()
+    @app.get('/api/v1/emulator/runs')
+    def emulator_runs():return [{k:v for k,v in run.items() if k!='packets'} for run in store.emulator_runs()]
+    @app.get('/api/v1/emulator/runs/{identifier}')
+    def emulator_run(identifier:str):
+        try:return store.emulator_run(identifier)
+        except KeyError:raise HTTPException(404,'Emulator recording not found.')
     @app.get('/api/v1/status')
     def status(): return dict(**manager.status(),scenario_active=scenarios.active)
     @app.post('/api/v1/connection')
@@ -128,6 +154,10 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     def csv(identifier:str):
         session(identifier)
         return Response(store.csv(identifier),media_type='text/csv',headers={'Content-Disposition':'attachment; filename="flight.csv"'})
+    @app.get('/api/v1/recordings/{identifier}/execution')
+    def execution(identifier:str,corridor:float=5):
+        try:return execution_report(session(identifier),corridor)
+        except ValueError as exc:raise HTTPException(422,str(exc))
     @app.get('/api/v1/recordings/{identifier}/report')
     def report_session(identifier:str,max_altitude:float=80,min_battery:float=20):
         try: return report(session(identifier),max_altitude,min_battery)

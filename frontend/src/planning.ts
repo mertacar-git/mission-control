@@ -245,6 +245,8 @@ function shortestPath(start: XY, end: XY, ps: XY[]): XY[] {
   return path;
 }
 export interface SurveyPreview {
+  generation: NonNullable<Mission['generation']>;
+  survey_distance_m: number;
   waypoints: Waypoint[];
   area_m2: number;
   line_count: number;
@@ -304,32 +306,50 @@ export function generateSurvey(m: Mission): SurveyPreview {
     throw Error(
       'Rota 50 nokta sınırını aşıyor. Hat aralığını büyütün veya alanı küçültün.',
     );
-  const candidates: XY[][] = [];
+  const candidates: {
+    points: XY[];
+    survey: [XY, XY][];
+    surveyLegs: number[];
+  }[] = [];
   for (const reverse of [false, true])
     for (const flip of [false, true]) {
       const rows = reverse ? [...lines].reverse() : lines;
       let route: XY[] = [];
+      const surveyParts: [XY, XY][] = [];
+      const tags: boolean[] = [];
       rows.forEach((parts, i) => {
         const backwards = (i % 2 === 1) !== flip;
         const ordered = backwards
           ? [...parts].reverse().map(([a, b]) => [b, a] as [XY, XY])
           : parts;
         ordered.forEach(([a, b]) => {
+          surveyParts.push([a, b]);
           const path = shortestPath(
             route.at(-1) ?? [0, 0],
             a,
             route.length ? survey : fence,
           );
           route.push(...path.slice(1), b);
+          tags.push(...path.slice(1).map(() => false), true);
         });
       });
-      route = route.filter((v, i) => i === 0 || norm(route[i - 1], v) > 1e-6);
-      candidates.push(route);
+      const kept = route.flatMap((v, i) =>
+        i === 0 || norm(route[i - 1], v) > 1e-6 ? [i] : [],
+      );
+      route = kept.map((i) => route[i]);
+      candidates.push({
+        points: route,
+        survey: surveyParts,
+        surveyLegs: kept.flatMap((original, i) =>
+          i > 0 && tags[original] ? [i] : [],
+        ),
+      });
     }
   const length = (r: XY[]) =>
     r.reduce((s, v, i) => s + norm(i ? r[i - 1] : [0, 0], v), 0);
-  candidates.sort((a, b) => length(a) - length(b));
-  const chosen = candidates[0];
+  candidates.sort((a, b) => length(a.points) - length(b.points));
+  const selected = candidates[0],
+    chosen = selected.points;
   if (chosen.length > 50)
     throw Error(
       `Rota ${chosen.length} nokta gerektiriyor (sınır 50). Hat aralığını büyütün veya alanı küçültün.`,
@@ -345,6 +365,15 @@ export function generateSurvey(m: Mission): SurveyPreview {
   });
   if (!result.valid) throw Error(result.issues.map((i) => i.message).join(' '));
   return {
+    generation: {
+      waypoints: structuredClone(waypoints),
+      takeoff_altitude_m: p.altitude_m,
+      survey_leg_indices: selected.surveyLegs,
+    },
+    survey_distance_m: selected.survey.reduce(
+      (sum, [a, b]) => sum + norm(a, b),
+      0,
+    ),
     waypoints,
     area_m2: areaM2(survey),
     line_count: lines.length,

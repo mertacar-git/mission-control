@@ -1,0 +1,3214 @@
+{
+  "schema_version": 1,
+  "assumptions": {
+    "speed_ms": 5,
+    "turn_delay_s": 2
+  },
+  "candidates": [
+    {
+      "heading_deg": 0,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978548970136487,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978548970136487,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97872773430027,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97872773430027,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978906498464056,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978906498464056,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            4,
+            6
+          ]
+        },
+        "survey_distance_m": 74.99999999959573,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978548970136487,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978548970136487,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97872773430027,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97872773430027,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978906498464056,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978906498464056,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 3,
+        "segment_count": 3,
+        "distance_m": 138.46291201709474
+      },
+      "error": null,
+      "turn_count": 6,
+      "turn_angles_deg": [
+        68.19859051361894,
+        157.3801350515046,
+        67.38013505150457,
+        90,
+        90,
+        90
+      ],
+      "connector_distance_m": 63.46291201749901,
+      "estimated_duration_s": 39.692582403418946,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 0,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-0",
+        "name": "L survey 0 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978548970136487,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978548970136487,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97872773430027,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97872773430027,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978906498464056,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978906498464056,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978548970136487,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978548970136487,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97872773430027,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97872773430027,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978906498464056,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978906498464056,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            4,
+            6
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 15,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00833048813809,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978572919993148,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97870378444361,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97865588473029,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978882548607395,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978930448320718,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            4,
+            6
+          ]
+        },
+        "survey_distance_m": 67.80063155387217,
+        "waypoints": [
+          {
+            "latitude": 41.00833048813809,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978572919993148,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97870378444361,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97865588473029,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978882548607395,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978930448320718,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 3,
+        "segment_count": 3,
+        "distance_m": 134.43845978129391
+      },
+      "error": null,
+      "turn_count": 5,
+      "turn_angles_deg": [
+        4.013899378926553,
+        145.72632141033534,
+        70.7263214104132,
+        104.99999999936705,
+        104.99999999936705,
+        74.99999999957055
+      ],
+      "connector_distance_m": 66.63782822742175,
+      "estimated_duration_s": 36.887691956258784,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 15,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-15",
+        "name": "L survey 15 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.00833048813809,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978572919993148,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97870378444361,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97865588473029,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978882548607395,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978930448320718,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00833048813809,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978572919993148,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97870378444361,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97865588473029,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978882548607395,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978930448320718,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            4,
+            6
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 30,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.008511454984976,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978565328192794,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00854657749177,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97846717985495,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978678660131347,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97878186966943,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899334994583,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97889014040775,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            7
+          ]
+        },
+        "survey_distance_m": 91.11215932169685,
+        "waypoints": [
+          {
+            "latitude": 41.008511454984976,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978565328192794,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00854657749177,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97846717985495,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978678660131347,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97878186966943,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97899334994583,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97889014040775,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 4,
+        "segment_count": 4,
+        "distance_m": 177.56894696799776
+      },
+      "error": null,
+      "turn_count": 7,
+      "turn_angles_deg": [
+        21.784730360411547,
+        105.84945803396991,
+        74.15054196598479,
+        119.9999999999348,
+        59.99999999992977,
+        59.99999999992977,
+        120.00000000007024
+      ],
+      "connector_distance_m": 86.45678764630091,
+      "estimated_duration_s": 49.51378939359955,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 30,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-30",
+        "name": "L survey 30 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.008511454984976,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978565328192794,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00854657749177,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97846717985495,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978678660131347,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97878186966943,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97899334994583,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97889014040775,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.008511454984976,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978565328192794,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00854657749177,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97846717985495,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978678660131347,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97878186966943,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899334994583,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97889014040775,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            7
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 45,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00854848712229,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.97859366117743,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00852600408215,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00834613976096,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978593661177435,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97877242534122,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00834613976097,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97886180742311,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            7
+          ]
+        },
+        "survey_distance_m": 81.3172798365816,
+        "waypoints": [
+          {
+            "latitude": 41.00854848712229,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.97859366117743,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00852600408215,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00834613976096,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978593661177435,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97877242534122,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00834613976097,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97886180742311,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 4,
+        "segment_count": 4,
+        "distance_m": 171.7177606219901
+      },
+      "error": null,
+      "turn_count": 7,
+      "turn_angles_deg": [
+        37.64762063893076,
+        102.52880770840673,
+        77.47119229213178,
+        90.00000000090913,
+        89.99999999824384,
+        56.30993247269049,
+        123.690067525924
+      ],
+      "connector_distance_m": 90.40048078540849,
+      "estimated_duration_s": 48.343552124398016,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 45,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-45",
+        "name": "L survey 45 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.00854848712229,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.97859366117743,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00852600408215,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00834613976096,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978593661177435,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97877242534122,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00834613976097,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97886180742311,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00854848712229,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.97859366117743,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00852600408215,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00834613976096,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978593661177435,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97877242534122,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00834613976097,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97886180742311,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            7
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 60,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978812733254188,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00832475924651,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97875606728491,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00825069497188,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00841028130431,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00851412601856,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978642735346355,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008569867636744,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            7
+          ]
+        },
+        "survey_distance_m": 87.31034446647044,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978812733254188,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00832475924651,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97875606728491,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00825069497188,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00841028130431,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00851412601856,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978642735346355,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008569867636744,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 4,
+        "segment_count": 4,
+        "distance_m": 176.8482548415447
+      },
+      "error": null,
+      "turn_count": 7,
+      "turn_angles_deg": [
+        21.784730359982476,
+        133.06431342967178,
+        46.93568657073529,
+        120.00000000002068,
+        60.00000000018892,
+        77.08553963887549,
+        102.91446036092701
+      ],
+      "connector_distance_m": 89.53791037507426,
+      "estimated_duration_s": 49.36965096830894,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 60,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-60",
+        "name": "L survey 60 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978812733254188,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00832475924651,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97875606728491,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00825069497188,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00841028130431,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00851412601856,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978642735346355,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008569867636744,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978812733254188,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00832475924651,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97875606728491,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00825069497188,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00841028130431,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00851412601856,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978642735346355,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008569867636744,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            7
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 75,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978572919993148,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00833048813809,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00844128912918,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00839309462957,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008564138745164,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00861233324477,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            4,
+            6
+          ]
+        },
+        "survey_distance_m": 78.15339335845934,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978572919993148,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00833048813809,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00844128912918,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00839309462957,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008564138745164,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00861233324477,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 3,
+        "segment_count": 3,
+        "distance_m": 144.94550017688994
+      },
+      "error": null,
+      "turn_count": 5,
+      "turn_angles_deg": [
+        4.013899379325767,
+        152.61361044338886,
+        77.61361044299451,
+        105.00000000106289,
+        105.00000000106289,
+        75.00000000104893
+      ],
+      "connector_distance_m": 66.7921068184306,
+      "estimated_duration_s": 38.98910003537799,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 75,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-75",
+        "name": "L survey 75 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978572919993148,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00833048813809,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00844128912918,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00839309462957,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008564138745164,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00861233324477,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978572919993148,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00833048813809,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00844128912918,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00839309462957,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008564138745164,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00861233324477,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            4,
+            6
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 90,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00831241520074,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00831241520074,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00844731344163,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00844731344163,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008582211682516,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008582211682516,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            4,
+            6
+          ]
+        },
+        "survey_distance_m": 85.00000000048917,
+        "waypoints": [
+          {
+            "latitude": 41.00831241520074,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00831241520074,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00844731344163,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00844731344163,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008582211682516,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008582211682516,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 3,
+        "segment_count": 3,
+        "distance_m": 147.06367829020692
+      },
+      "error": null,
+      "turn_count": 6,
+      "turn_angles_deg": [
+        68.19859051391305,
+        163.30075576598304,
+        73.30075576598304,
+        90,
+        90,
+        90
+      ],
+      "connector_distance_m": 62.06367828971776,
+      "estimated_duration_s": 41.412735658041385,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 90,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-90",
+        "name": "L survey 90 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.00831241520074,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00831241520074,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00844731344163,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00844731344163,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008582211682516,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008582211682516,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00831241520074,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00831241520074,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00844731344163,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00844731344163,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008582211682516,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008582211682516,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            4,
+            6
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 105,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00832044761734,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97883289189523,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008362973067314,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978912342634693,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00842321619182,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008471410691435,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008622373765526,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00857417926591,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            6,
+            8
+          ]
+        },
+        "survey_distance_m": 81.09663413255356,
+        "waypoints": [
+          {
+            "latitude": 41.00832044761734,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97883289189523,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008362973067314,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978912342634693,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00842321619182,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008471410691435,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008622373765526,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00857417926591,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 3,
+        "segment_count": 4,
+        "distance_m": 153.94304295918252
+      },
+      "error": null,
+      "turn_count": 8,
+      "turn_angles_deg": [
+        84.52815058153075,
+        58.81460102708812,
+        121.18539897258583,
+        15.000000000468882,
+        90,
+        74.99999999893713,
+        74.99999999893713,
+        105.00000000106287
+      ],
+      "connector_distance_m": 72.84640882662896,
+      "estimated_duration_s": 46.78860859183651,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 105,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-105",
+        "name": "L survey 105 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.00832044761734,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97883289189523,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008362973067314,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978912342634693,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00842321619182,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008471410691435,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008622373765526,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00857417926591,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00832044761734,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97883289189523,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008362973067314,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978912342634693,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00842321619182,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008471410691435,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008622373765526,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00857417926591,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            6,
+            8
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 120,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.008329722653116,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97865412773145,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00826558519169,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97873357847091,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0083953910845,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00849923579876,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.97850340059612,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00856490423014,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            6,
+            8
+          ]
+        },
+        "survey_distance_m": 86.20653320024104,
+        "waypoints": [
+          {
+            "latitude": 41.008329722653116,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97865412773145,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00826558519169,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97873357847091,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0083953910845,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00849923579876,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.97850340059612,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00856490423014,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 3,
+        "segment_count": 4,
+        "distance_m": 152.08344768121077
+      },
+      "error": null,
+      "turn_count": 8,
+      "turn_angles_deg": [
+        100.88202413563887,
+        34.571216715177606,
+        145.4287832843708,
+        29.999999999859437,
+        90,
+        59.99999999849134,
+        72.39583931847503,
+        107.60416067942414
+      ],
+      "connector_distance_m": 65.87691448096973,
+      "estimated_duration_s": 46.41668953624215,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 120,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-120",
+        "name": "L survey 120 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.008329722653116,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97865412773145,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00826558519169,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97873357847091,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0083953910845,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00849923579876,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.97850340059612,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00856490423014,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.008329722653116,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97865412773145,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00826558519169,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97873357847091,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0083953910845,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00849923579876,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.97850340059612,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00856490423014,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            6,
+            8
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 135,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00834239258761,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978588695506218,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978846910409462,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00853724560222,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978568832821352,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00855223429565,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978926361148922,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00832740389417,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            8
+          ]
+        },
+        "survey_distance_m": 84.85281374234002,
+        "waypoints": [
+          {
+            "latitude": 41.00834239258761,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978588695506218,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978846910409462,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00853724560222,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978568832821352,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00855223429565,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978926361148922,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00832740389417,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 3,
+        "segment_count": 4,
+        "distance_m": 176.95775881170744
+      },
+      "error": null,
+      "turn_count": 8,
+      "turn_angles_deg": [
+        117.47443162693212,
+        45.00000000016077,
+        135.00000000027288,
+        81.25383773809192,
+        98.74616226234174,
+        44.99999999983927,
+        90,
+        45.00000000143336
+      ],
+      "connector_distance_m": 92.10494506936742,
+      "estimated_duration_s": 51.391551762341486,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 135,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-135",
+        "name": "L survey 135 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.00834239258761,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978588695506218,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978846910409462,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00853724560222,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978568832821352,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00855223429565,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978926361148922,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00832740389417,
+            "longitude": 28.97899588054595,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00834239258761,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978588695506218,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978846910409462,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00853724560222,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978568832821352,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00855223429565,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978926361148922,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00832740389417,
+              "longitude": 28.97899588054595,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            8
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 150,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00838427442398,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978566171726168,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978779339069312,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978469710455066,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978682877798214,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00862997365595,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978889296874375,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978992506412457,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            8
+          ]
+        },
+        "survey_distance_m": 89.69655114581353,
+        "waypoints": [
+          {
+            "latitude": 41.00838427442398,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978566171726168,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978779339069312,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978469710455066,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978682877798214,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00862997365595,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978889296874375,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978992506412457,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 3,
+        "segment_count": 4,
+        "distance_m": 190.4291702671423
+      },
+      "error": null,
+      "turn_count": 8,
+      "turn_angles_deg": [
+        136.28684731694102,
+        59.99999999991949,
+        120.00000000007024,
+        120.00000000007024,
+        60.00000000151721,
+        29.99999999848279,
+        90,
+        59.999999999929756
+      ],
+      "connector_distance_m": 100.73261912132877,
+      "estimated_duration_s": 54.08583405342846,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 150,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-150",
+        "name": "L survey 150 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.00838427442398,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978566171726168,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978779339069312,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978469710455066,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978682877798214,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00862997365595,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978889296874375,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978992506412457,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.00838427442398,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978566171726168,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978779339069312,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978469710455066,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978682877798214,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00862997365595,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978889296874375,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978992506412457,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            5,
+            8
+          ]
+        }
+      }
+    },
+    {
+      "heading_deg": 165,
+      "preview": {
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97855695342204,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00851917266487,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978607985016968,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00839632304888,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97870378444361,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978751684156933,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978946414891823,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978898515178503,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            6,
+            8
+          ]
+        },
+        "survey_distance_m": 91.78784915488525,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97855695342204,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00851917266487,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978607985016968,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00839632304888,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97870378444361,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978751684156933,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978946414891823,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978898515178503,
+            "altitude_m": 10
+          }
+        ],
+        "area_m2": 1275.0000000004648,
+        "line_count": 3,
+        "segment_count": 4,
+        "distance_m": 143.65529361267224
+      },
+      "error": null,
+      "turn_count": 8,
+      "turn_angles_deg": [
+        84.21051471159103,
+        55.635625327334,
+        124.36437467239134,
+        15.00000000012067,
+        90,
+        74.99999999957055,
+        74.99999999957055,
+        104.99999999936705
+      ],
+      "connector_distance_m": 51.86744445778699,
+      "estimated_duration_s": 44.73105872253445,
+      "mission": {
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20,
+          "heading_deg": 165,
+          "altitude_m": 10,
+          "max_distance_m": 2000,
+          "max_altitude_m": 80
+        },
+        "id": "comparison-165",
+        "name": "L survey 165 degrees",
+        "takeoff_altitude_m": 10,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97855695342204,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00851917266487,
+            "longitude": 28.978459588054594,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978607985016968,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.00839632304888,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97870378444361,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978751684156933,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978946414891823,
+            "altitude_m": 10
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978898515178503,
+            "altitude_m": 10
+          }
+        ],
+        "generation": {
+          "waypoints": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97855695342204,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00851917266487,
+              "longitude": 28.978459588054594,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978607985016968,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.00839632304888,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97870378444361,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978751684156933,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978946414891823,
+              "altitude_m": 10
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978898515178503,
+              "altitude_m": 10
+            }
+          ],
+          "takeoff_altitude_m": 10,
+          "survey_leg_indices": [
+            1,
+            3,
+            6,
+            8
+          ]
+        }
+      }
+    }
+  ]
+}

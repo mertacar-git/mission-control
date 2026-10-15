@@ -92,6 +92,7 @@ describe('concave survey routing', () => {
     p.spacing_m = 15;
     const result = generateSurvey({ ...newMission(), planning: p });
     expect(result.segment_count).toBeGreaterThan(result.line_count);
+    expect(result.generation.survey_leg_indices).toHaveLength(result.segment_count);
     const ps = result.waypoints.map(project);
     ps.slice(1).forEach((v, i) =>
       expect(segmentInside(ps[i], v, p.survey_area.map(project))).toBe(true),

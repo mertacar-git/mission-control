@@ -6,7 +6,19 @@ Plan a mission, fly one virtual UAV, watch telemetry, record the flight, replay 
 
 React + TypeScript + Leaflet + Recharts frontend, FastAPI + SQLite backend, and an app-owned ArduCopter SITL process speaking MAVLink. The interface is Turkish; code and documentation are English.
 
-![Survey workspace and boundary layers](docs/media/survey-planner-v13.png)
+![Actual paired SITL flight comparison](docs/media/flight-comparison-v17.png)
+
+## Route experiments and computer prototype · UI 1.7
+
+The planned v1.5/v1.6 work and the software-computer prototype preparation are available together in v1.7:
+
+- **Compare route headings:** cancellable worker computation, survey/connector distances, turns, explicit duration assumptions, two-route overlay, independent backend validation in local mode and an undoable apply step.
+- **Compare actual execution:** frozen mission-index attribution, per-leg measurements, observed survey-line corridor fraction, turn windows, two real-time SITL flights, paired plan/track overlay and JSON/CSV reports. Missing observations remain unknown.
+- **Computer emulator:** a separate owned Python sender and loopback UDP receiver, CRC/sequence/boot checks, seeded fault profiles, raw-packet SQLite recordings and isolated replay. This is an explicitly synthetic source, separate from SITL and demo flight records. A portable C++ decoder and common golden vector prepare the later hardware step.
+
+[Route experiment method and actual flights](docs/ROUTE_EXPERIMENTS.md) · [Emulator protocol and prototype handoff](docs/COMPUTER_EMULATOR.md).
+
+Public Pages compares routes and replays checked-in real SITL/software-emulator evidence; new sender or SITL processes require the local application. No physical board or sensor validation is claimed. The release test suite contains **69 frontend and 58 backend tests**, including Python/C++ packet compatibility. The acceptance workflow covers twelve SITL scenarios/flights and five real subprocess/UDP emulator checks.
 
 [Watch the captioned walkthrough](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4) · [Chapters and recording method](docs/media/walkthrough.md).
 

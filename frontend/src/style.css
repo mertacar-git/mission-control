@@ -1809,3 +1809,157 @@ footer button {
     flex-direction: column;
   }
 }
+/* Route experiments and a distinct emulated computer source. */
+.route-comparison {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+.comparison-card {
+  padding: 18px;
+  background: #112033;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 0;
+}
+.comparison-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.comparison-card dl {
+  display: grid;
+  gap: 8px;
+}
+.comparison-card dd {
+  margin: 0 0 8px;
+  color: var(--mint);
+  font-family: 'IBM Plex Mono', monospace;
+}
+.comparison-card dt {
+  color: var(--muted);
+}
+.comparison-card p {
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.route-overlay {
+  margin: 16px 0;
+  padding: 12px;
+  background: #0b151f;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.route-overlay svg {
+  display: block;
+  width: 100%;
+  max-height: 320px;
+}
+.route-overlay figcaption {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+.execution-comparison,
+.emulator-lab {
+  padding: 24px;
+  margin: 20px 0;
+}
+.table-scroll {
+  overflow: auto;
+  max-width: 100%;
+}
+.execution-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+  text-align: left;
+}
+.execution-table th,
+.execution-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.execution-table th {
+  color: var(--muted);
+  font-weight: 500;
+}
+.emulator-counters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+.emulator-counters > div {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.emulator-counters span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.emulator-counters strong {
+  display: block;
+  font-size: 25px;
+  margin-top: 8px;
+}
+.emulator-chart {
+  width: 100%;
+  max-height: 220px;
+  background: #0b151f;
+  border-radius: 10px;
+  margin: 12px 0;
+}
+.packet-list {
+  max-height: 350px;
+  overflow: auto;
+}
+.packet-list > div {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.packet-list code {
+  display: block;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.emulator-lab input[type='range'] {
+  flex: 1 1 160px;
+  width: auto;
+  min-width: 100px;
+}
+.emulator-lab .row-actions select {
+  width: auto;
+  min-width: 80px;
+  max-width: 140px;
+}
+.emulator-lab .row-actions button {
+  white-space: normal;
+  max-width: 100%;
+}
+@media (max-width: 800px) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+  .emulator-counters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .execution-comparison,
+  .emulator-lab {
+    padding: 18px;
+  }
+  .emulator-lab .row-actions {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "stream_hex": "000102030405060708090a0b0c0d0e0f",
+  "packet_hex": "4d435431010f000102030405060708090a0b0c0d0e0f0200000011000000480d000000000000d05a7118c0c045110000a2410000b0409a9949416ac7c1b3",
+  "decoded": {
+    "flags": 15,
+    "boot_id": 2,
+    "sequence": 17,
+    "source_time_ms": 3400,
+    "latitude_e7": 410082000,
+    "longitude_e7": 289784000,
+    "altitude_m": 20.25,
+    "speed_ms": 5.5,
+    "voltage_v": 12.6
+  }
+}

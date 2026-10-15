@@ -24,6 +24,8 @@ import { FlightChart } from './components/TelemetryChart';
 import { EventLog } from './components/EventLog';
 import { IncidentInspector } from './components/IncidentInspector';
 import { ScenarioLab } from './components/ScenarioLab';
+import { ExecutionComparison } from './components/ExecutionComparison';
+import { EmulatorLab } from './components/EmulatorLab';
 import { MissionReadiness } from './components/MissionReadiness';
 import { missionStage, routeLength } from './missionPresentation';
 import { MapView } from './MapView';
@@ -49,7 +51,13 @@ import {
   type FlightEvent,
 } from './types';
 
-type Page = 'mission' | 'flight' | 'recordings' | 'analysis' | 'experiments';
+type Page =
+  | 'mission'
+  | 'flight'
+  | 'recordings'
+  | 'analysis'
+  | 'experiments'
+  | 'emulator';
 const names = {
   closed: 'Bağlantı kapalı',
   connecting: 'Bağlanıyor',
@@ -601,6 +609,7 @@ export default function App() {
               ['recordings', 'Uçuş kayıtları', Database],
               ['analysis', 'Uçuş analizi', Compass],
               ['experiments', 'Senaryo laboratuvarı', Radio],
+              ['emulator', 'Bilgisayar emülatörü', Database],
             ] as const
           ).map(([id, label, Icon]) => (
             <button
@@ -628,7 +637,7 @@ export default function App() {
           >
             Kaynak kodu & kurulum ↗
           </a>
-          <span>v1.4 · ArduCopter 4.6.3</span>
+          <span>v1.7 · ArduCopter 4.6.3</span>
         </div>
       </aside>
       <div className="main-area">
@@ -662,13 +671,15 @@ export default function App() {
           <section className="title-row">
             <div>
               <div className="eyebrow">
-                {replay
-                  ? 'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA'
-                  : page === 'experiments' && mode === 'demo'
-                    ? 'GERÇEK SITL / YAYIMLANMIŞ DENEY KAYITLARI'
-                    : mode === 'demo'
-                      ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
-                      : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
+                {page === 'emulator'
+                  ? 'EMÜLATÖR / AYRI TELEMETRİ KAYNAĞI'
+                  : replay
+                    ? 'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA'
+                    : page === 'experiments' && mode === 'demo'
+                      ? 'GERÇEK SITL / YAYIMLANMIŞ DENEY KAYITLARI'
+                      : mode === 'demo'
+                        ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
+                        : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
               </div>
               <h1>
                 {page === 'mission'
@@ -677,24 +688,29 @@ export default function App() {
                     ? 'Uçuş kontrol merkezi'
                     : page === 'recordings'
                       ? 'Uçuş arşivi'
-                      : page === 'experiments'
-                        ? 'Senaryo laboratuvarı'
-                        : 'Uçuş analizi'}
+                      : page === 'emulator'
+                        ? 'Uçuş bilgisayarı emülatörü'
+                        : page === 'experiments'
+                          ? 'Senaryo laboratuvarı'
+                          : 'Uçuş analizi'}
               </h1>
               <p>
-                {replay
-                  ? replay.session.source === 'sitl'
-                    ? 'Gerçek SITL kaydı · kayıtlı ölçümler inceleniyor.'
-                    : 'Tarayıcı modeli kaydı inceleniyor.'
-                  : page === 'experiments' && mode === 'demo'
-                    ? 'Kontrollü hata senaryoları · gerçek gözlemler ve kabul raporları.'
-                    : mode === 'demo'
-                      ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
-                      : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
+                {page === 'emulator'
+                  ? 'Sentetik sensörler · ayrı gönderici süreç · paket doğrulama ve tekrar oynatma.'
+                  : replay
+                    ? replay.session.source === 'sitl'
+                      ? 'Gerçek SITL kaydı · kayıtlı ölçümler inceleniyor.'
+                      : 'Tarayıcı modeli kaydı inceleniyor.'
+                    : page === 'experiments' && mode === 'demo'
+                      ? 'Kontrollü hata senaryoları · gerçek gözlemler ve kabul raporları.'
+                      : mode === 'demo'
+                        ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
+                        : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
               </p>
             </div>
             <div className="connection-actions">
-              {page !== 'experiments' &&
+              {page !== 'emulator' &&
+                page !== 'experiments' &&
                 !replay &&
                 status.state === 'closed' && (
                   <button
@@ -712,7 +728,7 @@ export default function App() {
                   </button>
                 )}
               {status.state === 'closed' ? (
-                page === 'experiments' ? null : (
+                page === 'experiments' || page === 'emulator' ? null : (
                   <button
                     className="primary"
                     disabled={busy || !!replay || !!status.scenario_active}
@@ -822,7 +838,7 @@ export default function App() {
               )}
             </>
           )}
-          {replay && (
+          {replay && page !== 'emulator' && (
             <section className="replay-bar panel">
               <div>
                 <strong>{replay.session.name}</strong>
@@ -965,6 +981,7 @@ export default function App() {
                 />
                 {page === 'mission' && !replay && (
                   <SurveyPlanner
+                    local={mode === 'local'}
                     mission={mission}
                     setMission={setMission}
                     layer={mission.planning ? editLayer : 'waypoints'}
@@ -1172,8 +1189,17 @@ export default function App() {
               onReplay={openReplay}
             />
           )}
+          {page === 'emulator' && <EmulatorLab local={localAvailable} />}
           {page === 'analysis' && (
             <>
+              {activeRecord && (
+                <ExecutionComparison
+                  recording={activeRecord}
+                  recordings={recordings}
+                  onReplay={openReplay}
+                  onSelectRecording={setSelected}
+                />
+              )}
               <section className="panel analysis-head">
                 <div>
                   <span className="eyebrow">KAYIT ANALİZİ</span>
