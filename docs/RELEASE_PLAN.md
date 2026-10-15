@@ -17,6 +17,14 @@ Improve the current single-vehicle application, verify its actual SITL workflow,
 - [x] Repeat the automated real SITL acceptance suite.
 - [x] Publish an engineering case study with decisions, limitations and evidence.
 - [x] Produce a captioned walkthrough from actual application views.
-- [ ] Publish code/demo, refresh portfolio presentation, verify GitHub Actions.
+- [x] Publish code/demo, refresh portfolio presentation, verify GitHub Actions.
 
 The product review is performed as a task-based self-review because the user delegated this evening's work. It is not represented as an interview with the user or independent usability research.
+
+## Published evidence
+
+- Application implementation: `9dbf91840310843ce3548358ed86d1872c9d908b`.
+- [Application validation and Pages deployment](https://github.com/mertacar-git/mission-control/actions/runs/38784801399): successful.
+- [Portfolio deployment](https://github.com/mertacar-git/portfolio/actions/runs/38785097005): successful; published card uses the v1.2 image.
+- [Clean Ubuntu SITL reproduction](https://github.com/mertacar-git/mission-control/actions/runs/38784852090): separate firmware build and acceptance artifacts for the implementation commit.
+- Profile links to the case study and captioned walkthrough.
