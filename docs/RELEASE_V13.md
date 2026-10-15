@@ -10,6 +10,15 @@
 - [x] Seven actual SITL scenarios, including survey landing and narrow-boundary observation.
 - [x] Desktop/mobile browser acceptance, recorded-flight replay and exports.
 - [x] Captioned walkthrough and updated screenshots.
-- [ ] Public application, portfolio/profile refresh and successful deployment checks.
+- [x] Public application, portfolio/profile refresh and successful deployment checks.
 
 Planning boundary enforcement on the autopilot, terrain, holes, disconnected regions, camera triggering and physical vehicles remain outside this release.
+
+## Published evidence
+
+- Implementation commit: `b04d8ea4f47d19fbc39848f48944b846209a60e4`.
+- [Application validation and deployment](https://github.com/mertacar-git/mission-control/actions/runs/38790974921): successful.
+- [Walkthrough/documentation deployment](https://github.com/mertacar-git/mission-control/actions/runs/38791528453): successful.
+- [Portfolio validation and deployment](https://github.com/mertacar-git/portfolio/actions/runs/38791518444): successful; new description and v1.3 image verified in the browser.
+- [Clean Ubuntu SITL reproduction](https://github.com/mertacar-git/mission-control/actions/runs/38790974876): pinned firmware rebuild and seven-scenario artifact run for the implementation commit.
+- Public demo generated and applied the example concave route successfully; profile links to the geometry contract and evidence.
