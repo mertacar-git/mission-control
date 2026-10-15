@@ -18,6 +18,8 @@ The planned v1.5/v1.6 work and the software-computer prototype preparation are a
 
 [Route experiment method and actual flights](docs/ROUTE_EXPERIMENTS.md) · [Emulator protocol and prototype handoff](docs/COMPUTER_EMULATOR.md).
 
+[v1.7 captioned walkthrough](docs/media/routes-emulator-v17.md).
+
 Public Pages compares routes and replays checked-in real SITL/software-emulator evidence; new sender or SITL processes require the local application. No physical board or sensor validation is claimed. The release test suite contains **69 frontend and 58 backend tests**, including Python/C++ packet compatibility. The acceptance workflow covers twelve SITL scenarios/flights and five real subprocess/UDP emulator checks.
 
 [Watch the captioned walkthrough](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4) · [Chapters and recording method](docs/media/walkthrough.md).

@@ -180,7 +180,8 @@ export function ExecutionComparison({
         <div className="comparison-card">
           <h3>{recording.session.name}</h3>
           <p>
-            Kaynak: {recording.session.source} · gözlenen tarama alt sınırı{' '}
+            Kaynak: {recording.session.source} · örneklerden hesaplanan hat
+            oranı{' '}
             {result.observed_survey_fraction === null
               ? '—'
               : fmt(result.observed_survey_fraction * 100) + '%'}
@@ -196,7 +197,7 @@ export function ExecutionComparison({
           <div className="comparison-card">
             <h3>{other.session.name}</h3>
             <p>
-              Kaynak: {other.session.source} · gözlenen tarama alt sınırı{' '}
+              Kaynak: {other.session.source} · örneklerden hesaplanan hat oranı{' '}
               {second!.observed_survey_fraction === null
                 ? '—'
                 : fmt(second!.observed_survey_fraction! * 100) + '%'}
@@ -318,7 +319,7 @@ export function ExecutionComparison({
         Yalnızca güncel, bağlı, armed AUTO ölçümleri atanır. Süre aynı parçada
         ardışık ≤3 s aralıklı ölçümlerin toplamıdır; tam uçuş süresi değildir.
         Koridor oranı bu örnekler arasında doğrusal iz varsayımıyla gözlenen
-        uzunluğun alt sınırıdır; kamera kapsaması değildir. Dönüşler ulaşılma
+        uzunluğun tahminidir; kamera kapsaması değildir. Dönüşler ulaşılma
         olayının ±2 s çevresinde incelenir. Bilinmeyen alanlar boş bırakılır.
       </p>
       <div className="row-actions">

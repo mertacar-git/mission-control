@@ -673,13 +673,17 @@ export default function App() {
               <div className="eyebrow">
                 {page === 'emulator'
                   ? 'EMÜLATÖR / AYRI TELEMETRİ KAYNAĞI'
-                  : replay
-                    ? 'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA'
-                    : page === 'experiments' && mode === 'demo'
-                      ? 'GERÇEK SITL / YAYIMLANMIŞ DENEY KAYITLARI'
-                      : mode === 'demo'
-                        ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
-                        : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
+                  : page === 'analysis' && activeRecord
+                    ? activeRecord.session.source === 'sitl'
+                      ? 'KAYDEDİLMİŞ SITL / UÇUŞ ANALİZİ'
+                      : 'KAYDEDİLMİŞ DEMO / UÇUŞ ANALİZİ'
+                    : replay
+                      ? 'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA'
+                      : page === 'experiments' && mode === 'demo'
+                        ? 'GERÇEK SITL / YAYIMLANMIŞ DENEY KAYITLARI'
+                        : mode === 'demo'
+                          ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
+                          : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
               </div>
               <h1>
                 {page === 'mission'
@@ -697,20 +701,23 @@ export default function App() {
               <p>
                 {page === 'emulator'
                   ? 'Sentetik sensörler · ayrı gönderici süreç · paket doğrulama ve tekrar oynatma.'
-                  : replay
-                    ? replay.session.source === 'sitl'
-                      ? 'Gerçek SITL kaydı · kayıtlı ölçümler inceleniyor.'
-                      : 'Tarayıcı modeli kaydı inceleniyor.'
-                    : page === 'experiments' && mode === 'demo'
-                      ? 'Kontrollü hata senaryoları · gerçek gözlemler ve kabul raporları.'
-                      : mode === 'demo'
-                        ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
-                        : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
+                  : page === 'analysis' && activeRecord
+                    ? activeRecord.session.source === 'sitl'
+                      ? 'Gerçek SITL kaydı · analiz kayıtlı ölçümleri kullanır.'
+                      : 'Tarayıcı modeli kaydı · analiz kayıtlı örnekleri kullanır.'
+                    : replay
+                      ? replay.session.source === 'sitl'
+                        ? 'Gerçek SITL kaydı · kayıtlı ölçümler inceleniyor.'
+                        : 'Tarayıcı modeli kaydı inceleniyor.'
+                      : page === 'experiments' && mode === 'demo'
+                        ? 'Kontrollü hata senaryoları · gerçek gözlemler ve kabul raporları.'
+                        : mode === 'demo'
+                          ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
+                          : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
               </p>
             </div>
             <div className="connection-actions">
-              {page !== 'emulator' &&
-                page !== 'experiments' &&
+              {['mission', 'flight'].includes(page) &&
                 !replay &&
                 status.state === 'closed' && (
                   <button
@@ -728,7 +735,7 @@ export default function App() {
                   </button>
                 )}
               {status.state === 'closed' ? (
-                page === 'experiments' || page === 'emulator' ? null : (
+                !['mission', 'flight'].includes(page) ? null : (
                   <button
                     className="primary"
                     disabled={busy || !!replay || !!status.scenario_active}

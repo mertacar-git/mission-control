@@ -33,7 +33,7 @@ async def main():
                 (folder/f'execution-{heading}.json').write_text(json.dumps(report,indent=2))
             results.append(dict(heading_deg=heading,status='passed',session_id=identifier,speedup=1,wpnav_speed_cms=500,firmware_revision=REVISION))
             (output/'sitl-results.json').write_text(json.dumps(results,indent=2))
-            print(f'Heading {heading}: passed; corridor lower bound {report["observed_survey_fraction"]:.3f}',flush=True)
+            print(f'Heading {heading}: passed; sampled corridor fraction {report["observed_survey_fraction"]:.3f}',flush=True)
             await manager.disconnect()
     finally:await manager.disconnect();store.close()
 
