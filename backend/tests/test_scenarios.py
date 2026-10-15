@@ -84,3 +84,24 @@ def test_api_blocks_manual_control_but_renews_owner_during_experiment(monkeypatc
         assert client.get('/api/v1/vehicle/mission').status_code==409
         assert client.post('/api/v1/scenarios',headers=headers,json={'kind':'raw_parameter'}).status_code==422
         assert client.get('/api/v1/status').json()['scenario_active'] is True
+
+def test_cleanup_survives_event_failure_and_late_cancel():
+    async def exercise():
+        store=Store(':memory:')
+        cleanup_entered=asyncio.Event();release=asyncio.Event()
+        async def disconnect():
+            cleanup_entered.set();await release.wait()
+        manager=SimpleNamespace(state='closed',simulator=SimpleNamespace(running=False),
+            connect=AsyncMock(side_effect=RuntimeError('Startup failed')),
+            emit=AsyncMock(side_effect=RuntimeError('Event persistence failed')),disconnect=disconnect)
+        runner=ScenarioRunner(manager,store);runner.start('gps_loss')
+        await cleanup_entered.wait()
+        closing=asyncio.create_task(runner.close())
+        await asyncio.sleep(0)
+        assert not runner.task.cancelled()
+        release.set();await closing
+        assert store.scenario_runs()[0]['status']=='failed'
+        assert 'Event persistence failed' in store.scenario_runs()[0]['error']
+        assert not runner.active
+        store.close()
+    asyncio.run(exercise())

@@ -2,7 +2,7 @@
 
 `scenarios/scenario-runs.json` contains three real Copter-4.6.3 experiments and links by session identity to `heartbeat_loss.json`, `low_battery.json` and `gps_loss.json` in the same directory. Identical fixtures are published under `frontend/public/verification` for browser inspection. These are actual app-owned SITL runs at 4×, not synthetic demo flights. Each check includes observed telemetry or the explicit command-rejection result.
 
-Local verification: **64 frontend + 47 backend tests**, TypeScript/production build, the existing seven real SITL scenarios in `sitl-results.json`, and the three new recorded fault experiments. New unit tests cover owner/control isolation during experiments, immediate/concurrent cancellation cleanup, backend restart recovery, finite observation failure, timestamp alignment, preceding commands, old-recording compatibility, missing measurements and chart gap separation. See [the experiment contract](../EXPERIMENTS.md).
+Local verification: **64 frontend + 48 backend tests**, TypeScript/production build, the existing seven real SITL scenarios in `sitl-results.json`, and the three new recorded fault experiments. New unit tests cover owner/control isolation during experiments, immediate/concurrent cancellation cleanup, backend restart recovery, finite observation failure, timestamp alignment, preceding commands, old-recording compatibility, missing measurements and chart gap separation. See [the experiment contract](../EXPERIMENTS.md).
 
 ---
 

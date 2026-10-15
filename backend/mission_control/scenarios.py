@@ -39,8 +39,8 @@ class ScenarioRunner:
             if self.active:
                 # Let the coroutine establish its cleanup block even on immediate cancellation.
                 await asyncio.sleep(0)
-                if not self.task.done(): self.task.cancel()
-                try: await self.task
+                if not self.task.done() and self.current['status']=='running': self.task.cancel()
+                try: await asyncio.shield(self.task)
                 except asyncio.CancelledError: pass
 
     async def wait(self, label, predicate, timeout):
@@ -122,8 +122,10 @@ class ScenarioRunner:
                 except ProcessLookupError: pass
             # No parameter leakage: the entire owned simulator and its isolated EEPROM end here.
             try:
-                await m.emit('scenario',dict(run_id=run['id'],status=run['status'],error=run['error']))
-                await m.disconnect()
+                try:
+                    await m.emit('scenario',dict(run_id=run['id'],status=run['status'],error=run['error']))
+                finally:
+                    await m.disconnect()
             except Exception as exc:
                 run.update(status='failed',error=f'Cleanup failed: {exc}')
             run['ended_utc']=utc_now();self.store.save_scenario(run)

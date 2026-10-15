@@ -6,7 +6,7 @@
 - [x] Actual recording fixtures available in public Pages; browser execution disabled.
 - [x] Incident selection synchronizes replay telemetry, map and chart cursor, with preceding command and ±10 s context.
 - [x] Unknown values across gaps, chart separators without invented exports, optional GPS fix field and old recording support.
-- [x] 64 frontend and 47 backend tests; TypeScript and production build.
+- [x] 64 frontend and 48 backend tests; TypeScript and production build.
 - [x] Seven existing actual SITL acceptance scenarios and three new recorded fault experiments.
 - [x] Browser-operated local low-battery experiment passed; explicit cancellation persisted as interrupted and closed owned process/recording.
 

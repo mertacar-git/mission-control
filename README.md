@@ -21,7 +21,7 @@ Run fixed telemetry interruption, low-battery and GPS-loss experiments against a
 
 Select an incident in any replay to synchronize the map, telemetry cards and chart cursor. Inspect the preceding command and ±10 s event context without assuming causality. Recording gaps remain unknown and break plotted lines; they do not inherit old battery or mode readings. Optional GPS fix data preserves old recording compatibility.
 
-Current local validation: **64 frontend tests, 47 backend tests, seven existing real SITL acceptance scenarios plus three new fault experiments**. The laboratory fixtures include successful GPS-loss LAND and low-battery RTL followed by disarm. Pausing SITL tests receiver freshness and recovery, not an airborne RF/GCS outage. [Evidence](docs/verification/scenarios/scenario-runs.json).
+Current local validation: **64 frontend tests, 48 backend tests, seven existing real SITL acceptance scenarios plus three new fault experiments**. The laboratory fixtures include successful GPS-loss LAND and low-battery RTL followed by disarm. Pausing SITL tests receiver freshness and recovery, not an airborne RF/GCS outage. [Evidence](docs/verification/scenarios/scenario-runs.json).
 
 ## Survey planning · UI 1.3
 
