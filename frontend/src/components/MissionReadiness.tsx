@@ -1,5 +1,6 @@
 import { Check, Circle, Radio, ArrowUpToLine, ShieldCheck } from 'lucide-react';
 import type { Status } from '../types';
+import { useState } from 'react';
 
 export function MissionReadiness({
   status,
@@ -10,6 +11,82 @@ export function MissionReadiness({
   matches: boolean;
   local: boolean;
 }) {
+  const [action, setAction] = useState<'arm' | 'start' | 'resume'>('start');
+  if (local) {
+    const assessment = status.preflight?.[action];
+    const names: Record<string, string> = {
+      controller: 'Kontrol sahipliği',
+      simulator: 'SITL kaynağı',
+      connection: 'Bağlantı',
+      position: 'Güncel konum',
+      gps: 'GPS',
+      ekf: 'EKF',
+      battery: 'Batarya',
+      operation: 'İşlem kilidi',
+      armed: 'Motor durumu',
+      disarmed: 'Motor durumu',
+      upload: 'Görev aktarımı',
+      mission: 'Görev geçerliliği',
+    };
+    return (
+      <section className="panel readiness-panel">
+        <div className="panel-head">
+          <div>
+            <span className="eyebrow">BACKEND / UÇUŞ ÖNCESİ</span>
+            <h2>Hazırlık kontrolü</h2>
+          </div>
+          <span className="count">
+            {assessment?.ready ? 'Hazır' : 'Hazır değil'}
+          </span>
+        </div>
+        <label>
+          Kontrol edilecek işlem{' '}
+          <select
+            value={action}
+            onChange={(e) => setAction(e.target.value as typeof action)}
+          >
+            <option value="arm">Arm</option>
+            <option value="start">Görevi başlat</option>
+            <option value="resume">Devam et</option>
+          </select>
+        </label>
+        {!matches && (
+          <p>
+            Taslak yüklenmiş görevle eşleşmiyor. Başlatma değerlendirmesi
+            yüklenmiş göreve aittir.
+          </p>
+        )}
+        {!assessment ? (
+          <p>Backend değerlendirmesi bekleniyor · bilinmiyor</p>
+        ) : (
+          <>
+            <ol className="readiness-list">
+              {assessment.checks.map((c) => (
+                <li key={c.id} className={c.state === 'ready' ? 'ready' : ''}>
+                  <div>
+                    <strong>
+                      {names[c.id] ?? c.id} ·{' '}
+                      {c.state === 'ready'
+                        ? 'Hazır'
+                        : c.state === 'blocked'
+                          ? 'Engel'
+                          : 'Bilinmiyor'}
+                    </strong>
+                    <small>{c.reason}</small>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <small>
+              Değerlendirme:{' '}
+              {new Date(assessment.evaluated_utc).toLocaleTimeString('tr-TR')} ·
+              Komut öncesinde yeniden kontrol edilir.
+            </small>
+          </>
+        )}
+      </section>
+    );
+  }
   const checks = [
     {
       label: 'Bağlantı',

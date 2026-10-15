@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "planning": {
+    "allowed_area": [
+      {
+        "latitude": 41.00802013567882,
+        "longitude": 28.978161647781622
+      },
+      {
+        "latitude": 41.00802013567882,
+        "longitude": 28.979234232764327
+      },
+      {
+        "latitude": 41.00882952512414,
+        "longitude": 28.979234232764327
+      },
+      {
+        "latitude": 41.00882952512414,
+        "longitude": 28.978161647781622
+      }
+    ],
+    "survey_area": [
+      {
+        "latitude": 41.0082449660803,
+        "longitude": 28.978459588054594
+      },
+      {
+        "latitude": 41.0082449660803,
+        "longitude": 28.97899588054595
+      },
+      {
+        "latitude": 41.008379864321185,
+        "longitude": 28.97899588054595
+      },
+      {
+        "latitude": 41.008379864321185,
+        "longitude": 28.978697940272976
+      },
+      {
+        "latitude": 41.00864966080296,
+        "longitude": 28.978697940272976
+      },
+      {
+        "latitude": 41.00864966080296,
+        "longitude": 28.978459588054594
+      }
+    ],
+    "spacing_m": 20,
+    "heading_deg": 0,
+    "altitude_m": 10,
+    "max_distance_m": 2000,
+    "max_altitude_m": 80
+  },
+  "id": "acceptance-survey-v13",
+  "name": "İçbükey L alanı · SITL kabul",
+  "takeoff_altitude_m": 10,
+  "waypoints": [
+    {
+      "latitude": 41.0082449660803,
+      "longitude": 28.978548970136487,
+      "altitude_m": 10
+    },
+    {
+      "latitude": 41.00864966080296,
+      "longitude": 28.978548970136487,
+      "altitude_m": 10
+    },
+    {
+      "latitude": 41.008379864321185,
+      "longitude": 28.978697940272976,
+      "altitude_m": 10
+    },
+    {
+      "latitude": 41.008379864321185,
+      "longitude": 28.97872773430027,
+      "altitude_m": 10
+    },
+    {
+      "latitude": 41.0082449660803,
+      "longitude": 28.97872773430027,
+      "altitude_m": 10
+    },
+    {
+      "latitude": 41.0082449660803,
+      "longitude": 28.978906498464056,
+      "altitude_m": 10
+    },
+    {
+      "latitude": 41.008379864321185,
+      "longitude": 28.978906498464056,
+      "altitude_m": 10
+    }
+  ]
+}

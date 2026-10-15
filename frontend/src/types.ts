@@ -75,6 +75,7 @@ export interface Recording {
   events: FlightEvent[];
 }
 export interface Status {
+  preflight?: Partial<Record<'arm' | 'start' | 'resume', Preflight>>;
   scenario_active?: boolean;
   state: ConnectionState;
   telemetry: Telemetry;
@@ -85,6 +86,17 @@ export interface Status {
   event_sequence: number;
   simulator_owned: boolean;
   simulator_revision: string;
+}
+export interface Preflight {
+  action: 'arm' | 'start' | 'resume';
+  evaluated_utc: string;
+  mission_fingerprint: string | null;
+  ready: boolean;
+  checks: {
+    id: string;
+    state: 'ready' | 'blocked' | 'unknown';
+    reason: string;
+  }[];
 }
 export interface Report {
   fence_violation_count?: number;

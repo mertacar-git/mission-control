@@ -21,6 +21,7 @@ def test_initial_position_is_not_presented_before_navigation_readiness():
     client.telemetry.latitude=0;client.telemetry.longitude=0
     assert client.snapshot()['latitude'] is None
     client.telemetry.navigation_ready=True
+    client.field_times['ekf']=time.monotonic()
     assert client.snapshot()['latitude']==0
     client.store.close()
 

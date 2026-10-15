@@ -1022,6 +1022,11 @@ export default function App() {
                           !!status.scenario_active ||
                           !!replay ||
                           status.state !== 'connected' ||
+                          (mode === 'local' &&
+                            ['arm', 'start', 'resume'].includes(action) &&
+                            !status.preflight?.[
+                              action as 'arm' | 'start' | 'resume'
+                            ]?.ready) ||
                           (action === 'arm' && shown.armed === true) ||
                           (action === 'start' &&
                             (!uploadMatches ||

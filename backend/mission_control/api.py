@@ -13,6 +13,7 @@ from .planning import validate_planning
 from .scenarios import ScenarioRunner
 from .execution import execution_report
 from .emulator import Emulator
+from .preflight import evaluate
 from typing import Literal
 
 class ScenarioRequest(BaseModel):
@@ -87,7 +88,12 @@ def create_app(database=None,manager_factory=MAVLinkManager):
         try:return store.emulator_run(identifier)
         except KeyError:raise HTTPException(404,'Emulator recording not found.')
     @app.get('/api/v1/status')
-    def status(): return dict(**manager.status(),scenario_active=scenarios.active)
+    def status(x_control_session:str|None=Header(default=None)):
+        return dict(**manager.status(),scenario_active=scenarios.active,
+                    preflight={action:evaluate(manager,action,x_control_session or '').model_dump() for action in ('arm','start','resume')})
+    @app.get('/api/v1/preflight')
+    def preflight(action:Literal['arm','start','resume']='start',x_control_session:str|None=Header(default=None)):
+        return evaluate(manager,action,x_control_session or '')
     @app.post('/api/v1/connection')
     async def connect(body:ConnectionRequest,x_control_session:str=Header(...)):
         if scenarios.active: raise HTTPException(409,'A SITL experiment is running.')

@@ -9,6 +9,7 @@ from pymavlink import mavutil
 from .models import ConnectionState,Telemetry,Event,utc_now
 from .simulator import Simulator,HOME
 from .planning import require_valid, fence_state
+from .preflight import evaluate
 
 M=mavutil.mavlink
 
@@ -85,6 +86,7 @@ class MAVLinkManager:
         if now-self.field_times.get('speed',-math.inf)>=3: result.ground_speed_ms=None
         if now-self.field_times.get('battery',-math.inf)>=5: result.battery_pct=result.battery_voltage_v=None
         if now-self.field_times.get('gps',-math.inf)>=3: result.gps_fix_type=None
+        if now-self.field_times.get('ekf',-math.inf)>=3: result.navigation_ready=False;result.position_fresh=False;result.latitude=result.longitude=result.relative_altitude_m=None
         if self.state!=ConnectionState.CONNECTED:
             result.flight_mode=result.armed=None;result.navigation_ready=False
             result.ground_speed_ms=result.battery_pct=result.battery_voltage_v=None
@@ -183,6 +185,7 @@ class MAVLinkManager:
             self.telemetry.gps_fix_type=message.fix_type;self.field_times['gps']=now
         elif kind=='EKF_STATUS_REPORT':
             self.telemetry.navigation_ready=bool(message.flags&M.EKF_POS_HORIZ_ABS)
+            self.field_times['ekf']=now
 
     async def response(self,predicate,send,timeout=8):
         future=asyncio.get_running_loop().create_future();entry=(predicate,future);self.pending.append(entry)
@@ -208,6 +211,13 @@ class MAVLinkManager:
         self.require_connected()
         if self.operation.locked(): raise RuntimeError('Another mission/command operation is pending.')
         async with self.operation:
+            if action in ('arm','start','resume'):
+                assessment=evaluate(self,action,ignore_busy=True)
+                await self.emit('preflight',assessment.model_dump())
+                if action in ('start','resume') and self.active_mission:
+                    require_valid(self.active_mission)
+                if not assessment.ready:
+                    raise RuntimeError('Preflight: '+'; '.join(c.id+': '+c.reason for c in assessment.checks if c.state!='ready'))
             identifier=str(uuid4());await self.emit('command',dict(id=identifier,action=action,status='requested'))
             try:
                 if action=='arm':

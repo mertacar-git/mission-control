@@ -7,7 +7,7 @@ and evidence; uncompleted phases stay explicitly pending.
 | Phase | Deliverable | Acceptance |
 |---|---|---|
 | 0 | Lazy runtime startup, controller reclaim, baseline regression | Passed: 7 real SITL scenarios, 66 backend / 69 frontend tests |
-| 1 | Action-specific server-authoritative preflight | Pending |
+| 1 | Action-specific server-authoritative preflight | Passed: 7 real SITL scenarios, 75 backend / 69 frontend tests |
 | 2 | Observed mission lifecycle and connection recovery | Pending |
 | 3 | Two-to-five flight comparison and portable exports | Pending |
 | 4 | Windows serial service and application integration | Pending |
@@ -32,3 +32,27 @@ database and an active recording, expired lease reclaim and competing owners.
 Real pinned-SITL baseline results are stored under `verification/phases/phase-0`.
 
 Browser check: local mode and reload remained closed without spawning SITL. At a 390 px viewport, content width was 375 px (no horizontal overflow).
+
+## Phase 1
+
+`GET /api/v1/preflight?action=arm|start|resume` returns typed ready/blocked/unknown
+checks, evaluation UTC and an operational-content SHA-256 mission fingerprint
+(name, ID and generation labels excluded). Status includes all three action
+assessments for the current controller header. Assessments do not acquire or
+renew a control lease. Internal trusted scenario commands use the same vehicle
+checks; API commands additionally require the controller lease.
+
+Position/GPS/EKF age must be under 3 seconds; battery age under 5 seconds and
+remaining percentage at least 20. Arm requires disarmed state. Start/resume also
+require armed state, verified readback and independently valid loaded mission.
+The current command's own lock is excluded from its readiness check. Preflight
+events are emitted before arm/start/resume and recorded if a recording is open.
+Return/land retain their existing connected transport requirement without the
+preflight battery/GPS/mission gate. The frontend shows action selection, reasons,
+timestamp and a draft/loaded mismatch note; local buttons use backend readiness.
+
+Validation includes direct HTTP bypass attempts, competing controller, missing
+measurements, threshold freshness, low battery, operation lock and unchanged
+geometry rejection behaviour. Public demo retains explicitly simulated controls.
+
+Phase 1 browser acceptance: action selector changes start/arm requirements; unknown GPS/battery and loaded-draft mismatch are visible. At 390 px, content width remains 375 px. TypeScript and production build passed.
