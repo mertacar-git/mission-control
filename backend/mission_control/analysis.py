@@ -1,4 +1,5 @@
 import math
+from .planning import fence_metrics
 
 EARTH_RADIUS_M=6371000.0
 
@@ -33,7 +34,7 @@ def report(recording, max_altitude=80, min_battery=20):
     deviations=[route_deviation_m((r['latitude'],r['longitude']),waypoints) for r in fresh] if waypoints else []
     route_distance=sum(distance_m((a['latitude'],a['longitude']),(b['latitude'],b['longitude'])) for a,b in zip(fresh,fresh[1:]) if b['elapsed_s']-a['elapsed_s']<=3)
     gaps=sum(b['elapsed_s']-a['elapsed_s']>3 for a,b in zip(rows,rows[1:]))
-    return dict(schema_version=1,samples=len(rows),duration_s=max(0,rows[-1]['elapsed_s']-rows[0]['elapsed_s']) if rows else 0,
+    return dict(**fence_metrics(mission,rows),schema_version=1,samples=len(rows),duration_s=max(0,rows[-1]['elapsed_s']-rows[0]['elapsed_s']) if rows else 0,
                 peak_relative_altitude_m=max(altitude) if altitude else None,peak_ground_speed_ms=max(speeds) if speeds else None,
                 battery_used_percentage_points=batteries[0]-batteries[-1] if batteries else None,
                 observed_ground_distance_m=route_distance,max_route_deviation_m=max(deviations) if deviations else None,

@@ -5,13 +5,26 @@ export type ConnectionState =
   | 'stale'
   | 'disconnected';
 export type Action = 'arm' | 'start' | 'hold' | 'resume' | 'return' | 'land';
-export interface Waypoint {
+export interface Coordinate {
   latitude: number;
   longitude: number;
+}
+export interface Planning {
+  allowed_area: Coordinate[];
+  survey_area: Coordinate[];
+  spacing_m: number;
+  heading_deg: number;
+  altitude_m: number;
+  max_distance_m: number;
+  max_altitude_m: number;
+}
+export type EditLayer = 'waypoints' | 'allowed_area' | 'survey_area';
+export interface Waypoint extends Coordinate {
   altitude_m: number;
 }
 export interface Mission {
-  schema_version: 1;
+  schema_version: 1 | 2;
+  planning?: Planning | null;
   id: string;
   name: string;
   takeoff_altitude_m: number;
@@ -67,6 +80,8 @@ export interface Status {
   simulator_revision: string;
 }
 export interface Report {
+  fence_violation_count?: number;
+  fence_observed_violation_s?: number;
   samples: number;
   duration_s: number;
   peak_relative_altitude_m: number | null;
@@ -81,7 +96,8 @@ export interface Report {
 export const HOME = { latitude: 41.0082, longitude: 28.9784 };
 export function newMission(): Mission {
   return {
-    schema_version: 1,
+    schema_version: 2,
+    planning: null,
     id: crypto.randomUUID(),
     name: 'İstanbul · örnek görev',
     takeoff_altitude_m: 20,
@@ -117,7 +133,7 @@ export function validateMission(input: unknown): Mission {
     throw Error('Görev JSON nesnesi olmalıdır.');
   const m = input as Mission;
   if (
-    m.schema_version !== 1 ||
+    ![1, 2].includes(m.schema_version) ||
     typeof m.id !== 'string' ||
     !m.id.length ||
     m.id.length > 80 ||
@@ -148,5 +164,62 @@ export function validateMission(input: unknown): Mission {
       w.altitude_m > 120
     )
       throw Error('Koordinatlar veya nokta irtifası geçersiz.');
-  return structuredClone(m);
+  if (m.schema_version === 1 && m.planning != null)
+    throw Error('Sürüm 1 alan planlama bilgisi içeremez.');
+  if (m.planning != null) {
+    const p = m.planning;
+    for (const area of [p.allowed_area, p.survey_area])
+      if (
+        !Array.isArray(area) ||
+        area.length > 60 ||
+        area.some(
+          (w) =>
+            !w ||
+            !Number.isFinite(w.latitude) ||
+            !Number.isFinite(w.longitude) ||
+            Math.abs(w.latitude) > 90 ||
+            Math.abs(w.longitude) > 180,
+        )
+      )
+        throw Error(
+          'Alan koordinatları geçersiz; en fazla 60 köşe kullanılabilir.',
+        );
+    if (
+      !Number.isFinite(p.spacing_m) ||
+      p.spacing_m < 5 ||
+      p.spacing_m > 200 ||
+      !Number.isFinite(p.heading_deg) ||
+      p.heading_deg < 0 ||
+      p.heading_deg >= 180 ||
+      !Number.isFinite(p.altitude_m) ||
+      p.altitude_m < 5 ||
+      p.altitude_m > 120 ||
+      !Number.isFinite(p.max_distance_m) ||
+      p.max_distance_m < 1 ||
+      p.max_distance_m > 100000 ||
+      !Number.isFinite(p.max_altitude_m) ||
+      p.max_altitude_m < 5 ||
+      p.max_altitude_m > 120
+    )
+      throw Error('Tarama ayarları veya görev sınırları geçersiz.');
+  }
+  return {
+    ...structuredClone(m),
+    schema_version: 2,
+    planning: m.planning ? structuredClone(m.planning) : null,
+  };
+}
+
+// Wire serializers may reorder properties. Mission identity must compare values,
+// preserving array order while normalizing legacy version/nullable metadata.
+export function missionFingerprint(mission: Mission): string {
+  return JSON.stringify(
+    { ...mission, schema_version: 2, planning: mission.planning ?? null },
+    (_key, value) =>
+      value && typeof value === 'object' && !Array.isArray(value)
+        ? Object.fromEntries(
+            Object.entries(value).sort(([a], [b]) => a.localeCompare(b)),
+          )
+        : value,
+  );
 }

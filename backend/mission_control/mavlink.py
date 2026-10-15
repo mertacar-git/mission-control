@@ -8,6 +8,7 @@ os.environ.setdefault('MAVLINK20','1')
 from pymavlink import mavutil
 from .models import ConnectionState,Telemetry,Event,utc_now
 from .simulator import Simulator,HOME
+from .planning import require_valid, fence_state
 
 M=mavutil.mavlink
 
@@ -37,6 +38,7 @@ class MAVLinkManager:
         self.active_mission=None; self.upload_verified=False
         self.events=[]; self.sequence=0; self.controller=None; self.controller_seen=0.0
         self.observations={}
+        self.last_fence_state=None
 
     def claim(self,token):
         if not token or len(token)>100: raise PermissionError('Missing control session.')
@@ -146,7 +148,12 @@ class MAVLinkManager:
                 if self.state==ConnectionState.CONNECTED and now-last_request>=5:
                     self.link.mav.request_data_stream_send(1,1,M.MAV_DATA_STREAM_ALL,5,1);last_request=now
                 if now-last_publish>=.5:
-                    await self.emit('telemetry',self.snapshot());last_publish=now
+                    snapshot=self.snapshot()
+                    state=fence_state(self.active_mission,snapshot)
+                    if state!=self.last_fence_state:
+                        self.last_fence_state=state
+                        await self.emit('fence',dict(state=state,mission_id=self.active_mission.id if self.active_mission else None))
+                    await self.emit('telemetry',snapshot);last_publish=now
                 await asyncio.sleep(.02)
         except asyncio.CancelledError: raise
         except Exception as exc:
@@ -204,11 +211,13 @@ class MAVLinkManager:
                     await self.command_long(M.MAV_CMD_COMPONENT_ARM_DISARM,[1,0,0,0,0,0,0])
                 elif action=='start':
                     if not self.upload_verified or not self.telemetry.armed: raise RuntimeError('Arm and upload a verified mission before starting.')
+                    require_valid(self.active_mission)
                     await self.set_mode('AUTO')
                     await self.command_long(M.MAV_CMD_MISSION_START,[0,0,0,0,0,0,0])
                 elif action=='hold': await self.set_mode('BRAKE')
                 elif action=='resume':
                     if not self.upload_verified or not self.telemetry.armed: raise RuntimeError('There is no active armed mission to resume.')
+                    require_valid(self.active_mission)
                     await self.set_mode('AUTO')
                 elif action=='return': await self.set_mode('RTL')
                 elif action=='land': await self.set_mode('LAND')
@@ -240,6 +249,7 @@ class MAVLinkManager:
 
     async def upload(self,mission):
         self.require_connected()
+        require_valid(mission)
         if self.telemetry.armed: raise RuntimeError('Mission changes require a disarmed simulator.')
         if self.operation.locked(): raise RuntimeError('Another mission/command operation is pending.')
         async with self.operation:

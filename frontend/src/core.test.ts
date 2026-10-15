@@ -25,7 +25,7 @@ describe('mission contracts', () => {
     m.waypoints[0].latitude = 91;
     expect(() => validateMission(m)).toThrow();
     expect(() =>
-      validateMission({ ...newMission(), schema_version: 2 }),
+      validateMission({ ...newMission(), schema_version: 3 }),
     ).toThrow();
     expect(() => validateMission({ ...newMission(), waypoints: [] })).toThrow();
   });

@@ -4,7 +4,15 @@
 
 A mission dashboard needs more than moving telemetry cards. An operator must know which route is being uploaded, recover a mistaken edit, distinguish command acceptance from vehicle behavior, and inspect a flight after a connection failure.
 
-Mission Control joins route planning, an app-owned ArduCopter simulator, live telemetry, SQLite recording, isolated playback and export. Release 1.2 adds route reordering, linked map/editor selection, bounded undo/redo and a reviewed upload snapshot. The public browser demo remains a deterministic model; autopilot acceptance is demonstrated separately with real SITL.
+Mission Control joins route planning, an app-owned ArduCopter simulator, live telemetry, SQLite recording, isolated playback and export. Release 1.3 adds concave-area survey generation and independent boundary validation to the recoverable editor and reviewed upload workflow. The public browser demo remains a deterministic model; autopilot acceptance is demonstrated separately with real SITL.
+
+## Concave survey planning · 1.3
+
+The survey feature addresses two distinct problems: generating a route whose planned connectors remain inside a concave polygon, and observing whether the actual trajectory stays inside an allowed boundary. These are separate claims. Scanline clipping, four serpentine candidates and visibility-graph connectors solve the geometric planning problem. Backend Shapely checks all segments independently, including cases where both endpoints are inside but the segment crosses a concavity.
+
+The generated L-shaped acceptance mission has seven points, a 138.463 m planned route and a 1,275 m² polygon. It completed on actual SITL and produced a recording/report. A second, deliberately narrow boundary observed a transient trajectory violation without sending corrective commands. An isolated outside sample is counted but has no measurable duration; the report does not fabricate time around it. [Detailed method, contracts and evidence](SURVEY_PLANNING.md).
+
+Browser acceptance exposed an additional serialization defect: raw JSON string equality interpreted reordered backend object properties as a different uploaded mission. Canonical value comparison now normalizes mission version/null metadata and object key ordering while preserving route-array order. A regression test covers backend-shaped objects and real changed limits.
 
 ## Data path and responsibilities
 

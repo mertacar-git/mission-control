@@ -9,6 +9,7 @@ from .models import Mission,ConnectionRequest,CommandRequest
 from .store import Store
 from .mavlink import MAVLinkManager
 from .analysis import report
+from .planning import validate_planning
 
 class RecordingRequest(BaseModel):
     name: str = Field(default='SITL uçuş kaydı',min_length=1,max_length=100)
@@ -21,7 +22,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     async def lifespan(app):
         yield
         await manager.disconnect();store.close()
-    app=FastAPI(title='Mission Control',version='1.0.0',lifespan=lifespan)
+    app=FastAPI(title='Mission Control',version='1.3.0',lifespan=lifespan)
     app.state.manager=manager;app.state.store=store
     origins=['http://localhost:5173','http://127.0.0.1:5173','http://localhost:8000','http://127.0.0.1:8000']
     app.add_middleware(CORSMiddleware,allow_origins=origins,allow_methods=['GET','POST','DELETE'],allow_headers=['Content-Type','X-Control-Session'])
@@ -37,7 +38,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     def translate(exc):
         return HTTPException(409,str(exc))
     @app.get('/api/v1/health')
-    def health(): return dict(status='ok',version='1.0.0',transport='owned-sitl-only')
+    def health(): return dict(status='ok',version='1.3.0',transport='owned-sitl-only')
     @app.get('/api/v1/status')
     def status(): return manager.status()
     @app.post('/api/v1/connection')
@@ -56,6 +57,8 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     def missions(): return store.missions()
     @app.post('/api/v1/missions')
     def save_mission(mission:Mission): return store.save_mission(mission)
+    @app.post('/api/v1/missions/validate')
+    def validate_mission(mission:Mission): return validate_planning(mission)
     @app.delete('/api/v1/missions/{identifier}')
     def delete_mission(identifier:str): store.delete_mission(identifier);return dict(status='deleted')
     @app.post('/api/v1/missions/{identifier}/upload')

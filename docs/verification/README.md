@@ -29,3 +29,15 @@ The first UI flight exposed the LOITER/default-throttle descent. [Regression tel
 - At a 390×844 viewport the page had no horizontal overflow; the 341 px review dialog fit between y=36.5 and y=807.5. [Mobile view](../media/mission-review-mobile.png).
 
 See [case study](../CASE_STUDY.md) and [captioned video chapters](../media/walkthrough.md) for decisions and media provenance. UI self-review is not represented as independent operator research.
+## UI 1.3 survey acceptance
+
+Release 1.3 adds [survey planning and independent boundary validation](../SURVEY_PLANNING.md). Verification now includes **58 frontend tests, 41 backend tests and seven actual SITL scenarios**. The original five scenarios were rerun, followed by a TypeScript-generated concave mission and a narrow-boundary trajectory observation. [Current scenario results](sitl-results.json).
+
+- [Shared geometry fixtures](../../tests/fixtures/planning.json) run in TypeScript and Python, including concave edge crossings, boundary tolerance, duplicate/backtracking vertices, radius, distance and altitude limits.
+- [Generated mission](survey-mission.json), [actual SITL session](survey-session.json), [report](survey-report.json), [CSV](survey-telemetry.csv). Seven points, 1,275 m² polygon, 138.463 m planned route.
+- [Narrow-boundary session](narrow-boundary-session.json), [report](narrow-boundary-report.json), [CSV](narrow-boundary-telemetry.csv). One isolated outside sample was observed in this local run: count 1, measurable duration 0 seconds. No duration is invented for a single sample and no corrective fence command is sent. Exact excursion counts are observational, not a cross-platform assertion.
+- [Actual browser-operated SITL acceptance](survey-ui-acceptance.json), [recording](survey-ui-session.json), [report](survey-ui-report.json), [CSV](survey-ui-telemetry.csv): 1× speed, 213 samples over 109.017 wall seconds, peak relative altitude 10.014 m and no observed boundary violation. The recording includes post-landing samples and is not a pure airborne-duration metric.
+- Browser checks cover layer-specific drawing, vertex dragging/numeric edits/deletion, undo/redo, preview invalidation, blocked invalid upload, actual snapshot upload and flight, isolated replay, report rendering and grid-only geometry. Mobile 390×844: page content 375 px, review width 341 px and height 804 px, fitting within the viewport with internal scrolling.
+
+Opera's automation extension did not permit local-file URL access, so automated file-chooser injection was unavailable. Actual schema 2 recordings were imported through the parser in unit tests and their boundary metrics compared with backend results; the browser exercised backend archive replay. Download buttons were exercised and export file contents were verified through API outputs. This limitation concerns automated browser verification, not a new application permission requirement.
+

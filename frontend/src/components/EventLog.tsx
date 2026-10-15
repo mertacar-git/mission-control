@@ -16,6 +16,18 @@ const actionNames: Record<string, string> = {
 };
 function eventLabel(event: FlightEvent) {
   const p = event.payload;
+  if (event.type === 'fence')
+    return (
+      'Görev sınırı · ' +
+      ((
+        {
+          inside: 'içeride',
+          outside: 'İHLAL GÖZLENDİ',
+          unknown: 'ölçüm bilinmiyor',
+          unconfigured: 'tanımlanmadı',
+        } as Record<string, string>
+      )[String(p.state)] ?? String(p.state))
+    );
   if (event.type === 'command')
     return `${actionNames[String(p.action)] ?? p.action} · ${p.status === 'requested' ? 'istendi' : p.status === 'acknowledged' ? 'kabul edildi' : p.status === 'observed' ? 'telemetride gözlendi' : p.status === 'timed_out' ? 'zaman aşımı' : p.status === 'not_observed' ? 'henüz gözlenmedi' : 'başarısız'}${p.error ? ' · ' + p.error : ''}`;
   if (event.type === 'connection')

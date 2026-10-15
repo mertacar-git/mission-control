@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-15",
+  "release": "1.3.0",
+  "frontend_tests": 58,
+  "backend_tests": 41,
+  "sitl_scenarios": 7,
+  "ui_session": "5aed94d5-124f-4be7-9c0e-ee000d2b2507",
+  "source": "sitl",
+  "simulator_speedup": 1,
+  "checks": [
+    "concave preview 1275 m2, 7 points, 138.5 m",
+    "changed settings invalidate preview",
+    "apply route is one undo/redo step",
+    "allowed-layer map click adds area vertex without adding route point",
+    "numeric area editing and delete/undo",
+    "area marker drag updates coordinates without adding vertex",
+    "invalid geometry blocks review confirmation",
+    "canonical uploaded mission identity regression fixed",
+    "actual UI SITL upload, arm/start, route, landing",
+    "actual UI recording replay and live-command isolation",
+    "JSON and CSV data exported through backend API",
+    "390x844 viewport: content width375, modal341x804 inside viewport, scrollable route summary",
+    "grid-only polygon/route rendering"
+  ],
+  "browser_limit": "Opera extension local-file URL access is disabled; automated file chooser injection was unavailable. Actual schema 2 recordings were parsed and compared to backend metrics by unit tests. Backend archive replay was exercised in browser. UI download controls were exercised; exported artifact content was verified via API."
+}

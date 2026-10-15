@@ -5,7 +5,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import { Plus, Trash2, Database, ArrowUpToLine } from 'lucide-react';
 import { download } from '../analysis';
 import { routeLength } from '../missionPresentation';
-import { validateMission, type Mission } from '../types';
+import { validateMission, missionFingerprint, type Mission } from '../types';
 type Props = {
   selectedIndex: number;
   onSelect: (index: number) => void;
@@ -294,7 +294,7 @@ export function MissionEditor({
             value=""
             onChange={(e) => {
               const m = missions.find((m) => m.id === e.target.value);
-              if (m) setMission(structuredClone(m));
+              if (m) setMission(validateMission(m));
             }}
           >
             <option value="">Görev seçin…</option>
@@ -313,7 +313,7 @@ export function MissionEditor({
           connected={connected}
           editing={editing}
           busy={busy}
-          matches={JSON.stringify(review) === JSON.stringify(mission)}
+          matches={missionFingerprint(review) === missionFingerprint(mission)}
           onClose={() => setReview(null)}
           onConfirm={async () => {
             await uploadMission(review);

@@ -10,6 +10,7 @@ from mission_control.mavlink import MAVLinkManager,M
 from mission_control.simulator import Simulator,HOME
 from mission_control.store import Store
 from mission_control.analysis import report
+from mission_control.planning import require_valid, SCALE, COS
 
 OUTPUT=Path(__file__).resolve().parents[2]/'docs/verification'
 
@@ -121,6 +122,37 @@ async def main():
             await wait_for(manager,lambda s:s['flight_mode']=='RTL',30,'configured battery RTL')
             await wait_for(manager,lambda s:s['armed'] is False,100,'battery failsafe landing')
         await scenario('configured low-battery RTL and landing',battery)
+        async def survey_flight(narrow=False):
+            await manager.disconnect();await ready(manager)
+            mission=Mission.model_validate_json((OUTPUT/'survey-mission.json').read_text())
+            if narrow:
+                # Deliberately close to planned turns; observe actual trajectory, never enforce a fence.
+                points=[(-.05,-.05),(50.05,-.05),(50.05,20.05),(25.05,20.05),(25.05,50.05),(-.05,50.05)]
+                from mission_control.models import Coordinate
+                mission.planning.allowed_area=[Coordinate(latitude=HOME[0]+y/SCALE,longitude=HOME[1]+x/SCALE/COS) for x,y in points]
+                mission.name='Narrow planning boundary observation'
+            require_valid(mission)
+            # Independent rejection must precede MAVLink transmission.
+            invalid=mission.model_copy(deep=True);invalid.planning.max_distance_m=1
+            try: await manager.upload(invalid)
+            except ValueError: pass
+            else: raise AssertionError('Invalid planning mission reached MAVLink upload.')
+            await manager.upload(mission)
+            identifier=store.start_recording(mission.name,mission.model_dump())
+            await arm(manager);await manager.command('start')
+            await wait_for(manager,lambda s:(s['relative_altitude_m'] or 0)>7,40,'survey takeoff')
+            await wait_for(manager,lambda s:s['armed'] is False,120,'survey landing')
+            await asyncio.sleep(1);store.stop_recording()
+            recording=store.session(identifier);analysis=report(recording)
+            assert analysis['samples']>20 and analysis['peak_relative_altitude_m']>7
+            assert any(e['type']=='mission_progress' for e in recording['events'])
+            assert any(e['type']=='fence' for e in recording['events'])
+            prefix='narrow-boundary' if narrow else 'survey'
+            (OUTPUT/f'{prefix}-session.json').write_text(json.dumps(recording,indent=2))
+            (OUTPUT/f'{prefix}-report.json').write_text(json.dumps(analysis,indent=2))
+            (OUTPUT/f'{prefix}-telemetry.csv').write_text(store.csv(identifier))
+        await scenario('generated concave survey, recording and report',lambda:survey_flight(False))
+        await scenario('narrow planning boundary trajectory observation',lambda:survey_flight(True))
     finally:
         await manager.disconnect();store.close()
     print(json.dumps(results,indent=2))

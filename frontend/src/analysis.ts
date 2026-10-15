@@ -125,6 +125,7 @@ export function analyze(
         { latitude: fresh[i].latitude!, longitude: fresh[i].longitude! },
       );
   return {
+    ...fenceMetrics(recording.session.mission, rows),
     samples: rows.length,
     duration_s: rows.length
       ? Math.max(0, rows.at(-1)!.elapsed_s - rows[0].elapsed_s)
@@ -183,3 +184,4 @@ export function download(
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+import { fenceMetrics } from './planning';

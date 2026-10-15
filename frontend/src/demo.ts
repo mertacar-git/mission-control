@@ -9,6 +9,7 @@ import {
   type Status,
 } from './types';
 import { distance } from './analysis';
+import { validatePlanning, fenceState, type FenceState } from './planning';
 
 export class DemoVehicle {
   state: Status = {
@@ -30,6 +31,7 @@ export class DemoVehicle {
   position = { ...HOME };
   battery = 100;
   recording: Recording | null = null;
+  lastFenceState: FenceState | null = null;
   emit(type: string, payload: Record<string, unknown>) {
     const event: FlightEvent = {
       type,
@@ -57,6 +59,9 @@ export class DemoVehicle {
     this.state.telemetry = emptyTelemetry();
   }
   upload(m: Mission) {
+    const validation = validatePlanning(m);
+    if (!validation.valid)
+      throw Error(validation.issues.map((i) => i.message).join(' '));
     if (this.armed)
       throw Error('Görev değişikliği için sanal araç disarmed olmalıdır.');
     this.state.mission = structuredClone(m);
@@ -67,6 +72,11 @@ export class DemoVehicle {
   command(action: Action) {
     if (this.state.state !== 'connected')
       throw Error('Önce demo bağlantısını açın.');
+    if (['start', 'resume'].includes(action) && this.state.mission) {
+      const validation = validatePlanning(this.state.mission);
+      if (!validation.valid)
+        throw Error(validation.issues.map((i) => i.message).join(' '));
+    }
     const id = crypto.randomUUID();
     this.emit('command', { id, action, status: 'requested' });
     if (action === 'arm') this.armed = true;
@@ -151,6 +161,11 @@ export class DemoVehicle {
       connection: this.state.state,
     };
     this.state.telemetry = telemetry;
+    const state = fenceState(this.state.mission, telemetry);
+    if (state !== this.lastFenceState) {
+      this.lastFenceState = state;
+      this.emit('fence', { state, mission_id: this.state.mission?.id ?? null });
+    }
     if (dt > 0)
       this.emit('telemetry', telemetry as unknown as Record<string, unknown>);
   }

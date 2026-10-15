@@ -1,0 +1,17 @@
+[
+  {"name":"rectangle","allowed":[[-20,-20],[100,-20],[100,100],[-20,100]],"survey":[[5,5],[60,5],[60,60],[5,60]],"route":[[10,10],[50,50]],"valid":true},
+  {"name":"concave endpoints inside but segment outside","allowed":[[-10,-10],[70,-10],[70,20],[20,20],[20,70],[-10,70]],"survey":[],"route":[[60,10],[10,60]],"valid":false,"code":"segment_outside"},
+  {"name":"survey edge crosses concavity","allowed":[[-10,-10],[70,-10],[70,20],[20,20],[20,70],[-10,70]],"survey":[[10,10],[60,10],[10,60]],"route":[[10,10]],"valid":false,"code":"survey_outside"},
+  {"name":"boundary route","allowed":[[0,0],[100,0],[100,100],[0,100]],"survey":[],"route":[[100,0],[100,100]],"valid":true},
+  {"name":"tolerance near boundary","allowed":[[0,0],[100,0],[100,100],[0,100]],"survey":[],"route":[[100.05,0]],"valid":true},
+  {"name":"outside tolerance","allowed":[[0,0],[100,0],[100,100],[0,100]],"survey":[],"route":[[100.2,0]],"valid":false,"code":"segment_outside"},
+  {"name":"bow tie","allowed":[[-10,-10],[100,100],[-10,100],[100,-10]],"survey":[],"route":[[10,10]],"valid":false,"code":"polygon"},
+  {"name":"repeated vertex","allowed":[[-10,-10],[100,-10],[100,100],[-10,-10],[-10,100]],"survey":[],"route":[[10,10]],"valid":false,"code":"polygon"},
+  {"name":"home outside","allowed":[[10,10],[100,10],[100,100],[10,100]],"survey":[],"route":[[20,20]],"valid":false,"code":"home_outside"},
+  {"name":"distance limit","allowed":[[-20,-20],[100,-20],[100,100],[-20,100]],"survey":[],"route":[[10,10],[50,50]],"max_distance_m":50,"valid":false,"code":"distance"},
+  {"name":"distance exact","allowed":[[-20,-20],[100,-20],[100,100],[-20,100]],"survey":[],"route":[[30,40]],"max_distance_m":50,"valid":true},
+  {"name":"altitude limit","allowed":[[-20,-20],[100,-20],[100,100],[-20,100]],"survey":[],"route":[[10,10]],"max_altitude_m":10,"valid":false,"code":"altitude"},
+  {"name":"radius limit","allowed":[[-20,-20],[2100,-20],[2100,100],[-20,100]],"survey":[],"route":[[10,10]],"valid":false,"code":"polygon"},
+  {"name":"zero area","allowed":[[0,0],[10,10],[20,20]],"survey":[],"route":[[10,10]],"valid":false,"code":"polygon"},
+  {"name":"overlapping boundary backtrack","allowed":[[-10,-10],[60,-10],[20,-10],[60,60],[-10,60]],"survey":[],"route":[[10,10]],"valid":false,"code":"polygon"}
+]

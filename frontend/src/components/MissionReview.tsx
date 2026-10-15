@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, X, ArrowUpToLine } from 'lucide-react';
 import { routeLength } from '../missionPresentation';
+import { validatePlanning } from '../planning';
+import { ValidationSummary } from './SurveyPlanner';
 import { validateMission, type Mission } from '../types';
 
 type Props = {
@@ -38,7 +40,9 @@ export function MissionReview({
   } catch (problem) {
     error = problem instanceof Error ? problem.message : String(problem);
   }
-  const allowed = connected && editing && matches && !error && !busy;
+  const validation = validatePlanning(mission);
+  const allowed =
+    connected && editing && matches && !error && !busy && validation.valid;
   return (
     <dialog
       ref={dialog}
@@ -106,6 +110,38 @@ export function MissionReview({
           <span>Son rota noktasında iniş</span>
         </li>
       </ol>
+      {mission.planning && (
+        <>
+          <p className="muted">
+            İzin verilen alan: {mission.planning.allowed_area.length} köşe ·
+            Tarama alanı: {mission.planning.survey_area.length} köşe · Sınırlar:{' '}
+            {mission.planning.max_distance_m} m /{' '}
+            {mission.planning.max_altitude_m} m. Alan koordinatları bu görev
+            özetiyle birlikte dondurulmuştur; otopilot geofence olarak
+            yüklenmez.
+          </p>
+          <details>
+            <summary>Alan koordinatlarını incele</summary>
+            {(['allowed_area', 'survey_area'] as const).map((area) => (
+              <div key={area}>
+                <strong>
+                  {area === 'allowed_area'
+                    ? 'İzin verilen alan'
+                    : 'Tarama alanı'}
+                </strong>
+                <ol>
+                  {mission.planning![area].map((p, i) => (
+                    <li key={i}>
+                      {p.latitude.toFixed(6)}, {p.longitude.toFixed(6)}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+          </details>
+          <ValidationSummary result={validation} />
+        </>
+      )}
       <p className="muted">
         İrtifalar eve göredir. Yükleme aracı arm etmez ve uçuşu başlatmaz.
         Aktarım tamamlanınca rota geri okunarak doğrulanır.

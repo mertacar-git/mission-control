@@ -6,6 +6,7 @@ import type {
   Action,
   FlightEvent,
 } from './types';
+import type { Validation } from './planning';
 const key = 'mission-control-controller';
 export function controller() {
   let token = sessionStorage.getItem(key);
@@ -44,6 +45,8 @@ export async function request<T>(
   return response.json() as Promise<T>;
 }
 export const api = {
+  validate: (mission: Mission) =>
+    request<Validation>('/missions/validate', 'POST', mission),
   status: () => request<Status>('/status'),
   connect: (speedup = 1) => request<Status>('/connection', 'POST', { speedup }),
   disconnect: () => request<Status>('/connection', 'DELETE'),

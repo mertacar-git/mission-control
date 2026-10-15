@@ -1,4 +1,7 @@
 import { useMissionDraft, moveWaypoint } from './missionDraft';
+import { SurveyPlanner } from './components/SurveyPlanner';
+import { fenceState, validatePlanning, defaultPlanning } from './planning';
+import { missionFingerprint, type EditLayer, type Waypoint } from './types';
 import { parseRecording } from './recording';
 import { MissionEditor } from './components/MissionEditor';
 import { RecordingArchive } from './components/RecordingArchive';
@@ -104,6 +107,8 @@ export default function App() {
     },
   );
   const [selectedWaypoint, setSelectedWaypoint] = useState(0);
+  const [editLayer, setEditLayer] = useState<EditLayer>('waypoints');
+  const [previewRoute, setPreviewRoute] = useState<Waypoint[] | null>(null);
   const [mapFocus, setMapFocus] = useState<{
     latitude: number;
     longitude: number;
@@ -165,7 +170,9 @@ export default function App() {
     ? (frameAt(replayFrames, replayTime) ??
       emptyTelemetry(replay.session.source))
     : status.telemetry;
-  const route = replay?.session.mission ?? mission;
+  const route =
+    replay?.session.mission ??
+    (page === 'mission' ? mission : (status.mission ?? mission));
   const trace = replay
     ? replayFrames.filter((r) => r.elapsed_s <= replayTime)
     : history;
@@ -173,7 +180,7 @@ export default function App() {
   const uploadMatches =
     status.upload_verified &&
     status.mission !== null &&
-    JSON.stringify(status.mission) === JSON.stringify(mission);
+    missionFingerprint(status.mission) === missionFingerprint(mission);
   const activeRecord = selected ?? replay ?? recordings[0] ?? null;
   const report = activeRecord
     ? analyze(activeRecord, altThreshold, batThreshold)
@@ -444,10 +451,16 @@ export default function App() {
     setNotice('');
     try {
       const checked = validateMission(approved ?? mission);
+      const validation = validatePlanning(checked);
+      if (!validation.valid)
+        throw Error(validation.issues.map((i) => i.message).join(' '));
       if (mode === 'demo') {
         demo.current.upload(checked);
         refreshDemo();
       } else {
+        const remote = await api.validate(checked);
+        if (!remote.valid)
+          throw Error(remote.issues.map((i) => i.message).join(' '));
         await api.save(checked);
         await api.upload(checked.id);
         setStatus(await api.status());
@@ -611,7 +624,7 @@ export default function App() {
           >
             Kaynak kodu & kurulum ↗
           </a>
-          <span>v1.2 · ArduCopter 4.6.3</span>
+          <span>v1.3 · ArduCopter 4.6.3</span>
         </div>
       </aside>
       <div className="main-area">
@@ -860,6 +873,37 @@ export default function App() {
             >
               <div className="workspace-main">
                 <MapView
+                  onLayerChange={(key) => {
+                    setEditLayer(key);
+                    if (key !== 'waypoints' && !mission.planning)
+                      setMission((m) => ({
+                        ...m,
+                        schema_version: 2,
+                        planning: defaultPlanning(),
+                      }));
+                  }}
+                  layer={
+                    page === 'mission' && mission.planning
+                      ? editLayer
+                      : 'waypoints'
+                  }
+                  previewRoute={
+                    page === 'mission' && !replay ? previewRoute : null
+                  }
+                  onAreaMove={(area, index, point) => {
+                    if (editing)
+                      setMission((m) => ({
+                        ...m,
+                        planning: m.planning
+                          ? {
+                              ...m.planning,
+                              [area]: m.planning[area].map((v, i) =>
+                                i === index ? point : v,
+                              ),
+                            }
+                          : null,
+                      }));
+                  }}
                   selectedIndex={
                     replay || page !== 'mission' ? null : selectedWaypoint
                   }
@@ -869,7 +913,27 @@ export default function App() {
                   telemetry={shown}
                   trace={trace}
                   editing={editing && page === 'mission'}
-                  onAdd={addPoint}
+                  onAdd={(lat, lon) => {
+                    if (!editing) return;
+                    if (mission.planning && editLayer !== 'waypoints') {
+                      if (mission.planning[editLayer].length >= 60) {
+                        setNotice('Alan en fazla 60 köşe içerebilir.');
+                        return;
+                      }
+                      setMission((m) => ({
+                        ...m,
+                        planning: m.planning
+                          ? {
+                              ...m.planning,
+                              [editLayer]: [
+                                ...m.planning[editLayer],
+                                { latitude: lat, longitude: lon },
+                              ],
+                            }
+                          : null,
+                      }));
+                    } else addPoint(lat, lon);
+                  }}
                   onMove={(index, lat, lon) =>
                     setMission((previous) => ({
                       ...previous,
@@ -881,6 +945,17 @@ export default function App() {
                     }))
                   }
                 />
+                {page === 'mission' && !replay && (
+                  <SurveyPlanner
+                    mission={mission}
+                    setMission={setMission}
+                    layer={mission.planning ? editLayer : 'waypoints'}
+                    setLayer={setEditLayer}
+                    editing={editing}
+                    onFocus={setMapFocus}
+                    onPreview={setPreviewRoute}
+                  />
+                )}
                 <section className="panel flight-actions">
                   <div>
                     <span className="eyebrow">UÇUŞ KONTROLLERİ</span>
@@ -932,6 +1007,31 @@ export default function App() {
                   <p>
                     Komut kabulü ve telemetride gözlenen durum ayrı izlenir.
                     Başlatma sırasında uçuş kaydı otomatik açılır.
+                  </p>
+                  <p
+                    className={
+                      'fence-state ' +
+                      fenceState(
+                        replay?.session.mission ?? status.mission,
+                        shown,
+                      )
+                    }
+                  >
+                    Görev sınırı:{' '}
+                    {
+                      {
+                        unconfigured: 'Tanımlanmadı',
+                        inside: 'İçeride',
+                        outside: 'İHLAL GÖZLENDİ',
+                        unknown: 'Bilinmiyor / güncel ölçüm yok',
+                      }[
+                        fenceState(
+                          replay?.session.mission ?? status.mission,
+                          shown,
+                        )
+                      ]
+                    }{' '}
+                    · Otomatik komut gönderilmez.
                   </p>
                 </section>
                 <section className="panel chart-panel">
@@ -1101,6 +1201,22 @@ export default function App() {
                   </section>
                   <section className="panel report-details">
                     <div>
+                      <span>
+                        Görev sınırı ihlali
+                        <strong>
+                          {activeRecord?.session.mission?.planning
+                            ? report.fence_violation_count
+                            : '—'}
+                        </strong>
+                      </span>
+                      <span>
+                        Gözlenen ihlal süresi
+                        <strong>
+                          {activeRecord?.session.mission?.planning
+                            ? value(report.fence_observed_violation_s ?? 0, 's')
+                            : '—'}
+                        </strong>
+                      </span>
                       <span>
                         İrtifa uyarısı
                         <strong>{report.altitude_alert_samples} örnek</strong>

@@ -6,12 +6,22 @@ Plan a mission, fly one virtual UAV, watch telemetry, record the flight, replay 
 
 React + TypeScript + Leaflet + Recharts frontend, FastAPI + SQLite backend, and an app-owned ArduCopter SITL process speaking MAVLink. The interface is Turkish; code and documentation are English.
 
-![Mission workspace and coordinate editor](docs/media/mission-planner-v12.png)
+![Survey workspace and boundary layers](docs/media/survey-planner-v13.png)
 
 [Watch the captioned walkthrough](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4) · [Chapters and recording method](docs/media/walkthrough.md).
 
 
-## Operator workspace · UI 1.2
+## Survey planning · UI 1.3
+
+Draw an **allowed area** and a separate **survey area**, including concave L/U shapes. Generate a deterministic serpentine preview with interior connectors, review its length/area/point count, then explicitly apply it. Map layers keep waypoint and polygon editing distinct; area coordinates, settings and route replacement participate in undo/redo. Tiles are optional.
+
+Backend Shapely validation independently checks the entire route, including home transit and concave crossings; checking only waypoint endpoints is insufficient. Invalid geometry, distance or altitude limits block upload and start/resume. Schema 1 missions and existing recordings remain readable; schema 2 adds optional planning metadata. [Geometry, API and compatibility contract](docs/SURVEY_PLANNING.md).
+
+The boundary is a **planning control, not an autopilot geofence**. Fresh measured violations are displayed and recorded; no automatic return/landing command is sent. Reports count observed outside episodes and sum only measurable outside intervals. The narrow-boundary SITL recording demonstrates that actual turns can leave a valid planned centreline.
+
+Defaults: 20 m line spacing, 0° heading from north, 20 m relative altitude, 2,000 m route limit and 80 m altitude ceiling. Planning stays within 2 km of simulation home and retains the 50-waypoint limit. Polygon holes, terrain and camera coverage are outside scope.
+
+## Operator workspace
 
 Move complete waypoints up/down, select the same point on the map and in the editor, and undo/redo the last 100 changes. Upload opens an explicit review of a fixed snapshot, showing source, coordinates, takeoff altitude and final landing. Invalid missions or an unavailable connection block confirmation. Upload still requires full backend readback verification.
 
@@ -21,7 +31,7 @@ The interface uses a map-first workspace with a focused coordinate editor, route
 
 Flight archives support name search and demo/SITL source filtering. Playback shows command and vehicle events without flooding the visible log with telemetry rows; the complete telemetry still remains in the recording. Repeated start actions are disabled while AUTO is observed. Map controls include metric scale and route fitting, including grid-only mode.
 
-Presentation code is separated into editor, review, archive, readiness, event-log and chart components. The chart library loads on demand; the initial JavaScript bundle is about 363 kB (112 kB gzip), with a separate chart chunk. Frontend verification includes 30 tests, TypeScript compilation and browser checks of planning, controls, archive filters and isolated replay.
+Presentation code is separated into survey planner, editor, review, archive, readiness, event-log and chart components. The chart library loads on demand; the initial JavaScript bundle is about 393 kB (122 kB gzip), with a separate chart chunk. Verification includes shared TypeScript/Python geometry fixtures, model/history/replay tests, TypeScript compilation and browser checks. Seven real SITL scenarios cover both existing flight controls and generated concave survey missions.
 
 ## Two distinct modes
 
@@ -69,7 +79,7 @@ Leave the WSL backend running and open **http://127.0.0.1:8000**. The local fron
 
 ## Workflow
 
-1. Edit coordinates numerically or add/drag route points on the map. Reorder points, undo/redo edits, save missions or import/export mission JSON.
+1. Edit coordinates numerically or add/drag route points on the map. For a survey, choose **Örnek içbükey alan** below the map, or draw both polygons using the map layer buttons. Set parameters, generate the gold preview, and explicitly apply the route. Reorder points, undo/redo edits, save missions or import/export mission JSON.
 2. Connect, review the upload snapshot, then confirm and read back the full mission. Editing and upload are locked while armed.
 3. Arm and start. Recording opens automatically on start; stop/save it after landing. Hold uses BRAKE, resume uses AUTO, return uses RTL, and landing uses LAND.
 4. Open **Uçuş kayıtları** and select **Oynat**. Pause, seek and select 0.5×/1×/2×. All live command controls are disabled during replay. Replay does not stop a live vehicle running in the background.
