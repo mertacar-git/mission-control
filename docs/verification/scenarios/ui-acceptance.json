@@ -1,0 +1,21 @@
+{
+  "release": "1.4.0",
+  "browser": "Opera Chromium extension",
+  "local_url": "http://127.0.0.1:8000/",
+  "checks": {
+    "local_low_battery_started_from_ui_and_passed": true,
+    "session_id": "03bd56e5-535d-4bf5-b144-535946ec40d2",
+    "selected_rtl_event_recording_time_s": 18.2,
+    "selected_voltage_v": 11.0,
+    "selected_mode": "RTL",
+    "preceding_command": "start observed",
+    "replay_arm_button_disabled": true,
+    "manual_controls_locked_during_experiment": true,
+    "cancellation_persisted_interrupted": true,
+    "after_cancellation": { "connection": "closed", "recording_id": null, "simulator_owned": false },
+    "mobile": { "viewport_width": 390, "viewport_height": 844, "content_width": 375, "lab_and_incident_seek_passed": true },
+    "viewport_reset": true
+  },
+  "screenshots": ["../../media/scenario-lab-v14.png", "../../media/incident-replay-v14.png", "../../media/incident-inspector-v14.png", "../../media/scenario-mobile-v14.png", "../../media/incident-mobile-v14.png"],
+  "limits": "Recording export contents verified via backend API. Browser download destination and file-chooser injection are not claimed; prior automation limitation remains documented."
+}

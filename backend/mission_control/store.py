@@ -21,11 +21,24 @@ class Store:
                 CREATE TABLE IF NOT EXISTS sessions(id TEXT PRIMARY KEY, name TEXT NOT NULL, started_utc TEXT NOT NULL, ended_utc TEXT, source TEXT NOT NULL, mission TEXT);
                 CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY AUTOINCREMENT, session_id TEXT NOT NULL, type TEXT NOT NULL, received_utc TEXT NOT NULL, payload TEXT NOT NULL);
                 CREATE INDEX IF NOT EXISTS events_session_idx ON events(session_id,id);
+                CREATE TABLE IF NOT EXISTS scenario_runs(id TEXT PRIMARY KEY, body TEXT NOT NULL);
             ''')
         # Interrupted recordings are closed at last persisted event, never labeled complete.
         with self.db:
             self.db.execute("UPDATE sessions SET ended_utc=COALESCE((SELECT MAX(received_utc) FROM events WHERE session_id=sessions.id),started_utc) WHERE ended_utc IS NULL")
         self.active: str | None = None
+        for run in self.scenario_runs():
+            if run['status']=='running':
+                run.update(status='interrupted',ended_utc=utc_now(),error='Backend restarted before completion; result is not a pass.')
+                self.save_scenario(run)
+
+    def save_scenario(self, run):
+        with self.lock, self.db:
+            self.db.execute('INSERT OR REPLACE INTO scenario_runs VALUES(?,?)',(run['id'],json.dumps(run,allow_nan=False)))
+
+    def scenario_runs(self):
+        with self.lock:
+            return [json.loads(r['body']) for r in self.db.execute('SELECT body FROM scenario_runs ORDER BY rowid DESC LIMIT 100')]
 
     def close(self):
         self.stop_recording()
@@ -84,5 +97,6 @@ class Store:
         rows=[e['payload'] for e in self.session(identifier)['events'] if e['type']=='telemetry']
         output=io.StringIO(newline='')
         fields=['received_utc','elapsed_s','vehicle_time_ms','latitude','longitude','relative_altitude_m','ground_speed_ms','battery_pct','battery_voltage_v','flight_mode','armed','mission_index','position_fresh','connection']
+        fields.append('gps_fix_type')
         writer=csv.DictWriter(output,fieldnames=fields,extrasaction='ignore'); writer.writeheader(); writer.writerows(rows)
         return output.getvalue()

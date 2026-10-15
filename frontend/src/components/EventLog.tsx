@@ -1,4 +1,5 @@
 import type { FlightEvent } from '../types';
+import { observationLabels, scenarioStatus } from '../scenarioLabels';
 const names = {
   closed: 'Bağlantı kapalı',
   connecting: 'Bağlanıyor',
@@ -14,8 +15,27 @@ const actionNames: Record<string, string> = {
   return: 'Eve dön',
   land: 'İniş',
 };
-function eventLabel(event: FlightEvent) {
+export function eventLabel(event: FlightEvent) {
   const p = event.payload;
+  if (event.type === 'scenario') {
+    if (p.status === 'started')
+      return (
+        'Deney başladı · ' +
+        ((
+          {
+            gps_loss: 'GPS kaybı',
+            heartbeat_loss: 'Telemetri kesilmesi',
+            low_battery: 'Düşük batarya',
+          } as Record<string, string>
+        )[String(p.kind)] ?? String(p.kind))
+      );
+    const key = String(p.label ?? p.fault ?? p.name ?? p.kind ?? p.status);
+    return (
+      'Deney · ' +
+      (observationLabels[key] ?? scenarioStatus[key] ?? key) +
+      (p.label ? ' · ' + (scenarioStatus[String(p.status)] ?? p.status) : '')
+    );
+  }
   if (event.type === 'fence')
     return (
       'Görev sınırı · ' +

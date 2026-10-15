@@ -10,6 +10,11 @@ from .store import Store
 from .mavlink import MAVLinkManager
 from .analysis import report
 from .planning import validate_planning
+from .scenarios import ScenarioRunner
+from typing import Literal
+
+class ScenarioRequest(BaseModel):
+    kind: Literal['heartbeat_loss','low_battery','gps_loss']
 
 class RecordingRequest(BaseModel):
     name: str = Field(default='SITL uçuş kaydı',min_length=1,max_length=100)
@@ -18,11 +23,13 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     root=Path(__file__).resolve().parents[2]
     store=Store(database or root/'.runtime/mission-control.sqlite3')
     manager=manager_factory(store)
+    scenarios=ScenarioRunner(manager,store)
     @asynccontextmanager
     async def lifespan(app):
         yield
+        await scenarios.close()
         await manager.disconnect();store.close()
-    app=FastAPI(title='Mission Control',version='1.3.0',lifespan=lifespan)
+    app=FastAPI(title='Mission Control',version='1.4.0',lifespan=lifespan)
     app.state.manager=manager;app.state.store=store
     origins=['http://localhost:5173','http://127.0.0.1:5173','http://localhost:8000','http://127.0.0.1:8000']
     app.add_middleware(CORSMiddleware,allow_origins=origins,allow_methods=['GET','POST','DELETE'],allow_headers=['Content-Type','X-Control-Session'])
@@ -33,16 +40,18 @@ def create_app(database=None,manager_factory=MAVLinkManager):
             return Response('Origin not allowed',status_code=403)
         return await call_next(request)
     def control(token):
+        if scenarios.active: raise HTTPException(409,'An automatic SITL experiment owns control until cleanup completes.')
         try: manager.require_control(token)
         except PermissionError as exc: raise HTTPException(409,str(exc))
     def translate(exc):
         return HTTPException(409,str(exc))
     @app.get('/api/v1/health')
-    def health(): return dict(status='ok',version='1.3.0',transport='owned-sitl-only')
+    def health(): return dict(status='ok',version='1.4.0',transport='owned-sitl-only')
     @app.get('/api/v1/status')
-    def status(): return manager.status()
+    def status(): return dict(**manager.status(),scenario_active=scenarios.active)
     @app.post('/api/v1/connection')
     async def connect(body:ConnectionRequest,x_control_session:str=Header(...)):
+        if scenarios.active: raise HTTPException(409,'A SITL experiment is running.')
         try:
             manager.claim(x_control_session)
             return await manager.connect(body.speedup)
@@ -52,9 +61,26 @@ def create_app(database=None,manager_factory=MAVLinkManager):
         control(x_control_session);await manager.disconnect();return manager.status()
     @app.post('/api/v1/control/renew')
     def renew(x_control_session:str=Header(...)):
-        control(x_control_session);return dict(status='renewed')
+        try: manager.require_control(x_control_session)
+        except PermissionError as exc: raise translate(exc)
+        return dict(status='renewed')
     @app.get('/api/v1/missions')
     def missions(): return store.missions()
+    @app.get('/api/v1/scenarios')
+    def scenario_runs(): return store.scenario_runs()
+    @app.post('/api/v1/scenarios')
+    async def start_scenario(body:ScenarioRequest,x_control_session:str=Header(...)):
+        try:
+            if scenarios.active: raise RuntimeError('A SITL experiment is already running.')
+            manager.claim(x_control_session)
+            return scenarios.start(body.kind)
+        except (RuntimeError,PermissionError,ValueError) as exc: raise translate(exc)
+    @app.post('/api/v1/scenarios/cancel')
+    async def cancel_scenario(x_control_session:str=Header(...)):
+        try: manager.require_control(x_control_session)
+        except PermissionError as exc: raise translate(exc)
+        await scenarios.close()
+        return dict(status='stopped')
     @app.post('/api/v1/missions')
     def save_mission(mission:Mission): return store.save_mission(mission)
     @app.post('/api/v1/missions/validate')
@@ -69,6 +95,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
         except (RuntimeError,ValueError) as exc: raise translate(exc)
     @app.get('/api/v1/vehicle/mission')
     async def download():
+        if scenarios.active: raise HTTPException(409,'A SITL experiment owns the mission transport.')
         try: return dict(items=await manager.download())
         except RuntimeError as exc: raise translate(exc)
     @app.post('/api/v1/commands')

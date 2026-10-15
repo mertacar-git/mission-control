@@ -1701,3 +1701,111 @@ footer button {
 .map-caption {
   flex-wrap: wrap;
 }
+/* Recorded evidence and synchronized incident investigation. */
+.scenario-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 20px 0;
+}
+.scenario-cards .panel,
+.scenario-result,
+.incident-inspector {
+  padding: 24px;
+}
+.scenario-cards p {
+  min-height: 100px;
+  color: var(--muted, #a4b4ca);
+  line-height: 1.7;
+}
+.scenario-result,
+.incident-inspector {
+  margin: 20px 0;
+}
+.scenario-checks {
+  display: grid;
+  gap: 8px;
+  margin: 20px 0;
+}
+.scenario-checks > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px;
+  background: #112033;
+  border-radius: 8px;
+}
+.scenario-checks span,
+.result-passed {
+  color: #71dfbe;
+}
+.observation-snapshot {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+}
+.result-failed,
+.result-interrupted {
+  color: #ff9c96;
+}
+.result-running {
+  color: #efc46d;
+}
+.scenario-result pre {
+  overflow: auto;
+  max-width: 100%;
+  font-size: 12px;
+}
+.scenario-result .row-actions {
+  margin-top: 16px;
+}
+.incident-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+}
+.incident-list {
+  max-height: 380px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.incident-item {
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  gap: 12px;
+  white-space: normal;
+}
+.incident-item span {
+  flex-shrink: 0;
+  color: #efc46d;
+}
+.incident-context {
+  padding-left: 20px;
+  max-height: 220px;
+  overflow: auto;
+}
+.incident-context button {
+  text-align: left;
+  white-space: normal;
+  background: transparent;
+  color: #afc3de;
+  border: 0;
+  padding: 7px;
+}
+@media (max-width: 900px) {
+  .scenario-cards,
+  .incident-grid {
+    grid-template-columns: 1fr;
+  }
+  .scenario-cards p {
+    min-height: 0;
+  }
+  .scenario-checks > div {
+    flex-direction: column;
+  }
+}

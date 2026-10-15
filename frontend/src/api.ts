@@ -7,6 +7,7 @@ import type {
   FlightEvent,
 } from './types';
 import type { Validation } from './planning';
+import type { ScenarioRun } from './components/ScenarioLab';
 const key = 'mission-control-controller';
 export function controller() {
   let token = sessionStorage.getItem(key);
@@ -45,6 +46,10 @@ export async function request<T>(
   return response.json() as Promise<T>;
 }
 export const api = {
+  scenarios: () => request<ScenarioRun[]>('/scenarios'),
+  cancelScenario: () => request('/scenarios/cancel', 'POST'),
+  startScenario: (kind: string) =>
+    request<ScenarioRun>('/scenarios', 'POST', { kind }),
   validate: (mission: Mission) =>
     request<Validation>('/missions/validate', 'POST', mission),
   status: () => request<Status>('/status'),

@@ -64,6 +64,7 @@ class Telemetry(StrictModel):
     mission_index: int | None = None
     position_fresh: bool = False
     navigation_ready: bool = False
+    gps_fix_type: int | None = None
     heartbeat_age_s: float | None = None
     connection: ConnectionState = ConnectionState.CLOSED
 

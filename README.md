@@ -11,6 +11,18 @@ React + TypeScript + Leaflet + Recharts frontend, FastAPI + SQLite backend, and 
 [Watch the captioned walkthrough](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4) · [Chapters and recording method](docs/media/walkthrough.md).
 
 
+## Fault experiments and incident investigation · UI 1.4
+
+![Owned SITL experiment laboratory](docs/media/scenario-lab-v14.png)
+
+[v1.4 captioned walkthrough](docs/media/experiments-v14.md).
+
+Run fixed telemetry interruption, low-battery and GPS-loss experiments against a fresh owned SITL. Each produces a persistent acceptance report with expected behavior, verified parameters, observed telemetry and failure/timeout reasons. Manual control is reserved during execution; cancellation awaits simulator cleanup. The public laboratory replays actual checked-in SITL evidence, with execution disabled. [Experiment definitions, reproducibility and API](docs/EXPERIMENTS.md).
+
+Select an incident in any replay to synchronize the map, telemetry cards and chart cursor. Inspect the preceding command and ±10 s event context without assuming causality. Recording gaps remain unknown and break plotted lines; they do not inherit old battery or mode readings. Optional GPS fix data preserves old recording compatibility.
+
+Current local validation: **64 frontend tests, 47 backend tests, seven existing real SITL acceptance scenarios plus three new fault experiments**. The laboratory fixtures include successful GPS-loss LAND and low-battery RTL followed by disarm. Pausing SITL tests receiver freshness and recovery, not an airborne RF/GCS outage. [Evidence](docs/verification/scenarios/scenario-runs.json).
+
 ## Survey planning · UI 1.3
 
 Draw an **allowed area** and a separate **survey area**, including concave L/U shapes. Generate a deterministic serpentine preview with interior connectors, review its length/area/point count, then explicitly apply it. Map layers keep waypoint and polygon editing distinct; area coordinates, settings and route replacement participate in undo/redo. Tiles are optional.
@@ -31,7 +43,7 @@ The interface uses a map-first workspace with a focused coordinate editor, route
 
 Flight archives support name search and demo/SITL source filtering. Playback shows command and vehicle events without flooding the visible log with telemetry rows; the complete telemetry still remains in the recording. Repeated start actions are disabled while AUTO is observed. Map controls include metric scale and route fitting, including grid-only mode.
 
-Presentation code is separated into survey planner, editor, review, archive, readiness, event-log and chart components. The chart library loads on demand; the initial JavaScript bundle is about 393 kB (122 kB gzip), with a separate chart chunk. Verification includes shared TypeScript/Python geometry fixtures, model/history/replay tests, TypeScript compilation and browser checks. Seven real SITL scenarios cover both existing flight controls and generated concave survey missions.
+Presentation code is separated into survey planner, editor, review, archive, readiness, experiment laboratory, incident inspector, event-log and chart components. The chart library loads on demand; the initial JavaScript bundle is about 403 kB (126 kB gzip), with a separate chart chunk. Verification includes shared TypeScript/Python geometry fixtures, model/history/replay tests, TypeScript compilation and browser checks. Seven existing real SITL scenarios cover flight controls and generated concave survey missions; three additional fault experiments produce replayable acceptance reports.
 
 ## Two distinct modes
 

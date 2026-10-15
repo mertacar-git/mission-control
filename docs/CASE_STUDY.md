@@ -1,5 +1,11 @@
 # Mission Control: from route editing to inspectable flight evidence
 
+## v1.4: falsifiable experiments and incident context
+
+The laboratory exposes three fixed, reproducible fault experiments instead of generic control knobs. Real Copter-4.6.3 runs verify receiver staleness/recovery, configured battery RTL and GPS-loss EKF LAND. A parameter ACK is never a behavioral pass: voltage, fix type, mode and disarm are checked separately. Reports persist failure reasons and interrupted runs in SQLite. Cancelling waits for owned-process cleanup; a subsequent experiment starts with a fresh isolated EEPROM.
+
+Public Pages includes those real recordings without pretending to run an autopilot. Incident selection aligns UTC events to the telemetry connection clock and drives the shared map/cards/chart cursor. The inspector shows the preceding command and surrounding events without inferring causation. Reviewing measurement gaps also corrected stale mode/battery display and chart lines that could bridge missing samples. [Definitions and limits](EXPERIMENTS.md), [actual acceptance reports](verification/scenarios/scenario-runs.json).
+
 ## Problem and result
 
 A mission dashboard needs more than moving telemetry cards. An operator must know which route is being uploaded, recover a mistaken edit, distinguish command acceptance from vehicle behavior, and inspect a flight after a connection failure.

@@ -22,6 +22,8 @@ import {
 } from 'lucide-react';
 import { FlightChart } from './components/TelemetryChart';
 import { EventLog } from './components/EventLog';
+import { IncidentInspector } from './components/IncidentInspector';
+import { ScenarioLab } from './components/ScenarioLab';
 import { MissionReadiness } from './components/MissionReadiness';
 import { missionStage, routeLength } from './missionPresentation';
 import { MapView } from './MapView';
@@ -47,7 +49,7 @@ import {
   type FlightEvent,
 } from './types';
 
-type Page = 'mission' | 'flight' | 'recordings' | 'analysis';
+type Page = 'mission' | 'flight' | 'recordings' | 'analysis' | 'experiments';
 const names = {
   closed: 'Bağlantı kapalı',
   connecting: 'Bağlanıyor',
@@ -176,7 +178,8 @@ export default function App() {
   const trace = replay
     ? replayFrames.filter((r) => r.elapsed_s <= replayTime)
     : history;
-  const editing = !busy && !replay && !status.telemetry.armed;
+  const editing =
+    !busy && !replay && !status.telemetry.armed && !status.scenario_active;
   const uploadMatches =
     status.upload_verified &&
     status.mission !== null &&
@@ -597,6 +600,7 @@ export default function App() {
               ['flight', 'Uçuş takibi', Activity],
               ['recordings', 'Uçuş kayıtları', Database],
               ['analysis', 'Uçuş analizi', Compass],
+              ['experiments', 'Senaryo laboratuvarı', Radio],
             ] as const
           ).map(([id, label, Icon]) => (
             <button
@@ -624,7 +628,7 @@ export default function App() {
           >
             Kaynak kodu & kurulum ↗
           </a>
-          <span>v1.3 · ArduCopter 4.6.3</span>
+          <span>v1.4 · ArduCopter 4.6.3</span>
         </div>
       </aside>
       <div className="main-area">
@@ -660,9 +664,11 @@ export default function App() {
               <div className="eyebrow">
                 {replay
                   ? 'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA'
-                  : mode === 'demo'
-                    ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
-                    : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
+                  : page === 'experiments' && mode === 'demo'
+                    ? 'GERÇEK SITL / YAYIMLANMIŞ DENEY KAYITLARI'
+                    : mode === 'demo'
+                      ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
+                      : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
               </div>
               <h1>
                 {page === 'mission'
@@ -671,43 +677,55 @@ export default function App() {
                     ? 'Uçuş kontrol merkezi'
                     : page === 'recordings'
                       ? 'Uçuş arşivi'
-                      : 'Uçuş analizi'}
+                      : page === 'experiments'
+                        ? 'Senaryo laboratuvarı'
+                        : 'Uçuş analizi'}
               </h1>
               <p>
-                {mode === 'demo'
-                  ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
-                  : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
+                {replay
+                  ? replay.session.source === 'sitl'
+                    ? 'Gerçek SITL kaydı · kayıtlı ölçümler inceleniyor.'
+                    : 'Tarayıcı modeli kaydı inceleniyor.'
+                  : page === 'experiments' && mode === 'demo'
+                    ? 'Kontrollü hata senaryoları · gerçek gözlemler ve kabul raporları.'
+                    : mode === 'demo'
+                      ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
+                      : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
               </p>
             </div>
             <div className="connection-actions">
-              {!replay && status.state === 'closed' && (
-                <button
-                  className="secondary"
-                  onClick={() =>
-                    openReplay(
-                      recordings.find(
-                        (r) => r.session.id === 'sample-demo-flight',
-                      ) ?? recordings[0],
-                    )
-                  }
-                >
-                  <Play size={15} />
-                  Örnek uçuşu incele
-                </button>
-              )}
+              {page !== 'experiments' &&
+                !replay &&
+                status.state === 'closed' && (
+                  <button
+                    className="secondary"
+                    onClick={() =>
+                      openReplay(
+                        recordings.find(
+                          (r) => r.session.id === 'sample-demo-flight',
+                        ) ?? recordings[0],
+                      )
+                    }
+                  >
+                    <Play size={15} />
+                    Örnek uçuşu incele
+                  </button>
+                )}
               {status.state === 'closed' ? (
-                <button
-                  className="primary"
-                  disabled={busy || !!replay}
-                  onClick={() => void connect()}
-                >
-                  <Wifi size={16} />
-                  {mode === 'demo' ? 'Demoya bağlan' : 'SITL başlat & bağlan'}
-                </button>
+                page === 'experiments' ? null : (
+                  <button
+                    className="primary"
+                    disabled={busy || !!replay || !!status.scenario_active}
+                    onClick={() => void connect()}
+                  >
+                    <Wifi size={16} />
+                    {mode === 'demo' ? 'Demoya bağlan' : 'SITL başlat & bağlan'}
+                  </button>
+                )
               ) : (
                 <button
                   className="secondary"
-                  disabled={busy || !!replay}
+                  disabled={busy || !!replay || !!status.scenario_active}
                   onClick={() => void disconnect()}
                 >
                   <X size={16} />
@@ -976,6 +994,7 @@ export default function App() {
                         }
                         disabled={
                           busy ||
+                          !!status.scenario_active ||
                           !!replay ||
                           status.state !== 'connected' ||
                           (action === 'arm' && shown.armed === true) ||
@@ -1044,7 +1063,10 @@ export default function App() {
                       {shown.source === 'demo' ? 'Demo verisi' : 'SITL ölçümü'}
                     </span>
                   </div>
-                  <FlightChart rows={chartRows} />
+                  <FlightChart
+                    rows={replay ? replayFrames : chartRows}
+                    cursor={replay ? replayTime : undefined}
+                  />
                 </section>
               </div>
               <div className="workspace-side">
@@ -1126,6 +1148,28 @@ export default function App() {
                 setSelected(recording);
                 setPage('analysis');
               }}
+            />
+          )}
+          {replay && page === 'flight' && (
+            <IncidentInspector
+              recording={replay}
+              time={replayTime}
+              onSeek={(time) => {
+                setPlaying(false);
+                setReplayTime(
+                  Math.max(
+                    replayFrames[0]?.elapsed_s ?? 0,
+                    Math.min(replayEnd, time),
+                  ),
+                );
+              }}
+            />
+          )}
+          {page === 'experiments' && (
+            <ScenarioLab
+              local={mode === 'local'}
+              replaying={!!replay}
+              onReplay={openReplay}
             />
           )}
           {page === 'analysis' && (
@@ -1299,7 +1343,7 @@ export default function App() {
             <div>
               {status.state === 'connected' && !replay && (
                 <button
-                  disabled={busy}
+                  disabled={busy || !!status.scenario_active}
                   onClick={() =>
                     void perform(() =>
                       status.recording_id ? stopRecording() : startRecording(),

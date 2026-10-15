@@ -7,9 +7,17 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  ReferenceLine,
 } from 'recharts';
 import type { Telemetry } from '../types';
-export function FlightChart({ rows }: { rows: Telemetry[] }) {
+import { chartData } from '../chartData';
+export function FlightChart({
+  rows,
+  cursor,
+}: {
+  rows: Telemetry[];
+  cursor?: number;
+}) {
   return (
     <div className="chart">
       {rows.length === 0 ? (
@@ -20,7 +28,7 @@ export function FlightChart({ rows }: { rows: Telemetry[] }) {
       ) : (
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
-            data={rows}
+            data={chartData(rows)}
             margin={{ top: 12, right: 18, left: -18, bottom: 0 }}
           >
             <defs>
@@ -59,6 +67,15 @@ export function FlightChart({ rows }: { rows: Telemetry[] }) {
                 typeof v === 'number' ? v.toFixed(2) : String(v ?? '—')
               }
             />
+            {cursor !== undefined && (
+              <ReferenceLine
+                yAxisId="alt"
+                x={cursor}
+                stroke="#efc46d"
+                strokeDasharray="4 3"
+                label="Seçili an"
+              />
+            )}
             <Area
               isAnimationActive={false}
               yAxisId="alt"

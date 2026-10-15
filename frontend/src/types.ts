@@ -46,6 +46,7 @@ export interface Telemetry {
   mission_index: number | null;
   position_fresh: boolean;
   navigation_ready?: boolean;
+  gps_fix_type?: number | null;
   heartbeat_age_s: number | null;
   connection: ConnectionState;
 }
@@ -69,6 +70,7 @@ export interface Recording {
   events: FlightEvent[];
 }
 export interface Status {
+  scenario_active?: boolean;
   state: ConnectionState;
   telemetry: Telemetry;
   recording_id: string | null;

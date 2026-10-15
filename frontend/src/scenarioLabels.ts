@@ -1,0 +1,27 @@
+export const observationLabels: Record<string, string> = {
+  'Navigation ready': 'Konum ve navigasyon hazır',
+  'Stale telemetry': 'Telemetri gecikmesi gözlendi',
+  'Disconnected telemetry': 'Bağlantı kesilmesi gözlendi',
+  'Command rejected while disconnected': 'Kesinti sırasında komut reddedildi',
+  'Fresh telemetry recovered': 'Güncel telemetri geri geldi',
+  Armed: 'Arm durumu gözlendi',
+  'Airborne above 7 m': '7 m üzerinde uçuş gözlendi',
+  'Measured battery below threshold': 'Ölçülen voltaj eşik altında',
+  'Autopilot RTL': 'Otopilot eve dönüşe geçti',
+  'Disarmed after failsafe': 'Failsafe sonrası disarm gözlendi',
+  'GPS has no 3D fix': 'GPS 3D fix kaybı gözlendi',
+  'Autopilot LAND': 'Otopilot inişe geçti',
+};
+export const scenarioStatus: Record<string, string> = {
+  running: 'Çalışıyor',
+  passed: 'Geçti',
+  failed: 'Başarısız',
+  interrupted: 'Yarıda kaldı',
+  started: 'Başladı',
+  injected: 'Hata uygulandı',
+  parameter_verified: 'Parametre doğrulandı',
+  process_pause: 'Simülatör süreci duraklatıldı',
+  low_battery: 'Düşük voltaj uygulandı',
+  gps_loss: 'GPS kapatıldı',
+  heartbeat_loss: 'Telemetri kesilmesi',
+};

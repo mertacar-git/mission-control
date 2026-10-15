@@ -20,6 +20,9 @@ jobs:
       - name: Execute real simulator scenarios
         working-directory: backend
         run: /opt/mission-control/venv/bin/python -m tests.integration_runner
+      - name: Execute replayable fault experiments
+        working-directory: backend
+        run: /opt/mission-control/venv/bin/python -m tests.scenario_runner
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -27,3 +30,4 @@ jobs:
           path: |
             docs/verification
             backend/.runtime/integration/**/sitl.log
+            backend/.runtime/scenarios/**/sitl.log

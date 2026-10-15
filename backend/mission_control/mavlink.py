@@ -84,9 +84,11 @@ class MAVLinkManager:
             result.latitude=result.longitude=result.relative_altitude_m=None
         if now-self.field_times.get('speed',-math.inf)>=3: result.ground_speed_ms=None
         if now-self.field_times.get('battery',-math.inf)>=5: result.battery_pct=result.battery_voltage_v=None
+        if now-self.field_times.get('gps',-math.inf)>=3: result.gps_fix_type=None
         if self.state!=ConnectionState.CONNECTED:
             result.flight_mode=result.armed=None;result.navigation_ready=False
             result.ground_speed_ms=result.battery_pct=result.battery_voltage_v=None
+            result.gps_fix_type=None
         return result.model_dump()
 
     async def connect(self,speedup=1):
@@ -177,6 +179,8 @@ class MAVLinkManager:
             self.telemetry.battery_voltage_v=message.voltage_battery/1000 if message.voltage_battery!=65535 else None
             self.field_times['battery']=now
         elif kind=='MISSION_CURRENT': self.telemetry.mission_index=message.seq
+        elif kind=='GPS_RAW_INT':
+            self.telemetry.gps_fix_type=message.fix_type;self.field_times['gps']=now
         elif kind=='EKF_STATUS_REPORT':
             self.telemetry.navigation_ready=bool(message.flags&M.EKF_POS_HORIZ_ABS)
 

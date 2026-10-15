@@ -1,3 +1,11 @@
+# v1.4 fault experiment evidence
+
+`scenarios/scenario-runs.json` contains three real Copter-4.6.3 experiments and links by session identity to `heartbeat_loss.json`, `low_battery.json` and `gps_loss.json` in the same directory. Identical fixtures are published under `frontend/public/verification` for browser inspection. These are actual app-owned SITL runs at 4×, not synthetic demo flights. Each check includes observed telemetry or the explicit command-rejection result.
+
+Local verification: **64 frontend + 47 backend tests**, TypeScript/production build, the existing seven real SITL scenarios in `sitl-results.json`, and the three new recorded fault experiments. New unit tests cover owner/control isolation during experiments, immediate/concurrent cancellation cleanup, backend restart recovery, finite observation failure, timestamp alignment, preceding commands, old-recording compatibility, missing measurements and chart gap separation. See [the experiment contract](../EXPERIMENTS.md).
+
+---
+
 # Acceptance evidence
 
 Local environment: Windows host, Ubuntu 24.04 WSL, Python 3.12, ArduCopter `Copter-4.6.3` at commit `92b0cd788ec29406f26c6f9c31d5ceedbd1cc538`. Actual SITL scenarios were executed on 2026-10-15, at 4× simulator speed.
@@ -35,7 +43,7 @@ Release 1.3 adds [survey planning and independent boundary validation](../SURVEY
 
 - [Shared geometry fixtures](../../tests/fixtures/planning.json) run in TypeScript and Python, including concave edge crossings, boundary tolerance, duplicate/backtracking vertices, radius, distance and altitude limits.
 - [Generated mission](survey-mission.json), [actual SITL session](survey-session.json), [report](survey-report.json), [CSV](survey-telemetry.csv). Seven points, 1,275 m² polygon, 138.463 m planned route.
-- [Narrow-boundary session](narrow-boundary-session.json), [report](narrow-boundary-report.json), [CSV](narrow-boundary-telemetry.csv). One isolated outside sample was observed in this local run: count 1, measurable duration 0 seconds. No duration is invented for a single sample and no corrective fence command is sent. Exact excursion counts are observational, not a cross-platform assertion.
+- [Narrow-boundary session](narrow-boundary-session.json), [report](narrow-boundary-report.json), [CSV](narrow-boundary-telemetry.csv). The v1.4 regression run observed one outside episode with 0.516 measurable seconds. Earlier v1.3 acceptance observed one isolated outside sample with zero measurable duration. No duration is invented for isolated samples and no corrective fence command is sent. Exact excursion counts are observational, not a cross-platform assertion.
 - [Actual browser-operated SITL acceptance](survey-ui-acceptance.json), [recording](survey-ui-session.json), [report](survey-ui-report.json), [CSV](survey-ui-telemetry.csv): 1× speed, 213 samples over 109.017 wall seconds, peak relative altitude 10.014 m and no observed boundary violation. The recording includes post-landing samples and is not a pure airborne-duration metric.
 - Browser checks cover layer-specific drawing, vertex dragging/numeric edits/deletion, undo/redo, preview invalidation, blocked invalid upload, actual snapshot upload and flight, isolated replay, report rendering and grid-only geometry. Mobile 390×844: page content 375 px, review width 341 px and height 804 px, fitting within the viewport with internal scrolling.
 

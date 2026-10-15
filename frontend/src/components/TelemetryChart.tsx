@@ -6,7 +6,13 @@ const Plot = lazy(() =>
   import('./FlightChart').then((module) => ({ default: module.FlightChart })),
 );
 
-export function FlightChart({ rows }: { rows: Telemetry[] }) {
+export function FlightChart({
+  rows,
+  cursor,
+}: {
+  rows: Telemetry[];
+  cursor?: number;
+}) {
   if (!rows.length)
     return (
       <div className="chart">
@@ -26,7 +32,7 @@ export function FlightChart({ rows }: { rows: Telemetry[] }) {
         </div>
       }
     >
-      <Plot rows={rows} />
+      <Plot rows={rows} cursor={cursor} />
     </Suspense>
   );
 }

@@ -33,6 +33,13 @@ export function parseRecording(input: unknown): Recording {
       )
         throw Error('Telemetri zamanı sıralı ve sonlu olmalıdır.');
       previous = r.elapsed_s;
+      if (
+        r.gps_fix_type != null &&
+        (!Number.isInteger(r.gps_fix_type) ||
+          r.gps_fix_type < 0 ||
+          r.gps_fix_type > 8)
+      )
+        throw Error('GPS fix alanı geçersiz.');
       for (const field of [
         'latitude',
         'longitude',

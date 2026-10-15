@@ -57,6 +57,13 @@ export function frameAt(rows: Telemetry[], seconds: number): Telemetry | null {
         longitude: null,
         relative_altitude_m: null,
         ground_speed_ms: null,
+        battery_pct: null,
+        battery_voltage_v: null,
+        flight_mode: null,
+        armed: null,
+        gps_fix_type: null,
+        navigation_ready: false,
+        heartbeat_age_s: null,
       }
     : row;
 }
@@ -164,6 +171,7 @@ export function toCSV(rows: Telemetry[]): string {
     'mission_index',
     'position_fresh',
     'connection',
+    'gps_fix_type',
   ];
   const cell = (v: unknown) =>
     v == null ? '' : '"' + String(v).replaceAll('"', '""') + '"';
