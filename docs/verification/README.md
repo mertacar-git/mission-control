@@ -2,13 +2,13 @@
 
 Local environment: Windows host, Ubuntu 24.04 WSL, Python 3.12, ArduCopter `Copter-4.6.3` at commit `92b0cd788ec29406f26c6f9c31d5ceedbd1cc538`. Actual SITL scenarios were executed on 2026-10-15, at 4× simulator speed.
 
-- [Five acceptance results](sitl-results.json): mission transfer/readback and command rejection; complete takeoff/waypoints/landing with recording/report; heartbeat loss/recovery and a new clean session; BRAKE/AUTO/RTL; configured low battery causing RTL and landing.
+- [Seven acceptance results](sitl-results.json): mission transfer/readback and command rejection; complete takeoff/waypoints/landing with recording/report; heartbeat loss/recovery and a new clean session; BRAKE/AUTO/RTL; configured low battery causing RTL and landing; generated concave survey; narrow planning-boundary observation.
 - [Actual SITL recording](golden-session.json): version 1 JSON with telemetry and command/vehicle events.
 - [Report from that recording](golden-report.json): null-preserving metrics. Durations are reception wall time; at 4× speed they are not aircraft simulation time.
 
 The initial integration attempt revealed that valid GPS coordinates alone do not imply a healthy EKF position estimate. The application now tracks `EKF_STATUS_REPORT` navigation readiness and checks it before arm; the runner waits for estimator readiness. All five scenarios subsequently passed together.
 
-Backend: 22 unit/API/protocol tests. Frontend: 30 model/replay/analysis/history tests and a successful TypeScript/Vite production build. Protocol tests include duplicate/out-of-order requests, invalid indices, incomplete/rejected transfers, bounded timeout retries and acknowledgment versus observation. These scripted tests supplement the real simulator runs.
+Backend: 41 unit/API/protocol/geometry tests. Frontend: 58 model/replay/analysis/history/geometry tests and a successful TypeScript/Vite production build. Protocol tests include duplicate/out-of-order requests, invalid indices, incomplete/rejected transfers, bounded timeout retries and acknowledgment versus observation. These scripted tests supplement the real simulator runs.
 
 Reproduce with `python -m tests.integration_runner` from `backend/`, using the installed runtime virtual environment. It starts its own process, writes results here, captures failure context on failure, then stops its process. The optional GitHub Actions workflow repeats the tests from a clean Ubuntu setup and retains artifacts.
 
@@ -40,4 +40,3 @@ Release 1.3 adds [survey planning and independent boundary validation](../SURVEY
 - Browser checks cover layer-specific drawing, vertex dragging/numeric edits/deletion, undo/redo, preview invalidation, blocked invalid upload, actual snapshot upload and flight, isolated replay, report rendering and grid-only geometry. Mobile 390×844: page content 375 px, review width 341 px and height 804 px, fitting within the viewport with internal scrolling.
 
 Opera's automation extension did not permit local-file URL access, so automated file-chooser injection was unavailable. Actual schema 2 recordings were imported through the parser in unit tests and their boundary metrics compared with backend results; the browser exercised backend archive replay. Download buttons were exercised and export file contents were verified through API outputs. This limitation concerns automated browser verification, not a new application permission requirement.
-

@@ -1,19 +1,20 @@
-# Captioned walkthrough · UI 1.2
+# Captioned walkthrough · UI 1.3
 
-[Play/download the 35-second MP4](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4).
+[Play/download the 40-second MP4](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4).
 
 The video is a sequence of actual browser captures with burned-in Turkish explanations. It is not an uninterrupted real-time screen recording and contains no synthetic application mockups. No narration or soundtrack is included.
 
 | Time | View | Source |
 | --- | --- | --- |
-| 00–05 s | Route editor and history controls | Local application, planned route |
-| 05–10 s | Snapshot review before upload | Local SITL submission dialog |
-| 10–15 s | Mission execution | Live ArduCopter 4.6.3 |
-| 15–20 s | BRAKE hold at 10 m | Replay of the corrected actual SITL acceptance recording |
-| 20–25 s | Missing measurements during heartbeat loss | Replay of the same recording |
-| 25–30 s | Timeline, speed control and live-command isolation | Replay of the same recording |
+| 00–05 s | Separate allowed/survey areas and concave route, grid-only map | Local planning workspace |
+| 05–10 s | Explicit route preview and application | Local geometry engine |
+| 10–15 s | Invalid area geometry blocks confirmation | Browser demo validation |
+| 15–20 s | Polygon/limits snapshot before upload | Local SITL submission dialog |
+| 20–25 s | Generated survey execution | Live ArduCopter 4.6.3 |
+| 25–30 s | Timeline, speed and live-command isolation | Actual SITL recording replay |
 | 30–35 s | Flight metrics and graphs | Analysis of the same recording |
+| 35–40 s | Boundary metrics and export controls | Analysis of the same recording |
 
-The corrected recording is session `77357acb-9ce1-471e-894b-78142605b762`, captured on 2026-10-15 at 1× simulator speed. [Raw session](../verification/ui-acceptance-session.json), [report](../verification/ui-acceptance-report.json), [CSV](../verification/ui-acceptance-telemetry.csv). Example simulation coordinates are arbitrary and do not identify a user's location.
+The browser-operated survey recording is session `5aed94d5-124f-4be7-9c0e-ee000d2b2507`, captured on 2026-10-15 at 1× simulator speed. [Raw session](../verification/survey-ui-session.json), [report](../verification/survey-ui-report.json), [CSV](../verification/survey-ui-telemetry.csv). It contains 213 samples over 109.017 wall seconds, including post-landing data. Example simulation coordinates are arbitrary and do not identify a user's location.
 
-The separate [automated SITL suite](../verification/sitl-results.json) runs at 4× and includes a sustained altitude assertion during BRAKE, return-to-home and configured low-battery RTL. The earlier LOITER descent finding is retained as [regression evidence](../verification/hold-regression.json).
+The separate [seven-scenario automated SITL suite](../verification/sitl-results.json) runs at 4×. Its narrow-boundary flight is separate from the no-violation UI flight shown here. [Narrow-boundary report](../verification/narrow-boundary-report.json), [planning method and limits](../SURVEY_PLANNING.md). The earlier LOITER descent finding remains available as [regression evidence](../verification/hold-regression.json).
