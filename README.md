@@ -151,3 +151,13 @@ GitHub Actions runs backend/frontend tests and the production build before publi
 One virtual quadcopter, one control session, local backend. Multi-vehicle operations, hardware, ROS 2, PX4 and cloud deployment are outside this release. This is a portfolio simulation application, not flight-certified software.
 
 Application source: [MIT](LICENSE). ArduPilot is downloaded separately and remains under its own GPL license; firmware is not vendored. Leaflet/OpenStreetMap and other dependencies retain their own licenses. Developed with AI assistance, with executable tests and recorded verification evidence for review.
+## Serial hardware preparation
+
+A separate read-only USB/serial bench is available for the next physical
+prototype: bounded MCT1 framing, reconnect, live console telemetry, raw JSONL
+capture, offline HTML timeline replay and a portable C++ encoder. See the
+[hardware handoff and Windows setup](prototype/README.md). Software acceptance
+includes a Linux pseudo-terminal; physical board/sensor acceptance is pending.
+Open the [synthetic serial replay demo](https://mertacar-git.github.io/mission-control/serial-bench/)
+to inspect the real pyserial/pseudo-terminal capture, CRC recovery, duplicate
+rejection and missing measurements. This is deliberately labelled synthetic.
