@@ -972,7 +972,10 @@ input[type='range'] {
 .serial-device .row-actions,.serial-device .replay-bar { display: flex; flex-wrap: wrap; gap: 12px; }
 .serial-device .replay-bar input { flex: 1; min-width: 120px; }
 .serial-device .replay-bar select { width: auto; }
-.serial-device pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.serial-device pre, .experiment-lab pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.experiment-lab, .serial-experiments { min-width: 0; overflow-wrap: anywhere; }
+.experiment-lab .thresholds, .serial-experiments .thresholds { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,180px),1fr)); gap: 12px; }
+.experiment-lab .thresholds input,.experiment-lab .thresholds select,.serial-experiments .thresholds input,.serial-experiments .thresholds select { width:100%; min-width:0; }
 .serial-archive > div { border-top: 1px solid var(--line,#344453); padding: 14px 0; overflow-wrap: anywhere; }
 .serial-archive small { display: block; margin: 8px 0; }
 .multi-flight .row-actions { flex-wrap: wrap; }

@@ -39,12 +39,12 @@ function plot(
     previous = t;
   }
   if (current.length) segments.push(current);
-  const chosen=segments.filter((s) => s.length > 1).slice(0,250);
-  const budget=Math.max(2,Math.floor(2000/Math.max(1,chosen.length)));
+  const chosen = segments.filter((s) => s.length > 1).slice(0, 250);
+  const budget = Math.max(2, Math.floor(2000 / Math.max(1, chosen.length)));
   return chosen.map((s) => {
-      const stride = Math.max(1, Math.ceil(s.length / budget));
-      return s.filter((_, i) => i % stride === 0 || i === s.length - 1);
-    });
+    const stride = Math.max(1, Math.ceil(s.length / budget));
+    return s.filter((_, i) => i % stride === 0 || i === s.length - 1);
+  });
 }
 function Overlay({
   recordings,
@@ -140,7 +140,7 @@ export function MultiFlightComparison({
     [result, setResult] = useState<FlightComparison | null>(null),
     [error, setError] = useState('');
   const root = useRef<HTMLElement>(null);
-  const [preview,setPreview]=useState<string|null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const list = useMemo(
     () =>
       [...recordings, ...published].filter(
@@ -175,7 +175,7 @@ export function MultiFlightComparison({
           async (name) => {
             const response = await fetch(
               import.meta.env.BASE_URL + `comparison/${name}.json`,
-            {cache:'no-store'},
+              { cache: 'no-store' },
             );
             if (!response.ok) throw Error('Örnek kayıt alınamadı.');
             return parseRecording(await response.json());
@@ -189,7 +189,7 @@ export function MultiFlightComparison({
       setError(String(e));
     }
   }
-  function html(previewOnly=false) {
+  function html(previewOnly = false) {
     if (!result) return;
     const esc = (s: string) =>
       s.replace(
@@ -206,14 +206,16 @@ export function MultiFlightComparison({
     const figures = Array.from(root.current?.querySelectorAll('svg') ?? [])
       .map((s) => s.outerHTML)
       .join('');
-    const document='<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Uçuş karşılaştırması</title><style>body{font:16px system-ui;background:#111d29;color:#e1eaf2;max-width:1000px;margin:30px auto;padding:20px}svg{width:100%;height:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>Mission Control · Uçuş karşılaştırması</h1><p>' +
-        esc(result.assumptions) +
-        '</p>' +
-        figures +
-        '<pre>' +
-        esc(JSON.stringify(result, null, 2)) +
-        '</pre></html>';
-    if(previewOnly)setPreview(document);else download('flight-comparison.html',document,'text/html');
+    const document =
+      '<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Uçuş karşılaştırması</title><style>body{font:16px system-ui;background:#111d29;color:#e1eaf2;max-width:1000px;margin:30px auto;padding:20px}svg{width:100%;height:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>Mission Control · Uçuş karşılaştırması</h1><p>' +
+      esc(result.assumptions) +
+      '</p>' +
+      figures +
+      '<pre>' +
+      esc(JSON.stringify(result, null, 2)) +
+      '</pre></html>';
+    if (previewOnly) setPreview(document);
+    else download('flight-comparison.html', document, 'text/html');
   }
   return (
     <section className="panel multi-flight" ref={root}>
@@ -245,7 +247,9 @@ export function MultiFlightComparison({
                 )
               }
             />
-            {r.session.name} · {r.session.source}
+            {r.session.name} · {r.session.source} ·{' '}
+            {new Date(r.session.started_utc).toLocaleString('tr-TR')} ·{' '}
+            {r.session.id.slice(0, 8)}
           </label>
         ))}
       </div>
@@ -308,7 +312,11 @@ export function MultiFlightComparison({
           <Overlay recordings={selected} field="map" />
           <Overlay recordings={selected} field="relative_altitude_m" />
           <Overlay recordings={selected} field="ground_speed_ms" />
-          <p>Görünüm kayıt başına yaklaşık 2.000 nokta ve en fazla 250 kesintisiz parça ile sınırlıdır; rapor bütün örneklerden hesaplanır. Harita eşit metre ölçeği kullanır.</p>
+          <p>
+            Görünüm kayıt başına yaklaşık 2.000 nokta ve en fazla 250 kesintisiz
+            parça ile sınırlıdır; rapor bütün örneklerden hesaplanır. Harita
+            eşit metre ölçeği kullanır.
+          </p>
           <div className="row-actions">
             <button
               onClick={() =>
@@ -332,10 +340,20 @@ export function MultiFlightComparison({
             >
               Karşılaştırma CSV
             </button>
-            <button onClick={()=>html()}>Karşılaştırma HTML</button>
-            <button onClick={()=>html(true)}>HTML önizle</button>
+            <button onClick={() => html()}>Karşılaştırma HTML</button>
+            <button onClick={() => html(true)}>HTML önizle</button>
           </div>
-          {preview&&<div role="dialog" aria-label="HTML raporu önizlemesi"><button onClick={()=>setPreview(null)}>Önizlemeyi kapat</button><iframe title="HTML karşılaştırma raporu" srcDoc={preview} sandbox="" style={{width:'100%',height:650,border:0}}/></div>}
+          {preview && (
+            <div role="dialog" aria-label="HTML raporu önizlemesi">
+              <button onClick={() => setPreview(null)}>Önizlemeyi kapat</button>
+              <iframe
+                title="HTML karşılaştırma raporu"
+                srcDoc={preview}
+                sandbox=""
+                style={{ width: '100%', height: 650, border: 0 }}
+              />
+            </div>
+          )}
         </>
       )}
     </section>

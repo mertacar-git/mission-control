@@ -1,0 +1,474 @@
+[
+  {
+    "schema_version": 1,
+    "id": "33ccd23c-1828-4b57-9823-3cf581513bcf",
+    "definition": {
+      "schema_version": 1,
+      "id": "e2165686-f274-43ee-81df-39d817efd51c",
+      "parent_id": null,
+      "version": 1,
+      "name": "İçbükey görev · tarayıcı kabulü",
+      "source": "sitl",
+      "kind": "normal",
+      "mission": {
+        "generation": null,
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20.0,
+          "heading_deg": 0.0,
+          "altitude_m": 10.0,
+          "max_distance_m": 2000.0,
+          "max_altitude_m": 80.0
+        },
+        "id": "d7944abc-8cbc-4c41-bcf6-f459076ac4b8",
+        "name": "İçbükey alan tarama · v1.3 kabul",
+        "takeoff_altitude_m": 10.0,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978548970136487,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978548970136487,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97872773430027,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97872773430027,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978906498464056,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978906498464056,
+            "altitude_m": 10.0
+          }
+        ]
+      },
+      "mission_fingerprint": "mcfp1:731aa7b4cfd8dcb5199d56fbeaa3a32b8b98dae40b618e894e3713dbcbdee03a",
+      "speedup": 4,
+      "seed": null,
+      "timeout_s": 300,
+      "expected": "Final waypoint, landing and contiguous disarm observations establish completed mission.",
+      "created_utc": "2026-10-16T21:10:05.577072+03:00"
+    },
+    "status": "passed",
+    "created_utc": "2026-10-16T21:17:05.824577+03:00",
+    "started_utc": "2026-10-16T21:17:07.28307+03:00",
+    "ended_utc": "2026-10-16T21:17:42.968135+03:00",
+    "source": "sitl",
+    "software_revision": "b13603264ac2e6770813cde73b320f0d947d5eef",
+    "software_dirty": true,
+    "firmware": "Copter-4.6.3",
+    "firmware_revision": "92b0cd788ec29406f26c6f9c31d5ceedbd1cc538",
+    "speedup": 4,
+    "seed": null,
+    "recording_ids": [
+      "cb60a867-b9e6-48b3-b1ba-0e797fd70abf"
+    ],
+    "checks": [
+      {
+        "label": "Navigation ready",
+        "status": "passed",
+        "observed_utc": "2026-10-16T21:17:18.233157+03:00",
+        "latency_s": 10.222,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T21:17:18.233105+03:00",
+          "elapsed_s": 10.450348560999828,
+          "vehicle_time_ms": 41664,
+          "latitude": 41.0081999,
+          "longitude": 28.9784,
+          "relative_altitude_m": -0.012,
+          "ground_speed_ms": 0.0,
+          "battery_pct": 100.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "STABILIZE",
+          "armed": false,
+          "mission_index": 0,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.17088327800001935,
+          "connection": "connected"
+        }
+      },
+      {
+        "label": "Armed",
+        "status": "passed",
+        "observed_utc": "2026-10-16T21:17:23.84834+03:00",
+        "latency_s": 0.101,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T21:17:23.848296+03:00",
+          "elapsed_s": 16.065540677999707,
+          "vehicle_time_ms": 64062,
+          "latitude": 41.0081998,
+          "longitude": 28.9784001,
+          "relative_altitude_m": 0.007,
+          "ground_speed_ms": 0.01414213562373095,
+          "battery_pct": 100.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "STABILIZE",
+          "armed": true,
+          "mission_index": 0,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.04268075799973303,
+          "connection": "connected"
+        }
+      },
+      {
+        "label": "Airborne above 7 m",
+        "status": "passed",
+        "observed_utc": "2026-10-16T21:17:25.629879+03:00",
+        "latency_s": 1.704,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T21:17:25.629836+03:00",
+          "elapsed_s": 17.84708071399973,
+          "vehicle_time_ms": 71262,
+          "latitude": 41.0082,
+          "longitude": 28.9783998,
+          "relative_altitude_m": 7.029,
+          "ground_speed_ms": 0.01414213562373095,
+          "battery_pct": 98.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "AUTO",
+          "armed": true,
+          "mission_index": 1,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.0697738579997349,
+          "connection": "connected"
+        }
+      },
+      {
+        "label": "Observed mission completion",
+        "status": "passed",
+        "observed_utc": "2026-10-16T21:17:42.93838+03:00",
+        "latency_s": 16.828,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T21:17:42.938342+03:00",
+          "elapsed_s": 34.686885781,
+          "vehicle_time_ms": 138662,
+          "latitude": 41.00838,
+          "longitude": 28.9789062,
+          "relative_altitude_m": -0.005,
+          "ground_speed_ms": 0.01414213562373095,
+          "battery_pct": 83.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "AUTO",
+          "armed": false,
+          "mission_index": 1,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.17991918100005933,
+          "connection": "connected"
+        }
+      }
+    ],
+    "scenario_id": "0d0f3597-91ca-4bb6-b5d6-63a35d0b3cd7",
+    "error": null
+  },
+  {
+    "schema_version": 1,
+    "id": "d9bb15d5-1c7a-4a96-94c5-696804e1a7b8",
+    "definition": {
+      "schema_version": 1,
+      "id": "e2165686-f274-43ee-81df-39d817efd51c",
+      "parent_id": null,
+      "version": 1,
+      "name": "İçbükey görev · tarayıcı kabulü",
+      "source": "sitl",
+      "kind": "normal",
+      "mission": {
+        "generation": null,
+        "schema_version": 2,
+        "planning": {
+          "allowed_area": [
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.978161647781622
+            },
+            {
+              "latitude": 41.00802013567882,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.979234232764327
+            },
+            {
+              "latitude": 41.00882952512414,
+              "longitude": 28.978161647781622
+            }
+          ],
+          "survey_area": [
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.978459588054594
+            },
+            {
+              "latitude": 41.0082449660803,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.97899588054595
+            },
+            {
+              "latitude": 41.008379864321185,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978697940272976
+            },
+            {
+              "latitude": 41.00864966080296,
+              "longitude": 28.978459588054594
+            }
+          ],
+          "spacing_m": 20.0,
+          "heading_deg": 0.0,
+          "altitude_m": 10.0,
+          "max_distance_m": 2000.0,
+          "max_altitude_m": 80.0
+        },
+        "id": "d7944abc-8cbc-4c41-bcf6-f459076ac4b8",
+        "name": "İçbükey alan tarama · v1.3 kabul",
+        "takeoff_altitude_m": 10.0,
+        "waypoints": [
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978548970136487,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.00864966080296,
+            "longitude": 28.978548970136487,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978697940272976,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.97872773430027,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.97872773430027,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.0082449660803,
+            "longitude": 28.978906498464056,
+            "altitude_m": 10.0
+          },
+          {
+            "latitude": 41.008379864321185,
+            "longitude": 28.978906498464056,
+            "altitude_m": 10.0
+          }
+        ]
+      },
+      "mission_fingerprint": "mcfp1:731aa7b4cfd8dcb5199d56fbeaa3a32b8b98dae40b618e894e3713dbcbdee03a",
+      "speedup": 4,
+      "seed": null,
+      "timeout_s": 300,
+      "expected": "Final waypoint, landing and contiguous disarm observations establish completed mission.",
+      "created_utc": "2026-10-16T21:10:05.577072+03:00"
+    },
+    "status": "passed",
+    "created_utc": "2026-10-16T21:12:18.013674+03:00",
+    "started_utc": "2026-10-16T21:12:18.607106+03:00",
+    "ended_utc": "2026-10-16T21:12:53.855808+03:00",
+    "source": "sitl",
+    "software_revision": "b13603264ac2e6770813cde73b320f0d947d5eef",
+    "software_dirty": true,
+    "firmware": "Copter-4.6.3",
+    "firmware_revision": "92b0cd788ec29406f26c6f9c31d5ceedbd1cc538",
+    "speedup": 4,
+    "seed": null,
+    "recording_ids": [
+      "b48ffe69-b99a-48ae-8049-5afe1f84a694"
+    ],
+    "checks": [
+      {
+        "label": "Navigation ready",
+        "status": "passed",
+        "observed_utc": "2026-10-16T21:12:29.096246+03:00",
+        "latency_s": 10.236,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T21:12:29.096186+03:00",
+          "elapsed_s": 10.4793915690002,
+          "vehicle_time_ms": 41551,
+          "latitude": 41.0081999,
+          "longitude": 28.9784,
+          "relative_altitude_m": -0.012,
+          "ground_speed_ms": 0.0,
+          "battery_pct": 100.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "STABILIZE",
+          "armed": false,
+          "mission_index": 0,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.17425815200022043,
+          "connection": "connected"
+        }
+      },
+      {
+        "label": "Armed",
+        "status": "passed",
+        "observed_utc": "2026-10-16T21:12:34.699545+03:00",
+        "latency_s": 0.1,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T21:12:34.699502+03:00",
+          "elapsed_s": 16.0827085169999,
+          "vehicle_time_ms": 64150,
+          "latitude": 41.0081998,
+          "longitude": 28.9784001,
+          "relative_altitude_m": 0.007,
+          "ground_speed_ms": 0.01414213562373095,
+          "battery_pct": 100.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "STABILIZE",
+          "armed": true,
+          "mission_index": 0,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.043045197000083135,
+          "connection": "connected"
+        }
+      },
+      {
+        "label": "Airborne above 7 m",
+        "status": "passed",
+        "observed_utc": "2026-10-16T21:12:36.561968+03:00",
+        "latency_s": 1.807,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T21:12:36.561912+03:00",
+          "elapsed_s": 17.945119019999765,
+          "vehicle_time_ms": 71552,
+          "latitude": 41.0082,
+          "longitude": 28.9783998,
+          "relative_altitude_m": 7.559,
+          "ground_speed_ms": 0.01414213562373095,
+          "battery_pct": 98.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "AUTO",
+          "armed": true,
+          "mission_index": 1,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.14496185699999842,
+          "connection": "connected"
+        }
+      },
+      {
+        "label": "Observed mission completion",
+        "status": "passed",
+        "observed_utc": "2026-10-16T21:12:53.821652+03:00",
+        "latency_s": 16.761,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T21:12:53.82163+03:00",
+          "elapsed_s": 34.71707923999975,
+          "vehicle_time_ms": 138750,
+          "latitude": 41.0083799,
+          "longitude": 28.9789062,
+          "relative_altitude_m": 0.001,
+          "ground_speed_ms": 0.01414213562373095,
+          "battery_pct": 83.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "AUTO",
+          "armed": false,
+          "mission_index": 1,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.17802675699977044,
+          "connection": "connected"
+        }
+      }
+    ],
+    "scenario_id": "be044d2a-1792-4ce1-84bd-36a395753cbc",
+    "error": null
+  }
+]

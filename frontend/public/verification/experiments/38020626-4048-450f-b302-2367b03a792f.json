@@ -1,0 +1,2254 @@
+{
+  "schema_version": 1,
+  "session": {
+    "id": "38020626-4048-450f-b302-2367b03a792f",
+    "name": "Acceptance gps_loss",
+    "started_utc": "2026-10-16T18:10:49.570165+00:00",
+    "ended_utc": "2026-10-16T18:11:16.360748+00:00",
+    "source": "sitl",
+    "mission": {
+      "generation": null,
+      "schema_version": 2,
+      "planning": null,
+      "id": "68477914-2b92-4741-9d5d-60cb79df570a",
+      "name": "Acceptance gps_loss",
+      "takeoff_altitude_m": 10.0,
+      "waypoints": [
+        {
+          "latitude": 41.013200000000005,
+          "longitude": 28.9784,
+          "altitude_m": 10.0
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "environment",
+      "received_utc": "2026-10-16T18:10:49.570272+00:00",
+      "payload": {
+        "speedup": 4,
+        "firmware": "Copter-4.6.3",
+        "experiment": {
+          "definition_id": "7d9ff49c-1c5a-4576-ac69-e9a200dbcf31",
+          "kind": "gps_loss",
+          "seed": null,
+          "timeout_s": 300
+        }
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:10:49.570306+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "status": "started",
+        "kind": "gps_loss",
+        "expected": "SIM_GPS_DISABLE=1, FS_EKF_ACTION=1 \u2192 no 3D fix \u2192 LAND \u2192 disarmed"
+      }
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T18:10:49.570496+00:00",
+      "payload": {
+        "state": "unknown",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": false
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:49.570523+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:49.570479+00:00",
+        "elapsed_s": 0.21159253500036357,
+        "vehicle_time_ms": null,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": null,
+        "battery_pct": null,
+        "battery_voltage_v": null,
+        "flight_mode": null,
+        "armed": null,
+        "mission_index": null,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": null,
+        "heartbeat_age_s": null,
+        "connection": "connecting"
+      }
+    },
+    {
+      "type": "connection",
+      "received_utc": "2026-10-16T18:10:49.651624+00:00",
+      "payload": {
+        "state": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:49.854230+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Barometer 1 calibration complete"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:49.854343+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Barometer 2 calibration complete"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:49.996839+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "ArduPilot Ready"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:49.996976+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "AHRS: DCM active"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:50.058897+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "RC7: SaveWaypoint LOW"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:50.079589+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:50.079517+00:00",
+        "elapsed_s": 0.7206285430002026,
+        "vehicle_time_ms": 2729,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 0,
+        "heartbeat_age_s": 0.18440846000021338,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:50.495263+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 initialised"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:50.495663+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 initialised"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:50.495865+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "AHRS: EKF3 active"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:50.598422+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:50.598368+00:00",
+        "elapsed_s": 1.239479312000185,
+        "vehicle_time_ms": 4729,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 0,
+        "heartbeat_age_s": 0.20827972000006412,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:50.824258+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 tilt alignment complete"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:50.824412+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 tilt alignment complete"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:50.844751+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 MAG0 initial yaw alignment complete"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:50.844914+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 MAG0 initial yaw alignment complete"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:51.113798+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:51.113748+00:00",
+        "elapsed_s": 1.7548592850002933,
+        "vehicle_time_ms": 6929,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 0,
+        "heartbeat_age_s": 0.22759136600006968,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:51.628464+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:51.628421+00:00",
+        "elapsed_s": 2.269533008000053,
+        "vehicle_time_ms": 8929,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 0,
+        "heartbeat_age_s": 0.00011219299994991161,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:51.833784+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "GPS 1: probing for u-blox at 230400 baud"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:51.833898+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "GPS 1: detected u-blox"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:52.140491+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:52.140450+00:00",
+        "elapsed_s": 2.7815614670003015,
+        "vehicle_time_ms": 10929,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 9.629800024413271e-05,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:52.654961+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:52.654921+00:00",
+        "elapsed_s": 3.296032464000291,
+        "vehicle_time_ms": 13129,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.02072452099992006,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:53.168176+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:53.168127+00:00",
+        "elapsed_s": 3.8092383500002143,
+        "vehicle_time_ms": 15129,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.04092955499982054,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:53.681518+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:53.681454+00:00",
+        "elapsed_s": 4.322565502000089,
+        "vehicle_time_ms": 17129,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.04137279499991564,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:54.193388+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:54.193328+00:00",
+        "elapsed_s": 4.834439388000192,
+        "vehicle_time_ms": 19129,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.06126854400008597,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:54.377019+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 origin set"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:54.397391+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Field Elevation Set: 30m"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:54.439414+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 origin set"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:54.704990+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:54.704952+00:00",
+        "elapsed_s": 5.346064208000371,
+        "vehicle_time_ms": 21329,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.08155029299996386,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:55.214667+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:55.214623+00:00",
+        "elapsed_s": 5.855735525,
+        "vehicle_time_ms": 23329,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.0815322919997925,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:55.724820+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:55.724771+00:00",
+        "elapsed_s": 6.365882180000426,
+        "vehicle_time_ms": 25329,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.08165422400043099,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:56.235669+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:56.235611+00:00",
+        "elapsed_s": 6.876723243000015,
+        "vehicle_time_ms": 27329,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.10202308699990681,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:56.744796+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:56.744752+00:00",
+        "elapsed_s": 7.385863292000067,
+        "vehicle_time_ms": 29529,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.10204803299984633,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:57.255268+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:57.255220+00:00",
+        "elapsed_s": 7.896332000000257,
+        "vehicle_time_ms": 31529,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.12287039400007416,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:57.765747+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:57.765717+00:00",
+        "elapsed_s": 8.40682966400027,
+        "vehicle_time_ms": 33529,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0282842712474619,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.1431839960000616,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:58.276732+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:58.276704+00:00",
+        "elapsed_s": 8.917817007000394,
+        "vehicle_time_ms": 35529,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0282842712474619,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.1435439810002208,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:58.788116+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:58.788074+00:00",
+        "elapsed_s": 9.429186839000067,
+        "vehicle_time_ms": 37529,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0282842712474619,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.16395421099969099,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:59.299931+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:59.299896+00:00",
+        "elapsed_s": 9.941008220000185,
+        "vehicle_time_ms": 39729,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.0282842712474619,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.16377378800007136,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:59.729223+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 is using GPS"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:10:59.770104+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 is using GPS"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:59.780464+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:59.780318+00:00",
+        "elapsed_s": 10.421430506000434,
+        "vehicle_time_ms": 41529,
+        "latitude": 41.0081999,
+        "longitude": 28.9784,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.15356377300031454,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:10:59.780510+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "label": "Navigation ready",
+        "status": "passed",
+        "observed_utc": "2026-10-16T18:10:59.780346+00:00",
+        "latency_s": 10.21,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T18:10:59.780318+00:00",
+          "elapsed_s": 10.421430506000434,
+          "vehicle_time_ms": 41529,
+          "latitude": 41.0081999,
+          "longitude": 28.9784,
+          "relative_altitude_m": -0.012,
+          "ground_speed_ms": 0.0,
+          "battery_pct": 100.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "STABILIZE",
+          "armed": false,
+          "mission_index": 0,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.15356377300031454,
+          "connection": "connected"
+        }
+      }
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T18:10:59.811304+00:00",
+      "payload": {
+        "state": "preparing",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": false
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:10:59.811393+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:10:59.811275+00:00",
+        "elapsed_s": 10.45238726100024,
+        "vehicle_time_ms": 41729,
+        "latitude": 41.0081999,
+        "longitude": 28.9784,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.18452052800012098,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:00.320618+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:00.320574+00:00",
+        "elapsed_s": 10.961684972000057,
+        "vehicle_time_ms": 43729,
+        "latitude": 41.0081999,
+        "longitude": 28.9784,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.18326997599979222,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:00.829965+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:00.829913+00:00",
+        "elapsed_s": 11.471024551000028,
+        "vehicle_time_ms": 45729,
+        "latitude": 41.0081998,
+        "longitude": 28.9784001,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.2044861449999189,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:01.338019+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:01.337975+00:00",
+        "elapsed_s": 11.979086665000068,
+        "vehicle_time_ms": 47729,
+        "latitude": 41.0081999,
+        "longitude": 28.9784001,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.20324505500002488,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:01.849165+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:01.849123+00:00",
+        "elapsed_s": 12.49023435800018,
+        "vehicle_time_ms": 49929,
+        "latitude": 41.0081999,
+        "longitude": 28.9784001,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.22443154499978846,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:02.358298+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:02.358260+00:00",
+        "elapsed_s": 12.999371816000348,
+        "vehicle_time_ms": 51929,
+        "latitude": 41.0081999,
+        "longitude": 28.9784001,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.22388706600031583,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:02.867737+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:02.867699+00:00",
+        "elapsed_s": 13.50881155900015,
+        "vehicle_time_ms": 53929,
+        "latitude": 41.0081998,
+        "longitude": 28.9784001,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 8.295499992527766e-05,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:03.375995+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:03.375956+00:00",
+        "elapsed_s": 14.01706879800031,
+        "vehicle_time_ms": 55929,
+        "latitude": 41.0081998,
+        "longitude": 28.9784001,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 6.840900005045114e-05,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:03.884332+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:03.884294+00:00",
+        "elapsed_s": 14.52540621900016,
+        "vehicle_time_ms": 57929,
+        "latitude": 41.0081998,
+        "longitude": 28.9784001,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 7.553800014648004e-05,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:04.393691+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:04.393648+00:00",
+        "elapsed_s": 15.034759742000006,
+        "vehicle_time_ms": 60129,
+        "latitude": 41.0081998,
+        "longitude": 28.9784001,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.020860598999661306,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:04.801183+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "status": "parameter_verified",
+        "name": "FS_EKF_ACTION",
+        "value": 1
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:04.821507+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "status": "parameter_verified",
+        "name": "FS_DR_ENABLE",
+        "value": 0
+      }
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T18:11:04.821611+00:00",
+      "payload": {
+        "status": "uploading",
+        "total": 4
+      }
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T18:11:04.841907+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 1,
+        "total": 4
+      }
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T18:11:04.862235+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 2,
+        "total": 4
+      }
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T18:11:04.882607+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 3,
+        "total": 4
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:04.903006+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:04.902967+00:00",
+        "elapsed_s": 15.544079353000143,
+        "vehicle_time_ms": 61729,
+        "latitude": 41.0081998,
+        "longitude": 28.9784001,
+        "relative_altitude_m": -0.012,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.02048446899971168,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T18:11:04.903113+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 4,
+        "total": 4
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:04.923835+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Flight plan received"
+      }
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T18:11:05.026394+00:00",
+      "payload": {
+        "status": "verified",
+        "total": 4
+      }
+    },
+    {
+      "type": "preflight",
+      "received_utc": "2026-10-16T18:11:05.026632+00:00",
+      "payload": {
+        "action": "arm",
+        "evaluated_utc": "2026-10-16T18:11:05.026537+00:00",
+        "mission_fingerprint": "mcfp1:41037b460597182a1e2b4e7468d7cafd628060f7959316f7c3bf6848be4321e9",
+        "ready": true,
+        "checks": [
+          {
+            "id": "controller",
+            "state": "ready",
+            "reason": "Kontrol oturumu ge\u00e7erli"
+          },
+          {
+            "id": "simulator",
+            "state": "ready",
+            "reason": "Uygulaman\u0131n ba\u015flatt\u0131\u011f\u0131 SITL \u00e7al\u0131\u015fmal\u0131"
+          },
+          {
+            "id": "connection",
+            "state": "ready",
+            "reason": "Telemetri ba\u011flant\u0131s\u0131 g\u00fcncel olmal\u0131"
+          },
+          {
+            "id": "position",
+            "state": "ready",
+            "reason": "Konum \u00f6l\u00e7\u00fcm\u00fc 3 saniyeden yeni ve EKF haz\u0131r olmal\u0131"
+          },
+          {
+            "id": "gps",
+            "state": "ready",
+            "reason": "GPS fix t\u00fcr\u00fc en az 3 olmal\u0131"
+          },
+          {
+            "id": "ekf",
+            "state": "ready",
+            "reason": "EKF mutlak yatay konum tahmini haz\u0131r olmal\u0131"
+          },
+          {
+            "id": "battery",
+            "state": "ready",
+            "reason": "5 saniyeden yeni batarya \u00f6l\u00e7\u00fcm\u00fc en az %20 olmal\u0131"
+          },
+          {
+            "id": "operation",
+            "state": "ready",
+            "reason": "Ba\u015fka g\u00f6rev aktar\u0131m\u0131 veya komut beklememeli"
+          },
+          {
+            "id": "disarmed",
+            "state": "ready",
+            "reason": "Arm i\u00e7in ara\u00e7 disarmed olmal\u0131"
+          }
+        ]
+      }
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T18:11:05.026706+00:00",
+      "payload": {
+        "id": "ac0cdcc5-736e-427f-9c32-dab97c372271",
+        "action": "arm",
+        "status": "requested"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:05.047143+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Arming motors"
+      }
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T18:11:05.047266+00:00",
+      "payload": {
+        "id": "ac0cdcc5-736e-427f-9c32-dab97c372271",
+        "action": "arm",
+        "status": "acknowledged",
+        "observed": false
+      }
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T18:11:05.128996+00:00",
+      "payload": {
+        "id": "ac0cdcc5-736e-427f-9c32-dab97c372271",
+        "action": "arm",
+        "status": "observed",
+        "observed_mode": "STABILIZE",
+        "armed": true
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:05.148345+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:05.148234+00:00",
+        "elapsed_s": 15.789346508000108,
+        "vehicle_time_ms": 62989,
+        "latitude": 41.0081998,
+        "longitude": 28.9784001,
+        "relative_altitude_m": 0.007,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "STABILIZE",
+        "armed": true,
+        "mission_index": 0,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.01933427699987078,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:05.148387+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "label": "Armed",
+        "status": "passed",
+        "observed_utc": "2026-10-16T18:11:05.148265+00:00",
+        "latency_s": 0.101,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T18:11:05.148234+00:00",
+          "elapsed_s": 15.789346508000108,
+          "vehicle_time_ms": 62989,
+          "latitude": 41.0081998,
+          "longitude": 28.9784001,
+          "relative_altitude_m": 0.007,
+          "ground_speed_ms": 0.01414213562373095,
+          "battery_pct": 100.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "STABILIZE",
+          "armed": true,
+          "mission_index": 0,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.01933427699987078,
+          "connection": "connected"
+        }
+      }
+    },
+    {
+      "type": "preflight",
+      "received_utc": "2026-10-16T18:11:05.148528+00:00",
+      "payload": {
+        "action": "start",
+        "evaluated_utc": "2026-10-16T18:11:05.148479+00:00",
+        "mission_fingerprint": "mcfp1:41037b460597182a1e2b4e7468d7cafd628060f7959316f7c3bf6848be4321e9",
+        "ready": true,
+        "checks": [
+          {
+            "id": "controller",
+            "state": "ready",
+            "reason": "Kontrol oturumu ge\u00e7erli"
+          },
+          {
+            "id": "simulator",
+            "state": "ready",
+            "reason": "Uygulaman\u0131n ba\u015flatt\u0131\u011f\u0131 SITL \u00e7al\u0131\u015fmal\u0131"
+          },
+          {
+            "id": "connection",
+            "state": "ready",
+            "reason": "Telemetri ba\u011flant\u0131s\u0131 g\u00fcncel olmal\u0131"
+          },
+          {
+            "id": "position",
+            "state": "ready",
+            "reason": "Konum \u00f6l\u00e7\u00fcm\u00fc 3 saniyeden yeni ve EKF haz\u0131r olmal\u0131"
+          },
+          {
+            "id": "gps",
+            "state": "ready",
+            "reason": "GPS fix t\u00fcr\u00fc en az 3 olmal\u0131"
+          },
+          {
+            "id": "ekf",
+            "state": "ready",
+            "reason": "EKF mutlak yatay konum tahmini haz\u0131r olmal\u0131"
+          },
+          {
+            "id": "battery",
+            "state": "ready",
+            "reason": "5 saniyeden yeni batarya \u00f6l\u00e7\u00fcm\u00fc en az %20 olmal\u0131"
+          },
+          {
+            "id": "operation",
+            "state": "ready",
+            "reason": "Ba\u015fka g\u00f6rev aktar\u0131m\u0131 veya komut beklememeli"
+          },
+          {
+            "id": "armed",
+            "state": "ready",
+            "reason": "Motorlar\u0131n armed oldu\u011fu g\u00fcncel telemetride g\u00f6zlenmeli"
+          },
+          {
+            "id": "upload",
+            "state": "ready",
+            "reason": "Y\u00fcklenen g\u00f6rev geri okunarak do\u011frulanm\u0131\u015f olmal\u0131"
+          },
+          {
+            "id": "mission",
+            "state": "ready",
+            "reason": "Y\u00fcklenmi\u015f g\u00f6rev geometrisi ve s\u0131n\u0131rlar\u0131 ge\u00e7erli olmal\u0131"
+          }
+        ]
+      }
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T18:11:05.148581+00:00",
+      "payload": {
+        "id": "b9b94414-ba35-489a-a551-f8d789c25d90",
+        "action": "start",
+        "status": "requested"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:05.169995+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 1 Takeoff"
+      }
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T18:11:05.190756+00:00",
+      "payload": {
+        "id": "b9b94414-ba35-489a-a551-f8d789c25d90",
+        "action": "start",
+        "status": "acknowledged",
+        "observed": false
+      }
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T18:11:05.190812+00:00",
+      "payload": {
+        "id": "b9b94414-ba35-489a-a551-f8d789c25d90",
+        "action": "start",
+        "status": "observed",
+        "observed_mode": "AUTO",
+        "armed": true
+      }
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T18:11:05.415314+00:00",
+      "payload": {
+        "state": "executing",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": true
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:05.415425+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:05.415282+00:00",
+        "elapsed_s": 16.056394484000066,
+        "vehicle_time_ms": 64189,
+        "latitude": 41.0081999,
+        "longitude": 28.9784001,
+        "relative_altitude_m": 0.007,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 100.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 1,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.04118190400004096,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:05.924214+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:05.924161+00:00",
+        "elapsed_s": 16.565272954000193,
+        "vehicle_time_ms": 66189,
+        "latitude": 41.0081999,
+        "longitude": 28.9784001,
+        "relative_altitude_m": 0.02,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 99.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 1,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.04095316199982335,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:06.435756+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:06.435688+00:00",
+        "elapsed_s": 17.076799660000233,
+        "vehicle_time_ms": 68189,
+        "latitude": 41.0081999,
+        "longitude": 28.9783999,
+        "relative_altitude_m": 2.348,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 99.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 1,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.06124995900017893,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:06.476605+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 MAG0 in-flight yaw alignment complete"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:06.476713+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 MAG0 in-flight yaw alignment complete"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:06.946513+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:06.946470+00:00",
+        "elapsed_s": 17.587582137000027,
+        "vehicle_time_ms": 70189,
+        "latitude": 41.0082,
+        "longitude": 28.9783998,
+        "relative_altitude_m": 6.97,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 98.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 1,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.08174976600002992,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:07.018243+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:07.018096+00:00",
+        "elapsed_s": 17.659208082000077,
+        "vehicle_time_ms": 70589,
+        "latitude": 41.0082,
+        "longitude": 28.9783998,
+        "relative_altitude_m": 7.656,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 98.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 1,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 6,
+        "heartbeat_age_s": 0.15337571100008063,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:07.018286+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "label": "Airborne above 7 m",
+        "status": "passed",
+        "observed_utc": "2026-10-16T18:11:07.018135+00:00",
+        "latency_s": 1.827,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T18:11:07.018096+00:00",
+          "elapsed_s": 17.659208082000077,
+          "vehicle_time_ms": 70589,
+          "latitude": 41.0082,
+          "longitude": 28.9783998,
+          "relative_altitude_m": 7.656,
+          "ground_speed_ms": 0.01414213562373095,
+          "battery_pct": 98.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "AUTO",
+          "armed": true,
+          "mission_index": 1,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 6,
+          "heartbeat_age_s": 0.15337571100008063,
+          "connection": "connected"
+        }
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:07.028622+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "status": "parameter_verified",
+        "name": "SIM_GPS_DISABLE",
+        "value": 1
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:07.028658+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "status": "injected",
+        "fault": "gps_loss"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:07.231718+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:07.231580+00:00",
+        "elapsed_s": 17.87269173200002,
+        "vehicle_time_ms": 71389,
+        "latitude": 41.0082001,
+        "longitude": 28.9783998,
+        "relative_altitude_m": 8.771,
+        "ground_speed_ms": 0.01414213562373095,
+        "battery_pct": 98.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 1,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.10095942899988586,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:07.231807+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "label": "GPS has no 3D fix",
+        "status": "passed",
+        "observed_utc": "2026-10-16T18:11:07.231613+00:00",
+        "latency_s": 0.203,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T18:11:07.231580+00:00",
+          "elapsed_s": 17.87269173200002,
+          "vehicle_time_ms": 71389,
+          "latitude": 41.0082001,
+          "longitude": 28.9783998,
+          "relative_altitude_m": 8.771,
+          "ground_speed_ms": 0.01414213562373095,
+          "battery_pct": 98.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "AUTO",
+          "armed": true,
+          "mission_index": 1,
+          "position_fresh": true,
+          "navigation_ready": true,
+          "gps_fix_type": 1,
+          "heartbeat_age_s": 0.10095942899988586,
+          "connection": "connected"
+        }
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:07.872261+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:07.872213+00:00",
+        "elapsed_s": 18.098708103000263,
+        "vehicle_time_ms": 72389,
+        "latitude": 41.0081999,
+        "longitude": 28.9784,
+        "relative_altitude_m": 9.687,
+        "ground_speed_ms": 0.0,
+        "battery_pct": 98.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 1,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.08195852600010767,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "mission_progress",
+      "received_utc": "2026-10-16T18:11:08.035694+00:00",
+      "payload": {
+        "reached_index": 1
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:08.035814+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 2 WP"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:08.383285+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:08.383236+00:00",
+        "elapsed_s": 18.609731608000402,
+        "vehicle_time_ms": 74389,
+        "latitude": 41.0082015,
+        "longitude": 28.9784,
+        "relative_altitude_m": 9.954,
+        "ground_speed_ms": 0.5,
+        "battery_pct": 97.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.10223454100014351,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:08.894591+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:08.894524+00:00",
+        "elapsed_s": 19.121007534,
+        "vehicle_time_ms": 76389,
+        "latitude": 41.0082341,
+        "longitude": 28.9784,
+        "relative_altitude_m": 9.988,
+        "ground_speed_ms": 3.6,
+        "battery_pct": 97.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": true,
+        "navigation_ready": true,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.10251932899973326,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T18:11:09.405282+00:00",
+      "payload": {
+        "state": "unknown",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": true
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:09.405461+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:09.405243+00:00",
+        "elapsed_s": 19.63173805300039,
+        "vehicle_time_ms": 78389,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 7.69,
+        "battery_pct": 96.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "AUTO",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.12300382600005833,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:09.446370+00:00",
+      "payload": {
+        "severity": 2,
+        "text": "EKF3 lane switch 1"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:09.446501+00:00",
+      "payload": {
+        "severity": 4,
+        "text": "EKF primary changed:1"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:09.468196+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:09.468088+00:00",
+        "elapsed_s": 19.694583412000156,
+        "vehicle_time_ms": 78789,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 8.27,
+        "battery_pct": 96.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.0014501289997497224,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:09.468243+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "label": "Autopilot LAND",
+        "status": "passed",
+        "observed_utc": "2026-10-16T18:11:09.468113+00:00",
+        "latency_s": 1.822,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T18:11:09.468088+00:00",
+          "elapsed_s": 19.694583412000156,
+          "vehicle_time_ms": 78789,
+          "latitude": null,
+          "longitude": null,
+          "relative_altitude_m": null,
+          "ground_speed_ms": 8.27,
+          "battery_pct": 96.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "LAND",
+          "armed": true,
+          "mission_index": 2,
+          "position_fresh": false,
+          "navigation_ready": false,
+          "gps_fix_type": 1,
+          "heartbeat_age_s": 0.0014501289997497224,
+          "connection": "connected"
+        }
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:09.487632+00:00",
+      "payload": {
+        "severity": 2,
+        "text": "EKF variance"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:09.487718+00:00",
+      "payload": {
+        "severity": 2,
+        "text": "EKF Failsafe: changed to LAND Mode"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:09.915444+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:09.915403+00:00",
+        "elapsed_s": 20.14189817400029,
+        "vehicle_time_ms": 80589,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 3.970050377514119,
+        "battery_pct": 96.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.1428322440001466,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:10.425074+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:10.425028+00:00",
+        "elapsed_s": 20.651522870999997,
+        "vehicle_time_ms": 82589,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 1.7913681921927718,
+        "battery_pct": 95.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.14310974399995757,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:10.935897+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:10.935817+00:00",
+        "elapsed_s": 21.16231185300012,
+        "vehicle_time_ms": 84589,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.8121576201698781,
+        "battery_pct": 95.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.14303966299985404,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:11.222564+00:00",
+      "payload": {
+        "severity": 4,
+        "text": "EKF3 IMU1 stopped aiding"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:11.222664+00:00",
+      "payload": {
+        "severity": 4,
+        "text": "EKF3 IMU0 stopped aiding"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:11.446650+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:11.446597+00:00",
+        "elapsed_s": 21.673091010999997,
+        "vehicle_time_ms": 86589,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.21213203435596426,
+        "battery_pct": 94.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.1635943109999971,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:11.957072+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:11.957021+00:00",
+        "elapsed_s": 22.18351571600033,
+        "vehicle_time_ms": 88589,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.5869412236331676,
+        "battery_pct": 94.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.1839785639999718,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:12.467675+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:12.467622+00:00",
+        "elapsed_s": 22.694117197000196,
+        "vehicle_time_ms": 90789,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.7338937252763509,
+        "battery_pct": 93.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.183742575999986,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:12.976909+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:12.976857+00:00",
+        "elapsed_s": 23.203351601000122,
+        "vehicle_time_ms": 92789,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.61773780845922,
+        "battery_pct": 93.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.20417701299993496,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:12.997318+00:00",
+      "payload": {
+        "severity": 4,
+        "text": "SmartRTL deactivated: bad position"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:13.486243+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:13.486188+00:00",
+        "elapsed_s": 23.71268325600022,
+        "vehicle_time_ms": 94789,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.45276925690687087,
+        "battery_pct": 92.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.20368752800004586,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:13.995488+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:13.995435+00:00",
+        "elapsed_s": 24.221929660000114,
+        "vehicle_time_ms": 96789,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.38013155617496425,
+        "battery_pct": 92.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.22426590599980045,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:14.508121+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:14.508057+00:00",
+        "elapsed_s": 24.73455192700021,
+        "vehicle_time_ms": 98789,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.3634556369077249,
+        "battery_pct": 92.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.2264105220001511,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:15.019647+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:15.019597+00:00",
+        "elapsed_s": 25.2460911320004,
+        "vehicle_time_ms": 100989,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.3721558813185679,
+        "battery_pct": 91.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.0004907430002276669,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:15.532374+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:15.532324+00:00",
+        "elapsed_s": 25.758818969999993,
+        "vehicle_time_ms": 102989,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.3889730067755345,
+        "battery_pct": 91.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.00011201199959032238,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:15.573453+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "SIM Hit ground at 0.503096 m/s"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:16.045235+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:16.045164+00:00",
+        "elapsed_s": 26.27165809500002,
+        "vehicle_time_ms": 104989,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.7353910524340094,
+        "battery_pct": 90.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": true,
+        "mission_index": 2,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.022350464999817632,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:16.089776+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Disarming motors"
+      }
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T18:11:16.131074+00:00",
+      "payload": {
+        "severity": 4,
+        "text": "EKF primary changed:0"
+      }
+    },
+    {
+      "type": "telemetry",
+      "received_utc": "2026-10-16T18:11:16.355543+00:00",
+      "payload": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:11:16.355336+00:00",
+        "elapsed_s": 26.581829820000166,
+        "vehicle_time_ms": 106189,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": 0.33837848631377265,
+        "battery_pct": 90.0,
+        "battery_voltage_v": 12.6,
+        "flight_mode": "LAND",
+        "armed": false,
+        "mission_index": 0,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": 1,
+        "heartbeat_age_s": 0.08058152900002824,
+        "connection": "connected"
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:16.355609+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "label": "Disarmed after failsafe",
+        "status": "passed",
+        "observed_utc": "2026-10-16T18:11:16.355391+00:00",
+        "latency_s": 6.887,
+        "snapshot": {
+          "source": "sitl",
+          "received_utc": "2026-10-16T18:11:16.355336+00:00",
+          "elapsed_s": 26.581829820000166,
+          "vehicle_time_ms": 106189,
+          "latitude": null,
+          "longitude": null,
+          "relative_altitude_m": null,
+          "ground_speed_ms": 0.33837848631377265,
+          "battery_pct": 90.0,
+          "battery_voltage_v": 12.6,
+          "flight_mode": "LAND",
+          "armed": false,
+          "mission_index": 0,
+          "position_fresh": false,
+          "navigation_ready": false,
+          "gps_fix_type": 1,
+          "heartbeat_age_s": 0.08058152900002824,
+          "connection": "connected"
+        }
+      }
+    },
+    {
+      "type": "scenario",
+      "received_utc": "2026-10-16T18:11:16.355639+00:00",
+      "payload": {
+        "run_id": "9bdfa79a-89d4-42a7-bcc4-12accb0896a4",
+        "status": "passed",
+        "error": null
+      }
+    },
+    {
+      "type": "connection",
+      "received_utc": "2026-10-16T18:11:16.360654+00:00",
+      "payload": {
+        "state": "closed"
+      }
+    }
+  ]
+}

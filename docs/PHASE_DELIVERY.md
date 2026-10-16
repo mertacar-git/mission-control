@@ -11,7 +11,7 @@ and evidence; uncompleted phases stay explicitly pending.
 | 2 | Observed mission lifecycle and connection recovery | Passed: 7 SITL scenarios, actual browser reload flight, 78 backend / 69 frontend tests |
 | 3 | Two-to-five flight comparison and portable exports | Passed: real full-interval flight, Python/TS parity, 81 backend / 71 frontend tests |
 | 4 | Windows serial service and application integration | Passed: clean Windows install/UI, OS PTY, 88 backend / 76 frontend tests |
-| 5 | Repeatable experiment definitions and immutable runs | Pending |
+| 5 | Repeatable experiment definitions and immutable runs | Passed: 5 pinned SITL runs, browser concave mission/replay, Windows synthetic experiments, 98 backend / 76 frontend tests |
 | 6 | Unified acceptance runner, evidence and release | Pending |
 
 ## Phase 0
@@ -139,3 +139,39 @@ Windows tests: 10 passed, 3 platform/compiler skips. Ubuntu: 88 backend tests
 passed including those PTY/compiler checks. Frontend: 76 tests plus TypeScript
 and production build passed. Physical USB/sensor accuracy remains pending.
 See `SERIAL_DEVICE.md` for setup, API and boundaries.
+
+## Phase 5
+
+Immutable versioned definitions store the actual mission snapshot, content
+fingerprint, profile, speed, expectations and wall-clock timeout. Every rerun
+creates a new run and recording; parent definitions and previous results are
+preserved. SQLite migration 1 adds tables without rewriting old recordings.
+Startup recovers queued/running work as interrupted. Source provenance includes
+git revision and dirty-worktree state when available; SITL seed stays null.
+
+The single SITL experiment owner excludes manual controls through cleanup.
+Cancellation checks the initiating session independently of lease expiration,
+and cannot cancel another browser's run. Timeout, startup errors, missing
+observations and cleanup failure do not pass. Repeated cancellation cannot
+interrupt an already terminal run's cleanup. Existing scenario endpoints remain.
+
+Two real normal runs of one definition, heartbeat recovery, configured low-battery
+RTL/landing and GPS-loss LAND/disarm passed on the pinned firmware. Their first
+environment event preserves the experiment conditions. A browser-created
+seven-point concave mission completed twice, was replayed, and both recordings
+were transferred to the shared flight analysis table; 390 px testing
+observed 375 px content with no page overflow, disabled flight commands and
+working charts. A source rebuild invalidated an old lazy chart URL as expected;
+the supported reload recovery was exercised before the final browser check.
+
+Windows' independent registry runs only labelled synthetic serial fault profiles;
+no physical device writes occur. A mixed-packet definition ran twice through the
+UI, generated separate captures and passed all five observations. Three profiles
+also pass automated byte-level tests. Existing captures survive receiver restart;
+missing old source metadata remains absent. The current source-provenance fields
+are included in the second native Windows run. Raw files and result snapshots are
+under `verification/phases/phase-5`. Public Pages publishes SITL evidence read-only.
+
+Software validation: 98 backend tests; 76 frontend tests, TypeScript and production
+build. `VERSIONED_EXPERIMENTS.md` documents use, API and limits. Phase 6 remains
+pending until the unified acceptance package and release have passed.

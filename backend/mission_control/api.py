@@ -15,6 +15,7 @@ from .execution import execution_report
 from .emulator import Emulator
 from .preflight import evaluate
 from .comparison import compare_recordings,FlightComparison
+from .experiments import ExperimentRunner,ExperimentRequest,ExperimentStart,ExperimentDefinition,ExperimentRun,create_definition
 from typing import Literal
 
 class ScenarioRequest(BaseModel):
@@ -40,6 +41,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
             vehicle=manager_factory(database_store)
             resources.update(store=database_store,manager=vehicle,
                 scenarios=ScenarioRunner(vehicle,database_store),emulator=Emulator(database_store))
+            resources['experiments']=ExperimentRunner(resources['scenarios'],database_store)
     class Resource:
         def __init__(self,name):object.__setattr__(self,'name',name)
         def __getattr__(self,key):
@@ -47,17 +49,19 @@ def create_app(database=None,manager_factory=MAVLinkManager):
         def __setattr__(self,key,value):
             initialize();setattr(resources[self.name],key,value)
     store,manager,scenarios,emulator=(Resource(name) for name in ('store','manager','scenarios','emulator'))
+    experiments=Resource('experiments')
     @asynccontextmanager
     async def lifespan(app):
         initialize()
         try:yield
         finally:
             await emulator.stop()
+            await experiments.close()
             await scenarios.close()
             await manager.disconnect();store.close()
             resources.clear()
     app=FastAPI(title='Mission Control',version='1.7.0',lifespan=lifespan)
-    app.state.manager=manager;app.state.store=store
+    app.state.manager=manager;app.state.store=store;app.state.experiments=experiments
     origins=['http://localhost:5173','http://127.0.0.1:5173','http://localhost:8000','http://127.0.0.1:8000']
     app.add_middleware(CORSMiddleware,allow_origins=origins,allow_methods=['GET','POST','DELETE'],allow_headers=['Content-Type','X-Control-Session'])
     @app.middleware('http')
@@ -67,7 +71,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
             return Response('Origin not allowed',status_code=403)
         return await call_next(request)
     def control(token):
-        if scenarios.active: raise HTTPException(409,'An automatic SITL experiment owns control until cleanup completes.')
+        if scenarios.active or experiments.active: raise HTTPException(409,'An automatic SITL experiment owns control until cleanup completes.')
         try: manager.require_control(token)
         except PermissionError as exc: raise HTTPException(409,str(exc))
     def translate(exc):
@@ -93,14 +97,14 @@ def create_app(database=None,manager_factory=MAVLinkManager):
         except KeyError:raise HTTPException(404,'Emulator recording not found.')
     @app.get('/api/v1/status')
     def status(x_control_session:str|None=Header(default=None)):
-        return dict(**manager.status(),scenario_active=scenarios.active,
+        return dict(**manager.status(),scenario_active=scenarios.active or experiments.active,
                     preflight={action:evaluate(manager,action,x_control_session or '').model_dump() for action in ('arm','start','resume')})
     @app.get('/api/v1/preflight')
     def preflight(action:Literal['arm','start','resume']='start',x_control_session:str|None=Header(default=None)):
         return evaluate(manager,action,x_control_session or '')
     @app.post('/api/v1/connection')
     async def connect(body:ConnectionRequest,x_control_session:str=Header(...)):
-        if scenarios.active: raise HTTPException(409,'A SITL experiment is running.')
+        if scenarios.active or experiments.active: raise HTTPException(409,'A SITL experiment is running.')
         try:
             manager.claim(x_control_session)
             return await manager.connect(body.speedup)
@@ -115,7 +119,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
         return dict(status='renewed')
     @app.post('/api/v1/control/claim')
     def claim(x_control_session:str=Header(...)):
-        if scenarios.active:raise HTTPException(409,'An automatic experiment owns control.')
+        if scenarios.active or experiments.active:raise HTTPException(409,'An automatic experiment owns control.')
         try:manager.claim(x_control_session)
         except PermissionError as exc:raise translate(exc)
         return dict(status='claimed',**manager.status())
@@ -126,16 +130,44 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     @app.post('/api/v1/scenarios')
     async def start_scenario(body:ScenarioRequest,x_control_session:str=Header(...)):
         try:
-            if scenarios.active: raise RuntimeError('A SITL experiment is already running.')
+            if scenarios.active or experiments.active: raise RuntimeError('A SITL experiment is already running.')
             manager.claim(x_control_session)
             return scenarios.start(body.kind)
         except (RuntimeError,PermissionError,ValueError) as exc: raise translate(exc)
     @app.post('/api/v1/scenarios/cancel')
     async def cancel_scenario(x_control_session:str=Header(...)):
+        if experiments.active:raise HTTPException(409,'Cancel the owning experiment through its run endpoint.')
         try: manager.require_control(x_control_session)
         except PermissionError as exc: raise translate(exc)
         await scenarios.close()
         return dict(status='stopped')
+    @app.get('/api/v1/experiments',response_model=list[ExperimentDefinition])
+    def definitions():return store.experiments()
+    @app.post('/api/v1/experiments',response_model=ExperimentDefinition)
+    def define_experiment(body:ExperimentRequest):
+        try:return create_definition(store,body)
+        except KeyError:raise HTTPException(404,'Parent experiment not found.')
+        except ValueError as exc:raise HTTPException(422,str(exc))
+    @app.get('/api/v1/experiment-runs',response_model=list[ExperimentRun])
+    def experiment_runs():return store.experiment_runs()
+    @app.post('/api/v1/experiment-runs',response_model=ExperimentRun)
+    async def start_experiment(body:ExperimentStart,x_control_session:str=Header(...)):
+        try:
+            if experiments.active or scenarios.active:raise RuntimeError('Another experiment owns control.')
+            manager.claim(x_control_session)
+            return experiments.start(body.definition_id,x_control_session)
+        except KeyError:raise HTTPException(404,'Experiment definition not found.')
+        except (RuntimeError,PermissionError) as exc:raise translate(exc)
+    @app.get('/api/v1/experiment-runs/{identifier}',response_model=ExperimentRun)
+    def experiment_run(identifier:str):
+        try:return store.experiment_run(identifier)
+        except KeyError:raise HTTPException(404,'Experiment run not found.')
+    @app.post('/api/v1/experiment-runs/{identifier}/cancel',response_model=ExperimentRun)
+    async def cancel_experiment(identifier:str,x_control_session:str=Header(...)):
+        if not experiments.active or experiments.current['id']!=identifier:raise HTTPException(409,'This experiment is not active.')
+        try:await experiments.close(x_control_session)
+        except PermissionError as exc:raise translate(exc)
+        return store.experiment_run(identifier)
     @app.post('/api/v1/missions')
     def save_mission(mission:Mission): return store.save_mission(mission)
     @app.post('/api/v1/missions/validate')
@@ -150,7 +182,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
         except (RuntimeError,ValueError) as exc: raise translate(exc)
     @app.get('/api/v1/vehicle/mission')
     async def download():
-        if scenarios.active: raise HTTPException(409,'A SITL experiment owns the mission transport.')
+        if scenarios.active or experiments.active: raise HTTPException(409,'A SITL experiment owns the mission transport.')
         try: return dict(items=await manager.download())
         except RuntimeError as exc: raise translate(exc)
     @app.post('/api/v1/commands')

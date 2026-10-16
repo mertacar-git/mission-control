@@ -2,6 +2,9 @@
 
 Local base: `http://127.0.0.1:8000/api/v1`. Swagger: `/docs`. WebSocket: `/ws`.
 
+Versioned experiment definitions/runs and independent Windows serial experiments
+are documented in [VERSIONED_EXPERIMENTS.md](VERSIONED_EXPERIMENTS.md).
+
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/health`, `/status` | Backend health, connection/telemetry/mission/recording state |

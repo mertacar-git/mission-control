@@ -24,6 +24,7 @@ import { FlightChart } from './components/TelemetryChart';
 import { EventLog, eventLabel } from './components/EventLog';
 import { IncidentInspector } from './components/IncidentInspector';
 import { ScenarioLab } from './components/ScenarioLab';
+import { ExperimentLab } from './components/ExperimentLab';
 import { ExecutionComparison } from './components/ExecutionComparison';
 import { EmulatorLab } from './components/EmulatorLab';
 import { SerialDevice } from './components/SerialDevice';
@@ -603,6 +604,7 @@ export default function App() {
     });
   }
   function openReplay(recording: Recording) {
+    persistRecording(recording);
     setReplay(recording);
     setSelected(recording);
     setPlaying(false);
@@ -1252,6 +1254,9 @@ export default function App() {
                 );
               }}
             />
+          )}
+          {page === 'experiments' && (
+            <ExperimentLab local={mode === 'local'} replaying={!!replay} mission={mission} onReplay={openReplay} />
           )}
           {page === 'experiments' && (
             <ScenarioLab

@@ -23,11 +23,19 @@ class Store:
                 CREATE INDEX IF NOT EXISTS events_session_idx ON events(session_id,id);
                 CREATE TABLE IF NOT EXISTS scenario_runs(id TEXT PRIMARY KEY, body TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS emulator_runs(id TEXT PRIMARY KEY, body TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS experiment_definitions(id TEXT PRIMARY KEY, body TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS experiment_runs(id TEXT PRIMARY KEY, body TEXT NOT NULL);
             ''')
+            if self.db.execute('PRAGMA user_version').fetchone()[0]<1:
+                self.db.execute('PRAGMA user_version=1')
         # Interrupted recordings are closed at last persisted event, never labeled complete.
         with self.db:
             self.db.execute("UPDATE sessions SET ended_utc=COALESCE((SELECT MAX(received_utc) FROM events WHERE session_id=sessions.id),started_utc) WHERE ended_utc IS NULL")
         self.active: str | None = None
+        for run in self.experiment_runs():
+            if run['status'] in ('queued','running'):
+                run.update(status='interrupted',ended_utc=utc_now(),error='Backend restarted before completion; no acceptance result.')
+                self.save_experiment_run(run)
         for run in self.scenario_runs():
             if run['status']=='running':
                 run.update(status='interrupted',ended_utc=utc_now(),error='Backend restarted before completion; result is not a pass.')
@@ -36,6 +44,31 @@ class Store:
             if run['status']=='running':
                 run.update(status='interrupted',ended_utc=utc_now(),error='Backend restarted before completion.')
                 self.save_emulator(run)
+
+    def add_experiment(self, definition):
+        with self.lock,self.db:
+            self.db.execute('INSERT INTO experiment_definitions VALUES(?,?)',(definition['id'],json.dumps(definition,allow_nan=False)))
+
+    def experiments(self):
+        with self.lock:
+            return [json.loads(r['body']) for r in self.db.execute('SELECT body FROM experiment_definitions ORDER BY rowid DESC')]
+
+    def experiment(self, identifier):
+        with self.lock:row=self.db.execute('SELECT body FROM experiment_definitions WHERE id=?',(identifier,)).fetchone()
+        if row is None:raise KeyError(identifier)
+        return json.loads(row['body'])
+
+    def save_experiment_run(self, run):
+        with self.lock,self.db:
+            self.db.execute('INSERT OR REPLACE INTO experiment_runs VALUES(?,?)',(run['id'],json.dumps(run,allow_nan=False)))
+
+    def experiment_runs(self):
+        with self.lock:return [json.loads(r['body']) for r in self.db.execute('SELECT body FROM experiment_runs ORDER BY rowid DESC')]
+
+    def experiment_run(self, identifier):
+        with self.lock:row=self.db.execute('SELECT body FROM experiment_runs WHERE id=?',(identifier,)).fetchone()
+        if row is None:raise KeyError(identifier)
+        return json.loads(row['body'])
 
     def save_emulator(self,run):
         with self.lock,self.db:self.db.execute('INSERT OR REPLACE INTO emulator_runs VALUES(?,?)',(run['id'],json.dumps(run,allow_nan=False)))

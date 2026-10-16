@@ -21,15 +21,17 @@ class ScenarioRunner:
     @property
     def active(self): return self.task is not None and not self.task.done()
 
-    def start(self, kind):
-        if kind not in CATALOG: raise ValueError('Unknown scenario.')
+    def start(self, kind, *, mission=None, speedup=4, experiment=None):
+        if kind not in CATALOG and kind!='normal': raise ValueError('Unknown scenario.')
         m=self.manager
         if self.active or m.state!='closed' or m.simulator.running or self.store.active:
             raise RuntimeError('Close the existing connection and recording before starting a scenario.')
         self.current=dict(schema_version=1,id=str(uuid4()),kind=kind,status='running',
             started_utc=utc_now(),ended_utc=None,session_id=None,checks=[],error=None,
-            expected=CATALOG[kind],firmware='Copter-4.6.3',revision=REVISION,speedup=4,
+            expected=CATALOG.get(kind,'Final waypoint observed → landed → disarmed → completed'),firmware='Copter-4.6.3',revision=REVISION,speedup=speedup,
             clock='backend monotonic wall seconds',parameters={})
+        self.mission=mission
+        self.experiment=experiment
         self.store.save_scenario(self.current)
         self.task=asyncio.create_task(self.run(),name='owned-sitl-scenario')
         return dict(self.current)
@@ -68,8 +70,9 @@ class ScenarioRunner:
     async def run(self):
         m=self.manager;run=self.current;paused=False
         try:
-            await m.connect(speedup=4)
-            mission=Mission(name='Acceptance · '+run['kind'],takeoff_altitude_m=10,
+            await m.connect(speedup=run['speedup'])
+            m.experiment_context=self.experiment
+            mission=self.mission or Mission(name='Acceptance · '+run['kind'],takeoff_altitude_m=10,
                 waypoints=[Waypoint(latitude=HOME[0]+.005,longitude=HOME[1],altitude_m=10)])
             run['session_id']=self.store.start_recording(mission.name,mission.model_dump())
             self.store.save_scenario(run)
@@ -92,25 +95,28 @@ class ScenarioRunner:
                 if run['kind']=='low_battery':
                     for name,value in [('BATT_FS_LOW_ACT',2),('BATT_LOW_VOLT',11.5),('BATT_CRT_VOLT',10),('BATT_LOW_TIMER',2)]:
                         await self.parameter(name,value)
-                else:
+                elif run['kind']=='gps_loss':
                     await self.parameter('FS_EKF_ACTION',1)
                     await self.parameter('FS_DR_ENABLE',0)
                 await m.upload(mission)
                 # No force-arm and no automatic start retry. Prearm failure is a failed experiment.
                 await m.command('arm');await self.wait('Armed',lambda s:s['armed'] is True,10)
                 await m.command('start')
-                await self.wait('Airborne above 7 m',lambda s:(s['relative_altitude_m'] or 0)>7,40)
+                await self.wait('Airborne above 7 m',lambda s:(s['relative_altitude_m'] or 0)>min(7,mission.takeoff_altitude_m*.7),40)
                 if run['kind']=='low_battery':
                     await self.parameter('SIM_BATT_VOLTAGE',11)
                     await m.emit('scenario',dict(run_id=run['id'],status='injected',fault='low_battery'))
                     await self.wait('Measured battery below threshold',lambda s:s['battery_voltage_v'] is not None and s['battery_voltage_v']<11.5,15)
                     await self.wait('Autopilot RTL',lambda s:s['flight_mode']=='RTL',30)
-                else:
+                elif run['kind']=='gps_loss':
                     await self.parameter('SIM_GPS_DISABLE',1)
                     await m.emit('scenario',dict(run_id=run['id'],status='injected',fault='gps_loss'))
                     await self.wait('GPS has no 3D fix',lambda s:s['gps_fix_type'] is not None and s['gps_fix_type']<3,20)
                     await self.wait('Autopilot LAND',lambda s:s['flight_mode']=='LAND',60)
-                await self.wait('Disarmed after failsafe',lambda s:s['armed'] is False,100)
+                if run['kind']=='normal':
+                    await self.wait('Observed mission completion',lambda s:m.lifecycle.snapshot()['state']=='completed',180)
+                else:
+                    await self.wait('Disarmed after failsafe',lambda s:s['armed'] is False,100)
             run['status']='passed'
         except asyncio.CancelledError:
             run.update(status='interrupted',error='Run cancelled; owned simulator cleanup requested.')
@@ -128,4 +134,5 @@ class ScenarioRunner:
                     await m.disconnect()
             except Exception as exc:
                 run.update(status='failed',error=f'Cleanup failed: {exc}')
+            m.experiment_context=None
             run['ended_utc']=utc_now();self.store.save_scenario(run)

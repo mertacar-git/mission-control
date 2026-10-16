@@ -42,7 +42,7 @@ class MAVLinkManager:
         self.observations={}
         self.last_fence_state=None
         self.lifecycle=MissionLifecycle();self.command_requests={}
-        self.speedup=None;self.recording_context_id=None
+        self.speedup=None;self.recording_context_id=None;self.experiment_context=None
 
     def claim(self,token):
         if not token or len(token)>100: raise PermissionError('Missing control session.')
@@ -63,7 +63,7 @@ class MAVLinkManager:
     async def emit(self,kind,payload):
         if self.store.active and self.recording_context_id!=self.store.active:
             self.recording_context_id=self.store.active
-            await self.emit('environment',dict(speedup=self.speedup,firmware='Copter-4.6.3',experiment=None))
+            await self.emit('environment',dict(speedup=self.speedup,firmware='Copter-4.6.3',experiment=self.experiment_context))
         self.sequence+=1
         event=Event(type=kind,payload=payload).model_dump(); event['sequence']=self.sequence
         self.store.append(event)

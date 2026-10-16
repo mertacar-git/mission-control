@@ -20,6 +20,7 @@ from fastapi.responses import Response
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 from .serial_bench import capture, replay
 from .emulator_sender import schedule
+from .serial_experiments import SerialExperiments,SerialExperimentRequest
 
 ORIGINS = [
     "http://127.0.0.1:8000",
@@ -362,16 +363,19 @@ def create_serial_app(
         ports_provider,
         serial_factory,
     )
+    experiments=SerialExperiments(service)
 
     @asynccontextmanager
     async def lifespan(app):
         try:
             yield
         finally:
+            await experiments.close()
             await asyncio.to_thread(service.stop)
 
     app = FastAPI(title="Mission Control Serial Receiver", lifespan=lifespan)
     app.state.service = service
+    app.state.experiments=experiments
     app.state.access_token = secret
     app.add_middleware(
         CORSMiddleware,
@@ -413,6 +417,7 @@ def create_serial_app(
     @app.post("/api/v1/serial/control/claim", response_model=SerialStatus)
     def claim(x_control_session: str = Header(...)):
         try:
+            if experiments.active:raise RuntimeError('An experiment owns this receiver.')
             service.claim(x_control_session)
             return service.status(x_control_session)
         except (RuntimeError, ValueError) as error:
@@ -429,6 +434,7 @@ def create_serial_app(
     @app.post("/api/v1/serial/connection", response_model=SerialStatus)
     def connect(body: ConnectionRequest, x_control_session: str = Header(...)):
         try:
+            if experiments.active:raise RuntimeError('An experiment owns this receiver.')
             return service.start(body, x_control_session)
         except (RuntimeError, ValueError) as error:
             raise translate(error)
@@ -436,11 +442,36 @@ def create_serial_app(
     @app.delete("/api/v1/serial/connection", response_model=SerialStatus)
     async def disconnect(x_control_session: str = Header(...)):
         try:
+            if experiments.active:raise RuntimeError('Cancel the owning experiment instead.')
             service.require_owner(x_control_session)
             await asyncio.to_thread(service.stop)
             return service.status(x_control_session)
         except RuntimeError as error:
             raise translate(error)
+
+    @app.get('/api/v1/serial/experiments')
+    def experiment_definitions():return experiments.list('definition')
+
+    @app.post('/api/v1/serial/experiments')
+    def define_experiment(body:SerialExperimentRequest):
+        try:return experiments.define(body)
+        except (FileNotFoundError,ValueError) as error:raise translate(error)
+
+    @app.get('/api/v1/serial/experiment-runs')
+    def experiment_runs():return experiments.list('run')
+
+    @app.post('/api/v1/serial/experiment-runs/{identifier}')
+    async def start_experiment(identifier:UUID,x_control_session:str=Header(...)):
+        try:return experiments.start(identifier,x_control_session)
+        except (FileNotFoundError,ValueError,RuntimeError) as error:raise translate(error)
+
+    @app.post('/api/v1/serial/experiment-runs/{identifier}/cancel')
+    async def cancel_experiment(identifier:UUID,x_control_session:str=Header(...)):
+        try:
+            if not experiments.active or experiments.current['id']!=str(identifier):raise RuntimeError('Experiment is not active.')
+            await experiments.close(x_control_session)
+            return experiments.get('run',identifier)
+        except RuntimeError as error:raise translate(error)
 
     @app.get("/api/v1/serial/recordings", response_model=list[RunMetadata])
     def recordings():

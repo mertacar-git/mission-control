@@ -1,5 +1,6 @@
 export const observationLabels: Record<string, string> = {
   'Navigation ready': 'Konum ve navigasyon hazır',
+  'Observed mission completion': 'Son nokta, iniş ve disarm ile görev tamamlandı',
   'Stale telemetry': 'Telemetri gecikmesi gözlendi',
   'Disconnected telemetry': 'Bağlantı kesilmesi gözlendi',
   'Command rejected while disconnected': 'Kesinti sırasında komut reddedildi',

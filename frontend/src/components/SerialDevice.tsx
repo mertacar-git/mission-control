@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { controller } from '../api';
+import { SerialExperimentLab } from './SerialExperimentLab';
 import { download } from '../analysis';
 import {
   parseSerialRecording,
@@ -300,7 +301,7 @@ export function SerialDevice({ local }: { local: boolean }) {
               <input
                 type="number"
                 min={1}
-                max={status.transport==='synthetic'?60:3600}
+                max={status.transport === 'synthetic' ? 60 : 3600}
                 value={duration}
                 onChange={(e) => setDuration(Number(e.target.value))}
               />
@@ -414,7 +415,9 @@ export function SerialDevice({ local }: { local: boolean }) {
               status?.invalid_candidates ??
               null,
             discarded_bytes:
-              replay?.summary.discarded_bytes ?? status?.discarded_bytes ?? null,
+              replay?.summary.discarded_bytes ??
+              status?.discarded_bytes ??
+              null,
           },
           null,
           2,
@@ -497,6 +500,24 @@ export function SerialDevice({ local }: { local: boolean }) {
             </button>
           </div>
         </>
+      )}
+      {local && token && status?.transport === 'synthetic' && (
+        <SerialExperimentLab
+          request={request}
+          onOpen={(id) =>
+            void perform(async () =>
+              open(
+                await request(
+                  '/recordings/' + id,
+                  'GET',
+                  undefined,
+                  token,
+                  true,
+                ),
+              ),
+            )
+          }
+        />
       )}
       <h3>Seri kayıt arşivi</h3>
       {!archive.length && (
