@@ -8,7 +8,7 @@ and evidence; uncompleted phases stay explicitly pending.
 |---|---|---|
 | 0 | Lazy runtime startup, controller reclaim, baseline regression | Passed: 7 real SITL scenarios, 66 backend / 69 frontend tests |
 | 1 | Action-specific server-authoritative preflight | Passed: 7 real SITL scenarios, 75 backend / 69 frontend tests |
-| 2 | Observed mission lifecycle and connection recovery | Pending |
+| 2 | Observed mission lifecycle and connection recovery | Passed: 7 SITL scenarios, actual browser reload flight, 78 backend / 69 frontend tests |
 | 3 | Two-to-five flight comparison and portable exports | Pending |
 | 4 | Windows serial service and application integration | Pending |
 | 5 | Repeatable experiment definitions and immutable runs | Pending |
@@ -56,3 +56,33 @@ measurements, threshold freshness, low battery, operation lock and unchanged
 geometry rejection behaviour. Public demo retains explicitly simulated controls.
 
 Phase 1 browser acceptance: action selector changes start/arm requirements; unknown GPS/battery and loaded-draft mismatch are visible. At 390 px, content width remains 375 px. TypeScript and production build passed.
+
+## Phase 2
+
+Connection, observed mission lifecycle and the most recent command result are
+separate status fields. Lifecycle completion requires the final waypoint's
+MISSION_ITEM_REACHED, observed landing phase, a fresh arm-to-disarm transition
+and ground-relative altitude at most 1 m. A gap across disarm or an observed RTL
+leaves the mission outcome unknown rather than manufacturing success. Established
+completion evidence is retained after a later disconnect; a new upload resets it.
+
+Commands accept an optional request ID. The last 128 request outcomes are cached
+in process memory: duplicates of pending, failed or acknowledged requests do not
+resend a command, and reusing an ID for a different action is rejected. This is
+a bounded recent-request guard, not a persistent cross-restart retry contract.
+The frontend never automatically retries a command and serializes operations
+with an immediate ref guard as well as disabled controls.
+
+Local mode selection survives page reload within a tab. WebSocket snapshots
+replace the current state on reconnection; missed sequences and backend sequence
+resets produce explicit notices. Failed status polls clear all live measurement
+fields. Backend restart does not resume a process or replay a command.
+
+Validation: 78 backend / 69 frontend tests and TypeScript/production build passed.
+Seven pinned SITL scenarios passed, now also asserting observed completion of
+the normal mission. Evidence is under `verification/phases/phase-2`.
+
+Actual browser acceptance: a 1x concave SITL mission was started from the UI,
+reloaded in flight and completed. The recording ID and requested command IDs
+were unchanged after reload and after running pytest while recording was open.
+Raw browser-flight evidence and before/after/final snapshots are included.

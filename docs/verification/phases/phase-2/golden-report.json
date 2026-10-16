@@ -1,0 +1,20 @@
+{
+  "fence_violation_count": 0,
+  "fence_observed_violation_s": 0.0,
+  "schema_version": 1,
+  "samples": 25,
+  "duration_s": 12.345976657999927,
+  "peak_relative_altitude_m": 10.014,
+  "peak_ground_speed_ms": 4.46,
+  "battery_used_percentage_points": 11.0,
+  "observed_ground_distance_m": 37.2907619814375,
+  "max_route_deviation_m": 22.250106403847592,
+  "recording_gaps": 0,
+  "altitude_alert_samples": 0,
+  "battery_alert_samples": 0,
+  "thresholds": {
+    "max_altitude_m": 80,
+    "min_battery_pct": 20
+  },
+  "notes": "Altitude is relative to home; speed is ground speed. Route deviation uses a local tangent-plane approximation to mission segments. Gaps >3 s are excluded from distance integration; stale positions are not treated as new measurements."
+}

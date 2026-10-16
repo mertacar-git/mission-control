@@ -61,7 +61,8 @@ export const api = {
   missions: () => request<Mission[]>('/missions'),
   upload: (id: string) =>
     request('/missions/' + encodeURIComponent(id) + '/upload', 'POST'),
-  command: (action: Action) => request('/commands', 'POST', { action }),
+  command: (action: Action, request_id = crypto.randomUUID()) =>
+    request('/commands', 'POST', { action, request_id }),
   startRecording: (name: string) =>
     request<{ id: string }>('/recordings', 'POST', { name }),
   stopRecording: () =>

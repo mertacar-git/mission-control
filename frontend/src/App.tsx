@@ -21,7 +21,7 @@ import {
   X,
 } from 'lucide-react';
 import { FlightChart } from './components/TelemetryChart';
-import { EventLog } from './components/EventLog';
+import { EventLog, eventLabel } from './components/EventLog';
 import { IncidentInspector } from './components/IncidentInspector';
 import { ScenarioLab } from './components/ScenarioLab';
 import { ExecutionComparison } from './components/ExecutionComparison';
@@ -139,7 +139,13 @@ export default function App() {
       Math.max(0, Math.min(index, mission.waypoints.length - 1)),
     );
   }, [mission.waypoints.length]);
-  const [mode, setMode] = useState<'demo' | 'local'>('demo'),
+  const operationPending = useRef(false);
+  const [mode, setMode] = useState<'demo' | 'local'>(() =>
+      ['localhost', '127.0.0.1'].includes(location.hostname) &&
+      sessionStorage.getItem('mc-mode') === 'local'
+        ? 'local'
+        : 'demo',
+    ),
     [page, setPage] = useState<Page>('mission'),
     [status, setStatus] = useState<Status>(initialStatus);
   const [missions, setMissions] = useState<Mission[]>(() =>
@@ -270,6 +276,14 @@ export default function App() {
       if (disposed) return;
       if (event.type === 'snapshot') {
         const next = event.payload as unknown as Status;
+        if (lastSequence && next.event_sequence > lastSequence + 1)
+          setNotice(
+            'Yeniden bağlantı sırasında olay boşluğu var. Güncel backend durumu alındı; komut tekrarlanmadı.',
+          );
+        if (lastSequence && next.event_sequence < lastSequence)
+          setNotice(
+            'Backend yeniden başlatıldı; güncel durum alındı. Komutlar otomatik tekrarlanmaz.',
+          );
         lastSequence = next.event_sequence;
         setStatus(next);
         return;
@@ -342,6 +356,12 @@ export default function App() {
                 longitude: null,
                 relative_altitude_m: null,
                 ground_speed_ms: null,
+                battery_pct: null,
+                battery_voltage_v: null,
+                flight_mode: null,
+                armed: null,
+                gps_fix_type: null,
+                navigation_ready: false,
               },
             }));
         });
@@ -375,6 +395,8 @@ export default function App() {
     return () => clearInterval(timer);
   }, [playing, replay, replayEnd, speed]);
   async function perform(fn: () => Promise<void> | void) {
+    if (operationPending.current) return;
+    operationPending.current = true;
     setBusy(true);
     setNotice('');
     try {
@@ -382,6 +404,7 @@ export default function App() {
     } catch (error) {
       setNotice(error instanceof Error ? error.message : String(error));
     } finally {
+      operationPending.current = false;
       setBusy(false);
     }
   }
@@ -405,6 +428,7 @@ export default function App() {
       telemetry: emptyTelemetry(next === 'local' ? 'sitl' : 'demo'),
     });
     setMode(next);
+    sessionStorage.setItem('mc-mode', next);
     setNotice('');
   }
   async function connect() {
@@ -1005,7 +1029,19 @@ export default function App() {
                     <h2>
                       {replay
                         ? 'Kayıt inceleniyor'
-                        : missionStage(shown, route.waypoints.length)}
+                        : mode === 'local' && status.mission_lifecycle
+                          ? ({
+                              preparing: 'Hazırlık',
+                              loaded: 'Görev yüklendi',
+                              executing: 'Görev yürütülüyor',
+                              holding: 'Görev bekletiliyor',
+                              returning: 'Eve dönüş',
+                              landing: 'İniş',
+                              completed: 'Görev tamamlandı',
+                              unknown: 'Görev durumu bilinmiyor',
+                            }[status.mission_lifecycle.state] ??
+                            'Görev durumu bilinmiyor')
+                          : missionStage(shown, route.waypoints.length)}
                     </h2>
                   </div>
                   <div className="command-buttons">
@@ -1053,6 +1089,12 @@ export default function App() {
                       </button>
                     ))}
                   </div>
+                  {mode === 'local' && status.last_command && (
+                    <p>
+                      Son komut: {eventLabel({type:'command',payload:status.last_command,received_utc:''})}. Komut kabulü görev
+                      tamamlanması değildir.
+                    </p>
+                  )}
                   <p>
                     Komut kabulü ve telemetride gözlenen durum ayrı izlenir.
                     Başlatma sırasında uçuş kaydı otomatik açılır.

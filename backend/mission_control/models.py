@@ -84,6 +84,7 @@ class Telemetry(StrictModel):
 
 class CommandRequest(StrictModel):
     action: Literal['arm', 'start', 'hold', 'resume', 'return', 'land']
+    request_id: str | None = Field(default=None,min_length=1,max_length=80)
 
 class ConnectionRequest(StrictModel):
     speedup: float = Field(default=1, ge=1, le=10)

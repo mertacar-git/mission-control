@@ -152,7 +152,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     @app.post('/api/v1/commands')
     async def command(body:CommandRequest,x_control_session:str=Header(...)):
         control(x_control_session)
-        try: return await manager.command(body.action)
+        try: return await manager.command(body.action,body.request_id)
         except (RuntimeError,ValueError) as exc: raise translate(exc)
     @app.post('/api/v1/recordings')
     async def recording(body:RecordingRequest,x_control_session:str=Header(...)):

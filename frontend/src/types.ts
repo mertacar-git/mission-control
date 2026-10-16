@@ -75,6 +75,13 @@ export interface Recording {
   events: FlightEvent[];
 }
 export interface Status {
+  mission_lifecycle?: {
+    state: string;
+    final_waypoint_observed: boolean;
+    landing_observed: boolean;
+    ever_armed: boolean;
+  };
+  last_command?: { id: string; action?: string; status: string } | null;
   preflight?: Partial<Record<'arm' | 'start' | 'resume', Preflight>>;
   scenario_active?: boolean;
   state: ConnectionState;

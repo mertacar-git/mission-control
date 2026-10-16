@@ -1,0 +1,1217 @@
+{
+  "state": "connected",
+  "telemetry": {
+    "source": "sitl",
+    "received_utc": "2026-10-16T17:18:27.970490+00:00",
+    "elapsed_s": 140.52140941800002,
+    "vehicle_time_ms": 140284,
+    "latitude": 41.00838,
+    "longitude": 28.9789062,
+    "relative_altitude_m": 0.01,
+    "ground_speed_ms": 0.01414213562373095,
+    "battery_pct": 83.0,
+    "battery_voltage_v": 12.6,
+    "flight_mode": "AUTO",
+    "armed": false,
+    "mission_index": 1,
+    "position_fresh": true,
+    "navigation_ready": true,
+    "gps_fix_type": 6,
+    "heartbeat_age_s": 0.40550505600000974,
+    "connection": "connected"
+  },
+  "recording_id": "edc78e13-4c5d-47e5-9da3-bde380296219",
+  "mission_lifecycle": {
+    "state": "completed",
+    "final_waypoint_observed": true,
+    "landing_observed": true,
+    "ever_armed": true
+  },
+  "last_command": {
+    "id": "ff95b2e7-d6f2-460e-a470-75e59bcf2d9c",
+    "action": "start",
+    "status": "observed",
+    "observed_mode": "AUTO",
+    "armed": true
+  },
+  "mission": {
+    "generation": null,
+    "schema_version": 2,
+    "planning": {
+      "allowed_area": [
+        {
+          "latitude": 41.00802013567882,
+          "longitude": 28.978161647781622
+        },
+        {
+          "latitude": 41.00802013567882,
+          "longitude": 28.979234232764327
+        },
+        {
+          "latitude": 41.00882952512414,
+          "longitude": 28.979234232764327
+        },
+        {
+          "latitude": 41.00882952512414,
+          "longitude": 28.978161647781622
+        }
+      ],
+      "survey_area": [
+        {
+          "latitude": 41.0082449660803,
+          "longitude": 28.978459588054594
+        },
+        {
+          "latitude": 41.0082449660803,
+          "longitude": 28.97899588054595
+        },
+        {
+          "latitude": 41.008379864321185,
+          "longitude": 28.97899588054595
+        },
+        {
+          "latitude": 41.008379864321185,
+          "longitude": 28.978697940272976
+        },
+        {
+          "latitude": 41.00864966080296,
+          "longitude": 28.978697940272976
+        },
+        {
+          "latitude": 41.00864966080296,
+          "longitude": 28.978459588054594
+        }
+      ],
+      "spacing_m": 20.0,
+      "heading_deg": 0.0,
+      "altitude_m": 10.0,
+      "max_distance_m": 2000.0,
+      "max_altitude_m": 80.0
+    },
+    "id": "d7944abc-8cbc-4c41-bcf6-f459076ac4b8",
+    "name": "\u0130\u00e7b\u00fckey alan tarama \u00b7 v1.3 kabul",
+    "takeoff_altitude_m": 10.0,
+    "waypoints": [
+      {
+        "latitude": 41.0082449660803,
+        "longitude": 28.978548970136487,
+        "altitude_m": 10.0
+      },
+      {
+        "latitude": 41.00864966080296,
+        "longitude": 28.978548970136487,
+        "altitude_m": 10.0
+      },
+      {
+        "latitude": 41.008379864321185,
+        "longitude": 28.978697940272976,
+        "altitude_m": 10.0
+      },
+      {
+        "latitude": 41.008379864321185,
+        "longitude": 28.97872773430027,
+        "altitude_m": 10.0
+      },
+      {
+        "latitude": 41.0082449660803,
+        "longitude": 28.97872773430027,
+        "altitude_m": 10.0
+      },
+      {
+        "latitude": 41.0082449660803,
+        "longitude": 28.978906498464056,
+        "altitude_m": 10.0
+      },
+      {
+        "latitude": 41.008379864321185,
+        "longitude": 28.978906498464056,
+        "altitude_m": 10.0
+      }
+    ]
+  },
+  "upload_verified": true,
+  "simulator_revision": "Copter-4.6.3",
+  "simulator_owned": true,
+  "event_sequence": 358,
+  "events": [
+    {
+      "type": "connection",
+      "received_utc": "2026-10-16T17:16:07.687154+00:00",
+      "payload": {
+        "state": "connecting"
+      },
+      "sequence": 1
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T17:16:07.687928+00:00",
+      "payload": {
+        "state": "unknown",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": false
+      },
+      "sequence": 2
+    },
+    {
+      "type": "fence",
+      "received_utc": "2026-10-16T17:16:07.687948+00:00",
+      "payload": {
+        "state": "unconfigured",
+        "mission_id": null
+      },
+      "sequence": 3
+    },
+    {
+      "type": "connection",
+      "received_utc": "2026-10-16T17:16:08.563427+00:00",
+      "payload": {
+        "state": "connected"
+      },
+      "sequence": 6
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:09.436156+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Barometer 1 calibration complete"
+      },
+      "sequence": 9
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:09.436231+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Barometer 2 calibration complete"
+      },
+      "sequence": 10
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:09.971292+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "ArduPilot Ready"
+      },
+      "sequence": 12
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:09.971365+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "AHRS: DCM active"
+      },
+      "sequence": 13
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:10.261934+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "RC7: SaveWaypoint LOW"
+      },
+      "sequence": 14
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:11.959197+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 initialised"
+      },
+      "sequence": 19
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:11.959286+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 initialised"
+      },
+      "sequence": 20
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:11.980419+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "AHRS: EKF3 active"
+      },
+      "sequence": 21
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:13.313035+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 tilt alignment complete"
+      },
+      "sequence": 24
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:13.313094+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 tilt alignment complete"
+      },
+      "sequence": 25
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:13.414578+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 MAG0 initial yaw alignment complete"
+      },
+      "sequence": 27
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:13.414676+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 MAG0 initial yaw alignment complete"
+      },
+      "sequence": 28
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:17.317934+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "GPS 1: probing for u-blox at 230400 baud"
+      },
+      "sequence": 36
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:17.338057+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "GPS 1: detected u-blox"
+      },
+      "sequence": 37
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:27.532627+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 origin set"
+      },
+      "sequence": 58
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:27.573715+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Field Elevation Set: 30m"
+      },
+      "sequence": 59
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:27.735790+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 origin set"
+      },
+      "sequence": 61
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.556108+00:00",
+      "payload": {
+        "status": "uploading",
+        "total": 10
+      },
+      "sequence": 93
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.565719+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 1,
+        "total": 10
+      },
+      "sequence": 94
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.586604+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 2,
+        "total": 10
+      },
+      "sequence": 95
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.607716+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 3,
+        "total": 10
+      },
+      "sequence": 96
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.627838+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 4,
+        "total": 10
+      },
+      "sequence": 97
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.647917+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 5,
+        "total": 10
+      },
+      "sequence": 98
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.668059+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 6,
+        "total": 10
+      },
+      "sequence": 99
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.688526+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 7,
+        "total": 10
+      },
+      "sequence": 100
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.709503+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 8,
+        "total": 10
+      },
+      "sequence": 101
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.729742+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 9,
+        "total": 10
+      },
+      "sequence": 102
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.749655+00:00",
+      "payload": {
+        "status": "uploading",
+        "received": 10,
+        "total": 10
+      },
+      "sequence": 103
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:43.770832+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Flight plan received"
+      },
+      "sequence": 104
+    },
+    {
+      "type": "mission_transfer",
+      "received_utc": "2026-10-16T17:16:43.995925+00:00",
+      "payload": {
+        "status": "verified",
+        "total": 10
+      },
+      "sequence": 106
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T17:16:44.463515+00:00",
+      "payload": {
+        "state": "unknown",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": false
+      },
+      "sequence": 107
+    },
+    {
+      "type": "fence",
+      "received_utc": "2026-10-16T17:16:44.463577+00:00",
+      "payload": {
+        "state": "unknown",
+        "mission_id": "d7944abc-8cbc-4c41-bcf6-f459076ac4b8"
+      },
+      "sequence": 108
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:48.928359+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 is using GPS"
+      },
+      "sequence": 118
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T17:16:49.051977+00:00",
+      "payload": {
+        "state": "loaded",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": false
+      },
+      "sequence": 119
+    },
+    {
+      "type": "fence",
+      "received_utc": "2026-10-16T17:16:49.052362+00:00",
+      "payload": {
+        "state": "inside",
+        "mission_id": "d7944abc-8cbc-4c41-bcf6-f459076ac4b8"
+      },
+      "sequence": 120
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:49.134766+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 is using GPS"
+      },
+      "sequence": 122
+    },
+    {
+      "type": "preflight",
+      "received_utc": "2026-10-16T17:16:56.687830+00:00",
+      "payload": {
+        "action": "arm",
+        "evaluated_utc": "2026-10-16T17:16:56.687731+00:00",
+        "mission_fingerprint": "d230b9c1a8dc5f0bba9bc663f56f8187bcc31a54f6f1bcebe4501e085e014f3f",
+        "ready": true,
+        "checks": [
+          {
+            "id": "controller",
+            "state": "ready",
+            "reason": "Kontrol oturumu ge\u00e7erli"
+          },
+          {
+            "id": "simulator",
+            "state": "ready",
+            "reason": "Uygulaman\u0131n ba\u015flatt\u0131\u011f\u0131 SITL \u00e7al\u0131\u015fmal\u0131"
+          },
+          {
+            "id": "connection",
+            "state": "ready",
+            "reason": "Telemetri ba\u011flant\u0131s\u0131 g\u00fcncel olmal\u0131"
+          },
+          {
+            "id": "position",
+            "state": "ready",
+            "reason": "Konum \u00f6l\u00e7\u00fcm\u00fc 3 saniyeden yeni ve EKF haz\u0131r olmal\u0131"
+          },
+          {
+            "id": "gps",
+            "state": "ready",
+            "reason": "GPS fix t\u00fcr\u00fc en az 3 olmal\u0131"
+          },
+          {
+            "id": "ekf",
+            "state": "ready",
+            "reason": "EKF mutlak yatay konum tahmini haz\u0131r olmal\u0131"
+          },
+          {
+            "id": "battery",
+            "state": "ready",
+            "reason": "5 saniyeden yeni batarya \u00f6l\u00e7\u00fcm\u00fc en az %20 olmal\u0131"
+          },
+          {
+            "id": "operation",
+            "state": "ready",
+            "reason": "Ba\u015fka g\u00f6rev aktar\u0131m\u0131 veya komut beklememeli"
+          },
+          {
+            "id": "disarmed",
+            "state": "ready",
+            "reason": "Arm i\u00e7in ara\u00e7 disarmed olmal\u0131"
+          }
+        ]
+      },
+      "sequence": 137
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T17:16:56.687919+00:00",
+      "payload": {
+        "id": "bd25d12a-586f-4a4c-98fb-be11275b3c40",
+        "action": "arm",
+        "status": "requested"
+      },
+      "sequence": 138
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:16:56.719285+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Arming motors"
+      },
+      "sequence": 140
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T17:16:56.719428+00:00",
+      "payload": {
+        "id": "bd25d12a-586f-4a4c-98fb-be11275b3c40",
+        "action": "arm",
+        "status": "acknowledged",
+        "observed": false
+      },
+      "sequence": 141
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T17:16:57.557368+00:00",
+      "payload": {
+        "id": "bd25d12a-586f-4a4c-98fb-be11275b3c40",
+        "action": "arm",
+        "status": "observed",
+        "observed_mode": "STABILIZE",
+        "armed": true
+      },
+      "sequence": 143
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T17:16:57.720273+00:00",
+      "payload": {
+        "state": "unknown",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": true
+      },
+      "sequence": 144
+    },
+    {
+      "type": "recording",
+      "received_utc": "2026-10-16T17:17:02.802892+00:00",
+      "payload": {
+        "status": "started",
+        "id": "edc78e13-4c5d-47e5-9da3-bde380296219"
+      },
+      "sequence": 155
+    },
+    {
+      "type": "preflight",
+      "received_utc": "2026-10-16T17:17:02.891648+00:00",
+      "payload": {
+        "action": "start",
+        "evaluated_utc": "2026-10-16T17:17:02.891536+00:00",
+        "mission_fingerprint": "d230b9c1a8dc5f0bba9bc663f56f8187bcc31a54f6f1bcebe4501e085e014f3f",
+        "ready": true,
+        "checks": [
+          {
+            "id": "controller",
+            "state": "ready",
+            "reason": "Kontrol oturumu ge\u00e7erli"
+          },
+          {
+            "id": "simulator",
+            "state": "ready",
+            "reason": "Uygulaman\u0131n ba\u015flatt\u0131\u011f\u0131 SITL \u00e7al\u0131\u015fmal\u0131"
+          },
+          {
+            "id": "connection",
+            "state": "ready",
+            "reason": "Telemetri ba\u011flant\u0131s\u0131 g\u00fcncel olmal\u0131"
+          },
+          {
+            "id": "position",
+            "state": "ready",
+            "reason": "Konum \u00f6l\u00e7\u00fcm\u00fc 3 saniyeden yeni ve EKF haz\u0131r olmal\u0131"
+          },
+          {
+            "id": "gps",
+            "state": "ready",
+            "reason": "GPS fix t\u00fcr\u00fc en az 3 olmal\u0131"
+          },
+          {
+            "id": "ekf",
+            "state": "ready",
+            "reason": "EKF mutlak yatay konum tahmini haz\u0131r olmal\u0131"
+          },
+          {
+            "id": "battery",
+            "state": "ready",
+            "reason": "5 saniyeden yeni batarya \u00f6l\u00e7\u00fcm\u00fc en az %20 olmal\u0131"
+          },
+          {
+            "id": "operation",
+            "state": "ready",
+            "reason": "Ba\u015fka g\u00f6rev aktar\u0131m\u0131 veya komut beklememeli"
+          },
+          {
+            "id": "armed",
+            "state": "ready",
+            "reason": "Motorlar\u0131n armed oldu\u011fu g\u00fcncel telemetride g\u00f6zlenmeli"
+          },
+          {
+            "id": "upload",
+            "state": "ready",
+            "reason": "Y\u00fcklenen g\u00f6rev geri okunarak do\u011frulanm\u0131\u015f olmal\u0131"
+          },
+          {
+            "id": "mission",
+            "state": "ready",
+            "reason": "Y\u00fcklenmi\u015f g\u00f6rev geometrisi ve s\u0131n\u0131rlar\u0131 ge\u00e7erli olmal\u0131"
+          }
+        ]
+      },
+      "sequence": 157
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T17:17:02.899341+00:00",
+      "payload": {
+        "id": "ff95b2e7-d6f2-460e-a470-75e59bcf2d9c",
+        "action": "start",
+        "status": "requested"
+      },
+      "sequence": 158
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:02.923952+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 1 Takeoff"
+      },
+      "sequence": 159
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T17:17:02.950505+00:00",
+      "payload": {
+        "id": "ff95b2e7-d6f2-460e-a470-75e59bcf2d9c",
+        "action": "start",
+        "status": "acknowledged",
+        "observed": false
+      },
+      "sequence": 160
+    },
+    {
+      "type": "command",
+      "received_utc": "2026-10-16T17:17:02.955880+00:00",
+      "payload": {
+        "id": "ff95b2e7-d6f2-460e-a470-75e59bcf2d9c",
+        "action": "start",
+        "status": "observed",
+        "observed_mode": "AUTO",
+        "armed": true
+      },
+      "sequence": 161
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T17:17:03.318492+00:00",
+      "payload": {
+        "state": "executing",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": true
+      },
+      "sequence": 162
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:06.316370+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU1 MAG0 in-flight yaw alignment complete"
+      },
+      "sequence": 169
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:06.323405+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "EKF3 IMU0 MAG0 in-flight yaw alignment complete"
+      },
+      "sequence": 170
+    },
+    {
+      "type": "mission_progress",
+      "received_utc": "2026-10-16T17:17:10.924381+00:00",
+      "payload": {
+        "reached_index": 1
+      },
+      "sequence": 180
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:10.930188+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 2 WP"
+      },
+      "sequence": 181
+    },
+    {
+      "type": "mission_progress",
+      "received_utc": "2026-10-16T17:17:17.265682+00:00",
+      "payload": {
+        "reached_index": 2
+      },
+      "sequence": 195
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:17.274505+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Reached command #2"
+      },
+      "sequence": 196
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:17.279413+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 3 WP"
+      },
+      "sequence": 197
+    },
+    {
+      "type": "mission_progress",
+      "received_utc": "2026-10-16T17:17:25.240885+00:00",
+      "payload": {
+        "reached_index": 3
+      },
+      "sequence": 213
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:25.247686+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Reached command #3"
+      },
+      "sequence": 214
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:25.251860+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 4 WP"
+      },
+      "sequence": 215
+    },
+    {
+      "type": "mission_progress",
+      "received_utc": "2026-10-16T17:17:33.242121+00:00",
+      "payload": {
+        "reached_index": 4
+      },
+      "sequence": 232
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:33.247945+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Reached command #4"
+      },
+      "sequence": 233
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:33.250754+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 5 WP"
+      },
+      "sequence": 234
+    },
+    {
+      "type": "mission_progress",
+      "received_utc": "2026-10-16T17:17:35.648757+00:00",
+      "payload": {
+        "reached_index": 5
+      },
+      "sequence": 239
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:35.655122+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Reached command #5"
+      },
+      "sequence": 240
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:35.660289+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 6 WP"
+      },
+      "sequence": 241
+    },
+    {
+      "type": "mission_progress",
+      "received_utc": "2026-10-16T17:17:40.698941+00:00",
+      "payload": {
+        "reached_index": 6
+      },
+      "sequence": 252
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:40.706957+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Reached command #6"
+      },
+      "sequence": 253
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:40.710613+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 7 WP"
+      },
+      "sequence": 254
+    },
+    {
+      "type": "mission_progress",
+      "received_utc": "2026-10-16T17:17:44.873961+00:00",
+      "payload": {
+        "reached_index": 7
+      },
+      "sequence": 263
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:44.880587+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Reached command #7"
+      },
+      "sequence": 264
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:44.886189+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 8 WP"
+      },
+      "sequence": 265
+    },
+    {
+      "type": "mission_progress",
+      "received_utc": "2026-10-16T17:17:51.048202+00:00",
+      "payload": {
+        "reached_index": 8
+      },
+      "sequence": 278
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:51.057491+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Reached command #8"
+      },
+      "sequence": 279
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:17:51.062481+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 9 Land"
+      },
+      "sequence": 280
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T17:17:51.562049+00:00",
+      "payload": {
+        "state": "landing",
+        "final_waypoint_observed": true,
+        "landing_observed": true,
+        "ever_armed": true
+      },
+      "sequence": 282
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:18:12.540474+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "SIM Hit ground at 0.499660 m/s"
+      },
+      "sequence": 324
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:18:14.626124+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Disarming motors"
+      },
+      "sequence": 329
+    },
+    {
+      "type": "vehicle_message",
+      "received_utc": "2026-10-16T17:18:14.632400+00:00",
+      "payload": {
+        "severity": 6,
+        "text": "Mission: 1 Takeoff"
+      },
+      "sequence": 330
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T17:18:15.189396+00:00",
+      "payload": {
+        "state": "executing",
+        "final_waypoint_observed": true,
+        "landing_observed": true,
+        "ever_armed": true
+      },
+      "sequence": 332
+    },
+    {
+      "type": "mission_lifecycle",
+      "received_utc": "2026-10-16T17:18:15.704897+00:00",
+      "payload": {
+        "state": "completed",
+        "final_waypoint_observed": true,
+        "landing_observed": true,
+        "ever_armed": true
+      },
+      "sequence": 334
+    }
+  ],
+  "home": {
+    "latitude": 41.0082,
+    "longitude": 28.9784,
+    "msl_altitude_m": 30.0
+  },
+  "scenario_active": false,
+  "preflight": {
+    "arm": {
+      "action": "arm",
+      "evaluated_utc": "2026-10-16T17:18:27.970613+00:00",
+      "mission_fingerprint": "d230b9c1a8dc5f0bba9bc663f56f8187bcc31a54f6f1bcebe4501e085e014f3f",
+      "ready": false,
+      "checks": [
+        {
+          "id": "controller",
+          "state": "blocked",
+          "reason": "Kontrol\u00fc sahiplenin; ba\u015fka ge\u00e7erli sahip olabilir"
+        },
+        {
+          "id": "simulator",
+          "state": "ready",
+          "reason": "Uygulaman\u0131n ba\u015flatt\u0131\u011f\u0131 SITL \u00e7al\u0131\u015fmal\u0131"
+        },
+        {
+          "id": "connection",
+          "state": "ready",
+          "reason": "Telemetri ba\u011flant\u0131s\u0131 g\u00fcncel olmal\u0131"
+        },
+        {
+          "id": "position",
+          "state": "ready",
+          "reason": "Konum \u00f6l\u00e7\u00fcm\u00fc 3 saniyeden yeni ve EKF haz\u0131r olmal\u0131"
+        },
+        {
+          "id": "gps",
+          "state": "ready",
+          "reason": "GPS fix t\u00fcr\u00fc en az 3 olmal\u0131"
+        },
+        {
+          "id": "ekf",
+          "state": "ready",
+          "reason": "EKF mutlak yatay konum tahmini haz\u0131r olmal\u0131"
+        },
+        {
+          "id": "battery",
+          "state": "ready",
+          "reason": "5 saniyeden yeni batarya \u00f6l\u00e7\u00fcm\u00fc en az %20 olmal\u0131"
+        },
+        {
+          "id": "operation",
+          "state": "ready",
+          "reason": "Ba\u015fka g\u00f6rev aktar\u0131m\u0131 veya komut beklememeli"
+        },
+        {
+          "id": "disarmed",
+          "state": "ready",
+          "reason": "Arm i\u00e7in ara\u00e7 disarmed olmal\u0131"
+        }
+      ]
+    },
+    "start": {
+      "action": "start",
+      "evaluated_utc": "2026-10-16T17:18:27.971164+00:00",
+      "mission_fingerprint": "d230b9c1a8dc5f0bba9bc663f56f8187bcc31a54f6f1bcebe4501e085e014f3f",
+      "ready": false,
+      "checks": [
+        {
+          "id": "controller",
+          "state": "blocked",
+          "reason": "Kontrol\u00fc sahiplenin; ba\u015fka ge\u00e7erli sahip olabilir"
+        },
+        {
+          "id": "simulator",
+          "state": "ready",
+          "reason": "Uygulaman\u0131n ba\u015flatt\u0131\u011f\u0131 SITL \u00e7al\u0131\u015fmal\u0131"
+        },
+        {
+          "id": "connection",
+          "state": "ready",
+          "reason": "Telemetri ba\u011flant\u0131s\u0131 g\u00fcncel olmal\u0131"
+        },
+        {
+          "id": "position",
+          "state": "ready",
+          "reason": "Konum \u00f6l\u00e7\u00fcm\u00fc 3 saniyeden yeni ve EKF haz\u0131r olmal\u0131"
+        },
+        {
+          "id": "gps",
+          "state": "ready",
+          "reason": "GPS fix t\u00fcr\u00fc en az 3 olmal\u0131"
+        },
+        {
+          "id": "ekf",
+          "state": "ready",
+          "reason": "EKF mutlak yatay konum tahmini haz\u0131r olmal\u0131"
+        },
+        {
+          "id": "battery",
+          "state": "ready",
+          "reason": "5 saniyeden yeni batarya \u00f6l\u00e7\u00fcm\u00fc en az %20 olmal\u0131"
+        },
+        {
+          "id": "operation",
+          "state": "ready",
+          "reason": "Ba\u015fka g\u00f6rev aktar\u0131m\u0131 veya komut beklememeli"
+        },
+        {
+          "id": "armed",
+          "state": "blocked",
+          "reason": "Motorlar\u0131n armed oldu\u011fu g\u00fcncel telemetride g\u00f6zlenmeli"
+        },
+        {
+          "id": "upload",
+          "state": "ready",
+          "reason": "Y\u00fcklenen g\u00f6rev geri okunarak do\u011frulanm\u0131\u015f olmal\u0131"
+        },
+        {
+          "id": "mission",
+          "state": "ready",
+          "reason": "Y\u00fcklenmi\u015f g\u00f6rev geometrisi ve s\u0131n\u0131rlar\u0131 ge\u00e7erli olmal\u0131"
+        }
+      ]
+    },
+    "resume": {
+      "action": "resume",
+      "evaluated_utc": "2026-10-16T17:18:27.972131+00:00",
+      "mission_fingerprint": "d230b9c1a8dc5f0bba9bc663f56f8187bcc31a54f6f1bcebe4501e085e014f3f",
+      "ready": false,
+      "checks": [
+        {
+          "id": "controller",
+          "state": "blocked",
+          "reason": "Kontrol\u00fc sahiplenin; ba\u015fka ge\u00e7erli sahip olabilir"
+        },
+        {
+          "id": "simulator",
+          "state": "ready",
+          "reason": "Uygulaman\u0131n ba\u015flatt\u0131\u011f\u0131 SITL \u00e7al\u0131\u015fmal\u0131"
+        },
+        {
+          "id": "connection",
+          "state": "ready",
+          "reason": "Telemetri ba\u011flant\u0131s\u0131 g\u00fcncel olmal\u0131"
+        },
+        {
+          "id": "position",
+          "state": "ready",
+          "reason": "Konum \u00f6l\u00e7\u00fcm\u00fc 3 saniyeden yeni ve EKF haz\u0131r olmal\u0131"
+        },
+        {
+          "id": "gps",
+          "state": "ready",
+          "reason": "GPS fix t\u00fcr\u00fc en az 3 olmal\u0131"
+        },
+        {
+          "id": "ekf",
+          "state": "ready",
+          "reason": "EKF mutlak yatay konum tahmini haz\u0131r olmal\u0131"
+        },
+        {
+          "id": "battery",
+          "state": "ready",
+          "reason": "5 saniyeden yeni batarya \u00f6l\u00e7\u00fcm\u00fc en az %20 olmal\u0131"
+        },
+        {
+          "id": "operation",
+          "state": "ready",
+          "reason": "Ba\u015fka g\u00f6rev aktar\u0131m\u0131 veya komut beklememeli"
+        },
+        {
+          "id": "armed",
+          "state": "blocked",
+          "reason": "Motorlar\u0131n armed oldu\u011fu g\u00fcncel telemetride g\u00f6zlenmeli"
+        },
+        {
+          "id": "upload",
+          "state": "ready",
+          "reason": "Y\u00fcklenen g\u00f6rev geri okunarak do\u011frulanm\u0131\u015f olmal\u0131"
+        },
+        {
+          "id": "mission",
+          "state": "ready",
+          "reason": "Y\u00fcklenmi\u015f g\u00f6rev geometrisi ve s\u0131n\u0131rlar\u0131 ge\u00e7erli olmal\u0131"
+        }
+      ]
+    }
+  }
+}

@@ -10,6 +10,7 @@ from .models import ConnectionState,Telemetry,Event,utc_now
 from .simulator import Simulator,HOME
 from .planning import require_valid, fence_state
 from .preflight import evaluate
+from .lifecycle import MissionLifecycle
 
 M=mavutil.mavlink
 
@@ -40,6 +41,7 @@ class MAVLinkManager:
         self.events=[]; self.sequence=0; self.controller=None; self.controller_seen=0.0
         self.observations={}
         self.last_fence_state=None
+        self.lifecycle=MissionLifecycle();self.command_requests={}
 
     def claim(self,token):
         if not token or len(token)>100: raise PermissionError('Missing control session.')
@@ -70,6 +72,8 @@ class MAVLinkManager:
 
     def status(self):
         return dict(state=self.state,telemetry=self.snapshot(),recording_id=self.store.active,
+                    mission_lifecycle=self.lifecycle.snapshot(),
+                    last_command=next((event['payload'] for event in reversed(self.events) if event['type']=='command'),None),
                     mission=self.active_mission.model_dump() if self.active_mission else None,
                     upload_verified=self.upload_verified,simulator_revision='Copter-4.6.3',simulator_owned=self.simulator.running,
                     event_sequence=self.sequence,events=self.events,home=dict(latitude=HOME[0],longitude=HOME[1],msl_altitude_m=HOME[2]))
@@ -97,6 +101,7 @@ class MAVLinkManager:
         async with self.connect_lock:
             if self.reader and not self.reader.done(): raise RuntimeError('Disconnect before starting a new simulator.')
             self.telemetry=Telemetry();self.last_heartbeat=None;self.field_times={};self.active_mission=None;self.upload_verified=False
+            self.lifecycle=MissionLifecycle()
             self.observations={}
             self.started=time.monotonic();self.state=ConnectionState.CONNECTING
             # Bind first; the dispatcher receives only this app-owned process's loopback stream.
@@ -140,6 +145,7 @@ class MAVLinkManager:
                     if message.get_type()=='STATUSTEXT':
                         await self.emit('vehicle_message',dict(severity=message.severity,text=str(message.text)))
                     if message.get_type()=='MISSION_ITEM_REACHED':
+                        self.lifecycle.reached(message.seq)
                         await self.emit('mission_progress',dict(reached_index=message.seq))
                 age=now-self.last_heartbeat if self.last_heartbeat is not None else None
                 next_state=heartbeat_state(age,self.simulator.running)
@@ -153,6 +159,9 @@ class MAVLinkManager:
                     self.link.mav.request_data_stream_send(1,1,M.MAV_DATA_STREAM_ALL,5,1);last_request=now
                 if now-last_publish>=.5:
                     snapshot=self.snapshot()
+                    previous=self.lifecycle.snapshot()
+                    current=self.lifecycle.observe(snapshot,self.upload_verified)
+                    if current!=previous:await self.emit('mission_lifecycle',current)
                     state=fence_state(self.active_mission,snapshot)
                     if state!=self.last_fence_state:
                         self.last_fence_state=state
@@ -207,7 +216,27 @@ class MAVLinkManager:
         if mode not in mapping: raise RuntimeError(f'Unsupported flight mode {mode}.')
         return await self.command_long(M.MAV_CMD_DO_SET_MODE,[M.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,mapping[mode],0,0,0,0,0])
 
-    async def command(self,action):
+    async def command(self,action,request_id=None):
+        if request_id is None:return await self._command(action)
+        previous=self.command_requests.get(request_id)
+        if previous:
+            if previous['action']!=action:raise ValueError('Request ID was already used for a different action.')
+            if previous.get('error'):raise RuntimeError(previous['error'])
+            if 'result' not in previous:raise RuntimeError('This request is already pending; it was not resent.')
+            return previous['result']
+        if len(self.command_requests)>=128:
+            finished=next((key for key,value in self.command_requests.items() if 'result' in value or 'error' in value),None)
+            if finished is None:raise RuntimeError('Command request capacity reached.')
+            self.command_requests.pop(finished)
+        entry={'action':action};self.command_requests[request_id]=entry
+        try:
+            entry['result']=await self._command(action)
+            return entry['result']
+        except BaseException as exc:
+            entry['error']=str(exc) or 'Command interrupted; not automatically resent.'
+            raise
+
+    async def _command(self,action):
         self.require_connected()
         if self.operation.locked(): raise RuntimeError('Another mission/command operation is pending.')
         async with self.operation:
@@ -293,6 +322,7 @@ class MAVLinkManager:
                     raise RuntimeError('Readback command/altitude differs.')
                 if original['x'] and (abs(original['x']-readback['x'])>2 or abs(original['y']-readback['y'])>2): raise RuntimeError('Readback coordinates differ.')
             self.active_mission=mission;self.upload_verified=True
+            self.lifecycle=MissionLifecycle(len(mission.waypoints))
             await self.emit('mission_transfer',dict(status='verified',total=len(items)))
             return dict(status='verified',mission=mission.model_dump(),items=downloaded)
 

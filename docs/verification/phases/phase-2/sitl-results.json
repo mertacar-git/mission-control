@@ -1,0 +1,41 @@
+{
+  "simulator": "Copter-4.6.3",
+  "revision": "92b0cd788ec29406f26c6f9c31d5ceedbd1cc538",
+  "results": [
+    {
+      "scenario": "mission upload/readback and rejected commands",
+      "status": "passed",
+      "duration_s": 0.39
+    },
+    {
+      "scenario": "mission execution, recording, replay data and report",
+      "status": "passed",
+      "duration_s": 12.97
+    },
+    {
+      "scenario": "heartbeat loss, recovery and reconnect",
+      "status": "passed",
+      "duration_s": 25.75
+    },
+    {
+      "scenario": "hold, resume and return-to-home",
+      "status": "passed",
+      "duration_s": 15.19
+    },
+    {
+      "scenario": "configured low-battery RTL and landing",
+      "status": "passed",
+      "duration_s": 26.3
+    },
+    {
+      "scenario": "generated concave survey, recording and report",
+      "status": "passed",
+      "duration_s": 35.28
+    },
+    {
+      "scenario": "narrow planning boundary trajectory observation",
+      "status": "passed",
+      "duration_s": 35.3
+    }
+  ]
+}
