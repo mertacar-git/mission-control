@@ -1,0 +1,98 @@
+[
+  {
+    "schema_version": 1,
+    "source": "emulator",
+    "id": "fcd3ab12-f6b3-4be1-af52-314375d96212",
+    "profile": "nominal",
+    "seed": 42,
+    "rate_hz": 5,
+    "duration_s": 5,
+    "expected_packets": 25,
+    "status": "completed",
+    "started_utc": "2026-10-16T18:31:34.787842+00:00",
+    "ended_utc": "2026-10-16T18:31:40.110535+00:00",
+    "error": null,
+    "counters": {
+      "received": 25,
+      "accepted": 25,
+      "duplicates": 0,
+      "out_of_order": 0,
+      "corrupt": 0,
+      "foreign": 0,
+      "sequence_missing": 0,
+      "boots": 1
+    }
+  },
+  {
+    "schema_version": 1,
+    "source": "emulator",
+    "id": "fcb30623-335d-45f0-82c0-c728e3d402fb",
+    "profile": "mixed",
+    "seed": 42,
+    "rate_hz": 5,
+    "duration_s": 5,
+    "expected_packets": 25,
+    "status": "completed",
+    "started_utc": "2026-10-16T18:31:40.111661+00:00",
+    "ended_utc": "2026-10-16T18:31:45.344454+00:00",
+    "error": null,
+    "counters": {
+      "received": 22,
+      "accepted": 16,
+      "duplicates": 3,
+      "out_of_order": 1,
+      "corrupt": 2,
+      "foreign": 0,
+      "sequence_missing": 8,
+      "boots": 1
+    }
+  },
+  {
+    "schema_version": 1,
+    "source": "emulator",
+    "id": "aea61d86-f78f-4a58-a3e9-9128937d7432",
+    "profile": "sensor_gap",
+    "seed": 42,
+    "rate_hz": 5,
+    "duration_s": 5,
+    "expected_packets": 25,
+    "status": "completed",
+    "started_utc": "2026-10-16T18:31:45.345223+00:00",
+    "ended_utc": "2026-10-16T18:31:51.097082+00:00",
+    "error": null,
+    "counters": {
+      "received": 25,
+      "accepted": 25,
+      "duplicates": 0,
+      "out_of_order": 0,
+      "corrupt": 0,
+      "foreign": 0,
+      "sequence_missing": 0,
+      "boots": 1
+    }
+  },
+  {
+    "schema_version": 1,
+    "source": "emulator",
+    "id": "fa9edfa4-17d4-483b-9dd8-37fcd880deb9",
+    "profile": "restart",
+    "seed": 42,
+    "rate_hz": 5,
+    "duration_s": 5,
+    "expected_packets": 25,
+    "status": "completed",
+    "started_utc": "2026-10-16T18:31:51.097865+00:00",
+    "ended_utc": "2026-10-16T18:31:57.440724+00:00",
+    "error": null,
+    "counters": {
+      "received": 25,
+      "accepted": 25,
+      "duplicates": 0,
+      "out_of_order": 0,
+      "corrupt": 0,
+      "foreign": 0,
+      "sequence_missing": 0,
+      "boots": 2
+    }
+  }
+]

@@ -2,8 +2,6 @@
 
 import asyncio
 import copy
-import subprocess
-from pathlib import Path
 from typing import Literal
 from uuid import uuid4
 from pydantic import Field
@@ -12,6 +10,7 @@ from .planning import require_valid
 from .simulator import HOME, REVISION
 from .scenarios import CATALOG
 from .preflight import mission_fingerprint
+from .build_info import source_info, VERSION
 
 
 class ExperimentRequest(StrictModel):
@@ -37,6 +36,7 @@ class ExperimentRun(StrictModel):
     ended_utc: str | None
     source: Literal["sitl"]
     software_revision: str | None
+    software_version: str | None = None
     software_dirty: bool | None = None
     firmware: str
     firmware_revision: str
@@ -103,32 +103,6 @@ def create_definition(store, body):
     return result
 
 
-def software_revision():
-    try:
-        return subprocess.check_output(
-            ["git", "rev-parse", "HEAD"],
-            cwd=Path(__file__).resolve().parents[2],
-            text=True,
-            timeout=3,
-        ).strip()
-    except (OSError, subprocess.SubprocessError):
-        return None
-
-
-def software_dirty():
-    try:
-        return bool(
-            subprocess.check_output(
-                ["git", "status", "--porcelain", "--untracked-files=normal"],
-                cwd=Path(__file__).resolve().parents[2],
-                text=True,
-                timeout=3,
-            ).strip()
-        )
-    except (OSError, subprocess.SubprocessError):
-        return None
-
-
 class ExperimentRunner:
     def __init__(self, scenarios, store):
         self.scenarios = scenarios
@@ -165,8 +139,8 @@ class ExperimentRunner:
             started_utc=None,
             ended_utc=None,
             source="sitl",
-            software_revision=software_revision(),
-            software_dirty=software_dirty(),
+            **source_info(),
+            software_version=VERSION,
             firmware="Copter-4.6.3",
             firmware_revision=REVISION,
             speedup=definition.speedup,

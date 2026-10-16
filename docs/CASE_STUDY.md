@@ -1,5 +1,26 @@
 # Mission Control: from route editing to inspectable flight evidence
 
+## v1.8: observable operation and immutable experiments
+
+The backend now decides action-specific preflight against the loaded mission and
+fresh navigation/battery evidence. Reconnection restores state without replaying
+uncertain commands. Mission completion combines observed final waypoint, landing
+and disarm rather than interpreting command acknowledgment as flight success.
+
+Immutable definitions preserve mission/settings and every rerun preserves a new
+result and recording. Runs retain failure/interruption states, bounded timeouts,
+owner cancellation and source provenance. Independent Windows serial captures use
+their own authentication, registry and replay, preparing hardware work without
+claiming sensor/USB validation. Multi-flight reports compare 2–5 recordings with
+explicit conditions, missing intervals and null-preserving exports.
+
+A clean-environment acceptance runner ties these claims to 103 backend tests,
+76 frontend tests, ten desktop/mobile browser cases, actual transport/PTY/UDP
+checks and pinned SITL scenarios. Actual Uvicorn shutdown testing exposed an idle
+WebSocket subscriber waiting for another queue item after its peer closed. A
+concurrent receive task now releases the subscriber promptly, and the regression
+and installed-server test both pass. [Evidence and exact source manifests](verification/phases/phase-6/README.md).
+
 ## v1.7: compare hypotheses against execution, then exercise the telemetry boundary
 
 Heading comparison evaluates a bounded deterministic candidate set with explicit speed/turn assumptions. The worker remains cancellable and local candidates pass independent Shapely validation. Application is an explicit undoable step; an estimate is never presented as measured flight time.

@@ -1,0 +1,19 @@
+
+> mission-control-ui@1.8.0 test:e2e
+> playwright test
+
+
+Running 10 tests using 1 worker
+
+  ✓   1 [desktop] › e2e/critical.spec.ts:9:1 › offline planning, undo, explicit upload review and demo flight commands (1.2s)
+  ✓   2 [desktop] › e2e/critical.spec.ts:56:1 › published SITL experiment opens isolated replay with working charts (745ms)
+  ✓   3 [desktop] › e2e/critical.spec.ts:100:1 › five-record report, portable HTML and explicit conditions (745ms)
+  ✓   4 [desktop] › e2e/critical.spec.ts:134:1 › serial sample remains an independent source and preserves missing fields (935ms)
+  ✓   5 [desktop] › e2e/critical.spec.ts:189:1 › failed experiment evidence request shows an error rather than fabricated results (455ms)
+  ✓   6 [mobile-390] › e2e/critical.spec.ts:9:1 › offline planning, undo, explicit upload review and demo flight commands (1.0s)
+  ✓   7 [mobile-390] › e2e/critical.spec.ts:56:1 › published SITL experiment opens isolated replay with working charts (664ms)
+  ✓   8 [mobile-390] › e2e/critical.spec.ts:100:1 › five-record report, portable HTML and explicit conditions (701ms)
+  ✓   9 [mobile-390] › e2e/critical.spec.ts:134:1 › serial sample remains an independent source and preserves missing fields (1.0s)
+  ✓  10 [mobile-390] › e2e/critical.spec.ts:189:1 › failed experiment evidence request shows an error rather than fabricated results (504ms)
+
+  10 passed (9.3s)

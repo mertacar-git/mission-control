@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from uuid import UUID, uuid4
 from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
-from .build_info import source_info
+from .build_info import source_info, VERSION
 
 
 def now():
@@ -127,7 +127,8 @@ class SerialExperiments:
             error=None,
             source="synthetic_serial",
             seed=42,
-            software_version="MCT1/v1",
+            software_version=VERSION,
+            protocol_version="MCT1/v1",
             firmware=None,
         )
         self.save("run", self.current)

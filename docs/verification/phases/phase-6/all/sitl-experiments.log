@@ -1,0 +1,5 @@
+normal: passed None
+normal: passed None
+heartbeat_loss: passed None
+low_battery: passed None
+gps_loss: passed None

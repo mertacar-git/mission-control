@@ -406,23 +406,48 @@ export function SerialDevice({ local }: { local: boolean }) {
         Cihaz zamanı ve alınma zamanı farklı saatlerdir; tek yönlü gecikme
         çıkarılmaz.
       </p>
-      <pre>
-        {JSON.stringify(
-          {
-            ...counts,
-            invalid_candidates:
-              replay?.summary.invalid_candidates ??
-              status?.invalid_candidates ??
-              null,
-            discarded_bytes:
-              replay?.summary.discarded_bytes ??
-              status?.discarded_bytes ??
-              null,
-          },
-          null,
-          2,
-        )}
-      </pre>
+      <div className="serial-counters">
+        {[
+          ['Kabul edilen', counts.accepted],
+          ['Geç / tekrar', counts.late_or_duplicate],
+          ['Eksik sıra', counts.sequence_gaps],
+          ['Farklı akış', counts.foreign],
+          ['Saat gerilemesi', counts.clock_regression],
+          [
+            'CRC / çerçeve hatası',
+            replay?.summary.invalid_candidates ?? status?.invalid_candidates,
+          ],
+          [
+            'Atılan bayt',
+            replay?.summary.discarded_bytes ?? status?.discarded_bytes,
+          ],
+        ].map(([label, number]) => (
+          <div key={String(label)}>
+            <small>{label}</small>
+            <strong>{number ?? '—'}</strong>
+          </div>
+        ))}
+      </div>
+      <details>
+        <summary>Ham paket sayaçları</summary>
+        <pre>
+          {JSON.stringify(
+            {
+              ...counts,
+              invalid_candidates:
+                replay?.summary.invalid_candidates ??
+                status?.invalid_candidates ??
+                null,
+              discarded_bytes:
+                replay?.summary.discarded_bytes ??
+                status?.discarded_bytes ??
+                null,
+            },
+            null,
+            2,
+          )}
+        </pre>
+      </details>
       <div className="row-actions">
         <button
           disabled={busy}

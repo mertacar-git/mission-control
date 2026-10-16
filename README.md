@@ -6,6 +6,37 @@ Plan a mission, fly one virtual UAV, watch telemetry, record the flight, replay 
 
 React + TypeScript + Leaflet + Recharts frontend, FastAPI + SQLite backend, and an app-owned ArduCopter SITL process speaking MAVLink. The interface is Turkish; code and documentation are English.
 
+## Operational evidence and repeatable experiments · v1.8
+
+- **Explain readiness:** server-calculated arm/start/resume conditions, fresh
+  position/GPS/EKF/battery, verified loaded mission and specific blocking reasons.
+- **Observe outcomes:** final waypoint, landing and disarm establish completion;
+  acknowledgments alone do not. Reconnection never resends a flight command.
+- **Compare 2–5 recordings:** content fingerprints, observed arm/disarm intervals,
+  assigned route deviation, data gaps, boundaries and battery change; portable
+  HTML/CSV/JSON without an automatic winner.
+- **Independent Windows serial receiver:** loopback authentication, one reader,
+  raw MCT1/CRC capture and separate replay. Hardware validation remains pending.
+- **Versioned experiments:** immutable mission/settings snapshots, separate
+  reruns, owner cancellation, explicit failed/interrupted results and provenance.
+- **Unified acceptance:** required software and pinned SITL checks, source hashes,
+  raw evidence, JUnit and human-readable HTML reports.
+
+[Phased delivery](docs/PHASE_DELIVERY.md) · [Acceptance setup](docs/ACCEPTANCE.md) ·
+[Versioned experiments](docs/VERSIONED_EXPERIMENTS.md) · [Windows serial setup](docs/SERIAL_DEVICE.md).
+
+Validated on a clean Ubuntu installation: **103 backend + 76 frontend + 10
+desktop/mobile browser tests**, real HTTP/WebSocket and serial/UDP checks,
+**7 SITL scenarios + 5 experiment runs + 2 real-time paired flights**.
+[Acceptance reports and raw evidence](docs/verification/phases/phase-6/README.md).
+
+![Two actual experiment flight recordings](docs/media/flight-comparison-v18.png)
+
+[24-second captioned walkthrough](docs/media/operations-v18.md) ·
+[v1.8 release notes](docs/RELEASE_V18.md).
+
+Earlier release notes below retain their historical validation counts.
+
 ![Actual paired SITL flight comparison](docs/media/flight-comparison-v17.png)
 
 ## Route experiments and computer prototype · UI 1.7
@@ -20,7 +51,7 @@ The planned v1.5/v1.6 work and the software-computer prototype preparation are a
 
 [v1.7 captioned walkthrough](docs/media/routes-emulator-v17.md).
 
-Public Pages compares routes and replays checked-in real SITL/software-emulator evidence; new sender or SITL processes require the local application. No physical board or sensor validation is claimed. The release test suite contains **69 frontend and 58 backend tests**, including Python/C++ packet compatibility. The acceptance workflow covers twelve SITL scenarios/flights and five real subprocess/UDP emulator checks.
+Public Pages compares routes and replays checked-in real SITL/software-emulator evidence; new sender or SITL processes require the local application. No physical board or sensor validation is claimed. The historical v1.7 test suite contained **69 frontend and 58 backend tests**, including Python/C++ packet compatibility. The acceptance workflow covers twelve SITL scenarios/flights and five real subprocess/UDP emulator checks.
 
 [Watch the captioned walkthrough](https://github.com/mertacar-git/mission-control/raw/refs/heads/main/docs/media/walkthrough.mp4) · [Chapters and recording method](docs/media/walkthrough.md).
 
@@ -35,7 +66,7 @@ Run fixed telemetry interruption, low-battery and GPS-loss experiments against a
 
 Select an incident in any replay to synchronize the map, telemetry cards and chart cursor. Inspect the preceding command and ±10 s event context without assuming causality. Recording gaps remain unknown and break plotted lines; they do not inherit old battery or mode readings. Optional GPS fix data preserves old recording compatibility.
 
-Current local validation: **64 frontend tests, 48 backend tests, seven existing real SITL acceptance scenarios plus three new fault experiments**. The laboratory fixtures include successful GPS-loss LAND and low-battery RTL followed by disarm. Pausing SITL tests receiver freshness and recovery, not an airborne RF/GCS outage. [Evidence](docs/verification/scenarios/scenario-runs.json).
+Historical v1.4 validation: **64 frontend tests, 48 backend tests, seven existing real SITL acceptance scenarios plus three new fault experiments**. The laboratory fixtures include successful GPS-loss LAND and low-battery RTL followed by disarm. Pausing SITL tests receiver freshness and recovery, not an airborne RF/GCS outage. [Evidence](docs/verification/scenarios/scenario-runs.json).
 
 ## Survey planning · UI 1.3
 
@@ -57,7 +88,7 @@ The interface uses a map-first workspace with a focused coordinate editor, route
 
 Flight archives support name search and demo/SITL source filtering. Playback shows command and vehicle events without flooding the visible log with telemetry rows; the complete telemetry still remains in the recording. Repeated start actions are disabled while AUTO is observed. Map controls include metric scale and route fitting, including grid-only mode.
 
-Presentation code is separated into survey planner, editor, review, archive, readiness, experiment laboratory, incident inspector, event-log and chart components. The chart library loads on demand; the initial JavaScript bundle is about 403 kB (126 kB gzip), with a separate chart chunk. Verification includes shared TypeScript/Python geometry fixtures, model/history/replay tests, TypeScript compilation and browser checks. Seven existing real SITL scenarios cover flight controls and generated concave survey missions; three additional fault experiments produce replayable acceptance reports.
+Presentation code is separated into survey planner, editor, review, archive, readiness, experiment laboratory, incident inspector, event-log and chart components. The chart library loads on demand; the initial JavaScript bundle is about 472 kB (147 kB gzip), with a separate chart chunk. Verification includes shared TypeScript/Python geometry fixtures, model/history/replay tests, TypeScript compilation and browser checks. Seven existing real SITL scenarios cover flight controls and generated concave survey missions; three additional fault experiments produce replayable acceptance reports.
 
 ## Two distinct modes
 

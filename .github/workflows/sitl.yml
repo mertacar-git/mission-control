@@ -6,7 +6,7 @@ permissions:
 jobs:
   acceptance:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       MISSION_RUNTIME: /opt/mission-control
     steps:
@@ -19,22 +19,13 @@ jobs:
         run: /opt/mission-control/venv/bin/pip install -r backend/requirements.txt
       - name: Execute real simulator scenarios
         working-directory: backend
-        run: /opt/mission-control/venv/bin/python -m tests.integration_runner
-      - name: Execute replayable fault experiments
-        working-directory: backend
-        run: /opt/mission-control/venv/bin/python -m tests.scenario_runner
-      - name: Fly paired route headings at real time
-        working-directory: backend
-        run: /opt/mission-control/venv/bin/python -m tests.comparison_runner
-      - name: Verify owned subprocess UDP emulator
-        working-directory: backend
-        run: /opt/mission-control/venv/bin/python -m tests.emulator_runner
+        run: /opt/mission-control/venv/bin/python -m tests.acceptance_runner --suite sitl --output ../.runtime/ci-sitl
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: sitl-verification
           path: |
-            docs/verification
+            .runtime/ci-sitl
             backend/.runtime/integration/**/sitl.log
-            backend/.runtime/scenarios/**/sitl.log
+            backend/.runtime/experiments/**/sitl.log
             backend/.runtime/comparison/**/sitl.log

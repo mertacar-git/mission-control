@@ -11,7 +11,7 @@ from mission_control.emulator_protocol import encode
 
 
 def main():
-    directory = Path(__file__).resolve().parents[2]/'docs/verification/serial'
+    directory = Path(os.environ.get('MISSION_EVIDENCE_DIR',Path(__file__).resolve().parents[2]/'docs/verification/serial'))
     directory.mkdir(parents=True, exist_ok=True)
     recording = directory/'synthetic-pty.jsonl'
     master, slave = pty.openpty()

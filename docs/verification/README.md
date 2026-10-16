@@ -1,3 +1,13 @@
+# v1.8 operational acceptance
+
+[Complete v1.8 evidence](phases/phase-6/README.md): 103 backend tests, 76 frontend
+tests and ten desktop/mobile browser cases; real HTTP/WebSocket, PTY and UDP;
+seven baseline SITL scenarios, five immutable experiment runs and two real-time
+paired flights. The final software suite passed again after presentation refinements.
+Both source manifests, raw recordings, browser videos and simulator logs are retained.
+
+Earlier evidence below is preserved as versioned historical context.
+
 # v1.7 route and computer-emulator evidence
 
 - `comparison/candidates.json`: twelve deterministic heading candidates and generated mission provenance, independently validated by Python tests.
@@ -5,7 +15,7 @@
 - `emulator/results.json`: actual separate-process loopback UDP nominal/mixed/sensor-gap/restart tests and explicit cancellation cleanup. Each recording retains raw datagrams and receiver decisions. This is synthetic software telemetry, not SITL or hardware-sensor evidence.
 - `emulator/ui-run.json`: a mixed-profile run started through the browser UI; raw recording retained.
 - `prototype/golden-vectors.json` (repository root): fixed packet used with the portable C++ decoder.
-- Current unit suite: **69 frontend and 58 backend tests**. The existing seven SITL scenarios and three fault experiments remain in acceptance; the two new paired flights bring the SITL workflow to twelve, plus five emulator subprocess/UDP checks.
+- Historical v1.7 unit suite: **69 frontend and 58 backend tests**. The existing seven SITL scenarios and three fault experiments remain in acceptance; the two new paired flights bring the SITL workflow to twelve, plus five emulator subprocess/UDP checks.
 
 [Method](../ROUTE_EXPERIMENTS.md) · [Protocol](../COMPUTER_EMULATOR.md) · [Release](../RELEASE_V17.md).
 

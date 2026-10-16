@@ -9,7 +9,9 @@ are documented in [VERSIONED_EXPERIMENTS.md](VERSIONED_EXPERIMENTS.md).
 |---|---|---|
 | GET | `/health`, `/status` | Backend health, connection/telemetry/mission/recording state |
 | POST / DELETE | `/connection` | Start owned SITL (`{"speedup":1}`), stop it |
-| POST | `/control/renew` | Claim/renew single browser lease |
+| POST | `/control/claim` | Acquire an unowned/expired lease; reject another valid owner |
+| POST | `/control/renew` | Renew the existing owner's lease |
+| GET | `/preflight?action=arm\|start\|resume` | Reasoned readiness; re-evaluated inside the command path |
 | GET / POST | `/missions` | List/save validated mission |
 | DELETE | `/missions/{id}` | Remove stored mission |
 | POST | `/missions/{id}/upload` | Upload and verify by readback |
@@ -20,6 +22,7 @@ are documented in [VERSIONED_EXPERIMENTS.md](VERSIONED_EXPERIMENTS.md).
 | GET | `/recordings/{id}` | Versioned recording JSON |
 | GET | `/recordings/{id}/csv` | Telemetry CSV, empty unknown cells |
 | GET | `/recordings/{id}/report` | Report (`max_altitude=80&min_battery=20`) |
+| POST | `/recordings/compare` | Compare 2–5 unique `{identifiers:[...]}` with explicit source/conditions |
 
 Connection, upload and command/control calls use `X-Control-Session: <browser-generated-uuid>`. Claims conflict with an existing unexpired owner. Write requests with foreign browser origins are rejected; command transport is local HTTP, never replay/WS.
 

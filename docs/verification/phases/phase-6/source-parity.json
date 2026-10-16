@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "backend_source_identical": true,
+  "final_source_matches_software_acceptance": true,
+  "all_suite_source_sha256": "d511def08cf80ef0d76d820d83fd9818bfb37174b9213204fdc491a5ed82f2fe",
+  "final_software_source_sha256": "8e708ce23b70c8b523580b262b79e0ce348dc055db19f7acf6e690c185cb27fa",
+  "changed_files": [
+    "frontend/src/components/SerialDevice.tsx",
+    "frontend/src/style.css"
+  ],
+  "explanation": "After the all suite passed, presentation spacing and serial counter cards were refined; the complete software suite passed again. All backend sources and SITL behavior were unchanged.",
+  "hardware": "pending"
+}

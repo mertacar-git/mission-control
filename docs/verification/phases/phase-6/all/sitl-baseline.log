@@ -1,0 +1,37 @@
+[
+  {
+    "scenario": "mission upload/readback and rejected commands",
+    "status": "passed",
+    "duration_s": 0.38
+  },
+  {
+    "scenario": "mission execution, recording, replay data and report",
+    "status": "passed",
+    "duration_s": 13.12
+  },
+  {
+    "scenario": "heartbeat loss, recovery and reconnect",
+    "status": "passed",
+    "duration_s": 25.49
+  },
+  {
+    "scenario": "hold, resume and return-to-home",
+    "status": "passed",
+    "duration_s": 15.2
+  },
+  {
+    "scenario": "configured low-battery RTL and landing",
+    "status": "passed",
+    "duration_s": 26.29
+  },
+  {
+    "scenario": "generated concave survey, recording and report",
+    "status": "passed",
+    "duration_s": 35.24
+  },
+  {
+    "scenario": "narrow planning boundary trajectory observation",
+    "status": "passed",
+    "duration_s": 35.64
+  }
+]

@@ -8,5 +8,6 @@ __pycache__/
 .runtime/
 .env
 test-results/
+playwright-report/
 .venv-bench/
 .venv-serial/

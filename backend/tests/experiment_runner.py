@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import os
 from pathlib import Path
 from mission_control.experiments import (
     ExperimentRunner,
@@ -16,7 +17,7 @@ from mission_control.store import Store
 
 async def main():
     root = Path(__file__).resolve().parents[2]
-    output = root / "docs/verification/phases/phase-5"
+    output = Path(os.environ.get('MISSION_EVIDENCE_DIR',root / "docs/verification/phases/phase-5"))
     output.mkdir(parents=True, exist_ok=True)
     store = Store(":memory:")
     manager = MAVLinkManager(

@@ -1,0 +1,54 @@
+{
+  "status": "passed",
+  "health": {
+    "status": "ok",
+    "version": "1.8.0",
+    "transport": "owned-sitl-only"
+  },
+  "websockets_version": "17.2",
+  "snapshot": {
+    "type": "snapshot",
+    "payload": {
+      "state": "closed",
+      "telemetry": {
+        "source": "sitl",
+        "received_utc": "2026-10-16T18:42:36.599245+00:00",
+        "elapsed_s": 0,
+        "vehicle_time_ms": null,
+        "latitude": null,
+        "longitude": null,
+        "relative_altitude_m": null,
+        "ground_speed_ms": null,
+        "battery_pct": null,
+        "battery_voltage_v": null,
+        "flight_mode": null,
+        "armed": null,
+        "mission_index": null,
+        "position_fresh": false,
+        "navigation_ready": false,
+        "gps_fix_type": null,
+        "heartbeat_age_s": null,
+        "connection": "closed"
+      },
+      "recording_id": null,
+      "mission_lifecycle": {
+        "state": "preparing",
+        "final_waypoint_observed": false,
+        "landing_observed": false,
+        "ever_armed": false
+      },
+      "last_command": null,
+      "mission": null,
+      "upload_verified": false,
+      "simulator_revision": "Copter-4.6.3",
+      "simulator_owned": false,
+      "event_sequence": 0,
+      "events": [],
+      "home": {
+        "latitude": 41.0082,
+        "longitude": 28.9784,
+        "msl_altitude_m": 30.0
+      }
+    }
+  }
+}

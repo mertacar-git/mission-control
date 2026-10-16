@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_serializer
 from .serial_bench import capture, replay
 from .emulator_sender import schedule
 from .serial_experiments import SerialExperiments,SerialExperimentRequest
+from .build_info import VERSION
 
 ORIGINS = [
     "http://127.0.0.1:8000",
@@ -373,7 +374,7 @@ def create_serial_app(
             await experiments.close()
             await asyncio.to_thread(service.stop)
 
-    app = FastAPI(title="Mission Control Serial Receiver", lifespan=lifespan)
+    app = FastAPI(title="Mission Control Serial Receiver",version=VERSION, lifespan=lifespan)
     app.state.service = service
     app.state.experiments=experiments
     app.state.access_token = secret

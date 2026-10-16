@@ -1,0 +1,66 @@
+[
+  {
+    "profile": "nominal",
+    "status": "passed",
+    "id": "fcd3ab12-f6b3-4be1-af52-314375d96212",
+    "counters": {
+      "received": 25,
+      "accepted": 25,
+      "duplicates": 0,
+      "out_of_order": 0,
+      "corrupt": 0,
+      "foreign": 0,
+      "sequence_missing": 0,
+      "boots": 1
+    }
+  },
+  {
+    "profile": "mixed",
+    "status": "passed",
+    "id": "fcb30623-335d-45f0-82c0-c728e3d402fb",
+    "counters": {
+      "received": 22,
+      "accepted": 16,
+      "duplicates": 3,
+      "out_of_order": 1,
+      "corrupt": 2,
+      "foreign": 0,
+      "sequence_missing": 8,
+      "boots": 1
+    }
+  },
+  {
+    "profile": "sensor_gap",
+    "status": "passed",
+    "id": "aea61d86-f78f-4a58-a3e9-9128937d7432",
+    "counters": {
+      "received": 25,
+      "accepted": 25,
+      "duplicates": 0,
+      "out_of_order": 0,
+      "corrupt": 0,
+      "foreign": 0,
+      "sequence_missing": 0,
+      "boots": 1
+    }
+  },
+  {
+    "profile": "restart",
+    "status": "passed",
+    "id": "fa9edfa4-17d4-483b-9dd8-37fcd880deb9",
+    "counters": {
+      "received": 25,
+      "accepted": 25,
+      "duplicates": 0,
+      "out_of_order": 0,
+      "corrupt": 0,
+      "foreign": 0,
+      "sequence_missing": 0,
+      "boots": 2
+    }
+  },
+  {
+    "profile": "explicit cancellation and cleanup",
+    "status": "passed"
+  }
+]

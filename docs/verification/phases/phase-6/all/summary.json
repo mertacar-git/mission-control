@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "suite": "all",
+  "status": "passed",
+  "started_utc": "2026-10-16T18:30:57.128038+00:00",
+  "ended_utc": "2026-10-16T18:41:25.902607+00:00",
+  "application_version": "1.8.0",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "software_revision": null,
+  "software_dirty": null,
+  "hardware": "pending; no physical board/sensor acceptance",
+  "checks": [
+    {
+      "name": "backend-tests",
+      "status": "passed",
+      "command": [
+        "/home/flwitch/mission-control-clean-v18/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "--junitxml=/home/flwitch/mission-control-v18-final/backend-tests.xml"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/backend",
+      "log": "backend-tests.log",
+      "error": null,
+      "test_count": 103,
+      "duration_s": 21.099
+    },
+    {
+      "name": "frontend-tests",
+      "status": "passed",
+      "command": [
+        "/opt/mission-control/node-v22.23.3-linux-x64/bin/npm",
+        "test",
+        "--",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/home/flwitch/mission-control-v18-final/frontend-tests.xml"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/frontend",
+      "log": "frontend-tests.log",
+      "error": null,
+      "test_count": 76,
+      "duration_s": 0.972
+    },
+    {
+      "name": "production-build",
+      "status": "passed",
+      "command": [
+        "/opt/mission-control/node-v22.23.3-linux-x64/bin/npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/frontend",
+      "log": "production-build.log",
+      "error": null,
+      "duration_s": 6.316
+    },
+    {
+      "name": "http-websocket",
+      "status": "passed",
+      "command": [
+        "/home/flwitch/mission-control-clean-v18/.venv/bin/python",
+        "-m",
+        "tests.socket_runner"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/backend",
+      "log": "http-websocket.log",
+      "error": null,
+      "duration_s": 1.071
+    },
+    {
+      "name": "serial-pty",
+      "status": "passed",
+      "command": [
+        "/home/flwitch/mission-control-clean-v18/.venv/bin/python",
+        "-m",
+        "tests.serial_runner"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/backend",
+      "log": "serial-pty.log",
+      "error": null,
+      "duration_s": 7.84
+    },
+    {
+      "name": "subprocess-emulator",
+      "status": "passed",
+      "command": [
+        "/home/flwitch/mission-control-clean-v18/.venv/bin/python",
+        "-m",
+        "tests.emulator_runner"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/backend",
+      "log": "subprocess-emulator.log",
+      "error": null,
+      "duration_s": 22.957
+    },
+    {
+      "name": "browser-critical-flows",
+      "status": "passed",
+      "command": [
+        "/opt/mission-control/node-v22.23.3-linux-x64/bin/npm",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/frontend",
+      "log": "browser-critical-flows.log",
+      "error": null,
+      "test_count": 10,
+      "duration_s": 9.739
+    },
+    {
+      "name": "sitl-baseline",
+      "status": "passed",
+      "command": [
+        "/home/flwitch/mission-control-clean-v18/.venv/bin/python",
+        "-m",
+        "tests.integration_runner"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/backend",
+      "log": "sitl-baseline.log",
+      "error": null,
+      "duration_s": 167.082
+    },
+    {
+      "name": "sitl-experiments",
+      "status": "passed",
+      "command": [
+        "/home/flwitch/mission-control-clean-v18/.venv/bin/python",
+        "-m",
+        "tests.experiment_runner"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/backend",
+      "log": "sitl-experiments.log",
+      "error": null,
+      "duration_s": 132.868
+    },
+    {
+      "name": "sitl-paired-flights",
+      "status": "passed",
+      "command": [
+        "/home/flwitch/mission-control-clean-v18/.venv/bin/python",
+        "-m",
+        "tests.comparison_runner"
+      ],
+      "cwd": "/home/flwitch/mission-control-clean-v18/backend",
+      "log": "sitl-paired-flights.log",
+      "error": null,
+      "duration_s": 249.767
+    }
+  ],
+  "source_sha256": "d511def08cf80ef0d76d820d83fd9818bfb37174b9213204fdc491a5ed82f2fe",
+  "dependencies": {
+    "fastapi": "0.115.12",
+    "pydantic": "2.11.5",
+    "pymavlink": "2.4.49",
+    "shapely": "2.1.2",
+    "pyserial": "3.5",
+    "pytest": "8.3.5"
+  }
+}

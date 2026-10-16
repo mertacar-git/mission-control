@@ -15,6 +15,7 @@ from .execution import execution_report
 from .emulator import Emulator
 from .preflight import evaluate
 from .comparison import compare_recordings,FlightComparison
+from .build_info import VERSION
 from .experiments import ExperimentRunner,ExperimentRequest,ExperimentStart,ExperimentDefinition,ExperimentRun,create_definition
 from typing import Literal
 
@@ -60,7 +61,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
             await scenarios.close()
             await manager.disconnect();store.close()
             resources.clear()
-    app=FastAPI(title='Mission Control',version='1.7.0',lifespan=lifespan)
+    app=FastAPI(title='Mission Control',version=VERSION,lifespan=lifespan)
     app.state.manager=manager;app.state.store=store;app.state.experiments=experiments
     origins=['http://localhost:5173','http://127.0.0.1:5173','http://localhost:8000','http://127.0.0.1:8000']
     app.add_middleware(CORSMiddleware,allow_origins=origins,allow_methods=['GET','POST','DELETE'],allow_headers=['Content-Type','X-Control-Session'])
@@ -77,7 +78,7 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     def translate(exc):
         return HTTPException(409,str(exc))
     @app.get('/api/v1/health')
-    def health(): return dict(status='ok',version='1.7.0',transport='owned-sitl-only')
+    def health(): return dict(status='ok',version=VERSION,transport='owned-sitl-only')
     @app.get('/api/v1/emulator')
     def emulator_status():return emulator.status()
     @app.post('/api/v1/emulator')
@@ -232,14 +233,26 @@ def create_app(database=None,manager_factory=MAVLinkManager):
         origin=ws.headers.get('origin')
         if origin and origin not in origins: await ws.close(code=1008);return
         await ws.accept();queue=asyncio.Queue(maxsize=256);manager.subscribers.add(queue)
+        async def receive_until_closed():
+            while True:
+                if (await ws.receive())['type']=='websocket.disconnect':return
+        receiver=asyncio.create_task(receive_until_closed())
+        delivery=None
         try:
             await ws.send_json(dict(type='snapshot',payload=manager.status()))
             while True:
-                try: event=await asyncio.wait_for(queue.get(),10)
+                delivery=asyncio.create_task(asyncio.wait_for(queue.get(),10))
+                done,_=await asyncio.wait((receiver,delivery),return_when=asyncio.FIRST_COMPLETED)
+                if receiver in done:break
+                try: event=delivery.result()
                 except asyncio.TimeoutError: event=dict(type='keepalive',payload={})
                 await ws.send_json(event)
         except (WebSocketDisconnect,RuntimeError): pass
-        finally: manager.subscribers.discard(queue)
+        finally:
+            manager.subscribers.discard(queue)
+            receiver.cancel()
+            if delivery is not None:delivery.cancel()
+            await asyncio.gather(receiver,*([delivery] if delivery is not None else []),return_exceptions=True)
     # Production local mode serves the same built frontend on port 8000.
     dist=root/'frontend/dist'
     @app.get('/{path:path}',include_in_schema=False)

@@ -12,7 +12,7 @@ and evidence; uncompleted phases stay explicitly pending.
 | 3 | Two-to-five flight comparison and portable exports | Passed: real full-interval flight, Python/TS parity, 81 backend / 71 frontend tests |
 | 4 | Windows serial service and application integration | Passed: clean Windows install/UI, OS PTY, 88 backend / 76 frontend tests |
 | 5 | Repeatable experiment definitions and immutable runs | Passed: 5 pinned SITL runs, browser concave mission/replay, Windows synthetic experiments, 98 backend / 76 frontend tests |
-| 6 | Unified acceptance runner, evidence and release | Pending |
+| 6 | Unified acceptance runner, evidence and release | Passed: clean Ubuntu install, 103 backend / 76 frontend / 10 browser tests, 7 SITL scenarios + 5 experiment runs + 2 paired flights |
 
 ## Phase 0
 
@@ -173,5 +173,34 @@ are included in the second native Windows run. Raw files and result snapshots ar
 under `verification/phases/phase-5`. Public Pages publishes SITL evidence read-only.
 
 Software validation: 98 backend tests; 76 frontend tests, TypeScript and production
-build. `VERSIONED_EXPERIMENTS.md` documents use, API and limits. Phase 6 remains
-pending until the unified acceptance package and release have passed.
+build. `VERSIONED_EXPERIMENTS.md` documents use, API and limits. Phase 6 is
+documented below with the unified acceptance package and release.
+
+## Phase 6
+
+`python -m tests.acceptance_runner --suite software|sitl|all` emits a unique bundle
+with required checks, source hashes, dependency context, raw recordings/logs,
+JSON summary, JUnit and standalone HTML. Missing/skipped tests and unrun mandatory
+checks are failures; hardware is always pending. Pages requires software acceptance
+and the manual firmware workflow uses the same SITL package.
+
+A separate Ubuntu source copy used a new Python 3.12 venv and Linux npm install,
+Node 22.23.3 and Playwright 1.64.1 Chromium. The first installation test identified
+missing browser system libraries; the documented install now includes them. Real
+Uvicorn transport acceptance then caught a WebSocket subscriber waiting for its
+next queue item after peer closure. A dedicated receiver now releases it promptly;
+both the actual-process acceptance and a disconnect regression test pass.
+
+The all suite passed on 16 October 2026: 103 backend tests, 76 frontend tests,
+10 isolated desktop/mobile browser cases, real HTTP/WebSocket startup/close,
+Linux pyserial PTY, subprocess UDP, seven baseline SITL scenarios, five versioned
+experiments and two 1× heading flights. Presentation spacing and serial packet
+counter cards were subsequently refined; the full software suite passed again.
+`verification/phases/phase-6/source-parity.json` establishes identical backend
+sources between the all-suite run and final software acceptance. Both reports,
+source manifests, recordings, UI videos and simulator stdout logs are retained.
+
+Actual v1.8 desktop/mobile screenshots and a captioned 24-second walkthrough are
+under `media`. The walkthrough explicitly uses actual screenshot sequences and
+distinguishes SITL, synthetic serial data and pending physical hardware.
+`ACCEPTANCE.md`, `VERSIONED_EXPERIMENTS.md` and `SERIAL_DEVICE.md` cover setup/use.

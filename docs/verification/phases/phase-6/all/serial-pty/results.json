@@ -1,0 +1,19 @@
+{
+  "source": "synthetic Linux PTY through real pyserial; no board or sensor",
+  "result": {
+    "state": "stale",
+    "age_s": 3.4083206670002255,
+    "telemetry": null,
+    "counts": {
+      "accepted": 20,
+      "late_or_duplicate": 1,
+      "foreign": 0,
+      "clock_regression": 0,
+      "sequence_gaps": 0
+    },
+    "experiment": "SENTET\u0130K TEST \u00b7 Linux sanal seri portu; fiziksel kart ve sens\u00f6r kullan\u0131lmad\u0131",
+    "discarded_bytes": 67,
+    "invalid_candidates": 1,
+    "duration_s": 7.816173094000078
+  }
+}
