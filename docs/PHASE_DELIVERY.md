@@ -9,7 +9,7 @@ and evidence; uncompleted phases stay explicitly pending.
 | 0 | Lazy runtime startup, controller reclaim, baseline regression | Passed: 7 real SITL scenarios, 66 backend / 69 frontend tests |
 | 1 | Action-specific server-authoritative preflight | Passed: 7 real SITL scenarios, 75 backend / 69 frontend tests |
 | 2 | Observed mission lifecycle and connection recovery | Passed: 7 SITL scenarios, actual browser reload flight, 78 backend / 69 frontend tests |
-| 3 | Two-to-five flight comparison and portable exports | Pending |
+| 3 | Two-to-five flight comparison and portable exports | Passed: real full-interval flight, Python/TS parity, 81 backend / 71 frontend tests |
 | 4 | Windows serial service and application integration | Pending |
 | 5 | Repeatable experiment definitions and immutable runs | Pending |
 | 6 | Unified acceptance runner, evidence and release | Pending |
@@ -86,3 +86,32 @@ Actual browser acceptance: a 1x concave SITL mission was started from the UI,
 reloaded in flight and completed. The recording ID and requested command IDs
 were unchanged after reload and after running pytest while recording was open.
 Raw browser-flight evidence and before/after/final snapshots are included.
+
+## Phase 3
+
+The analysis page compares 2–5 distinct recordings with common map, altitude and
+speed plots, condition warnings, completion evidence and nullable arm/disarm
+duration. Deviation is taken from mission-index-assigned AUTO flight legs,
+including the home-to-first-waypoint leg, rather than ground points projected
+onto unrelated waypoint segments. Unobserved boundaries and one-sample battery
+changes remain null. Incomplete endpoints or gaps do not yield a flight duration.
+
+`POST /api/v1/recordings/compare` accepts 2–5 unique recording identifiers and
+returns a Pydantic-validated version-1 report. Operational fingerprints use an
+explicit `mcfp1` canonical encoding (IEEE-754 binary64 numeric bytes, sorted
+object keys, null planning), shared with TypeScript. ID/name/generation labels
+are excluded. New recordings include an environment event with actual simulator
+speed and pinned firmware; missing historical conditions stay unknown.
+
+Five public recordings include one new real 4x SITL flight with observed arm and
+disarm (11.76 backend wall seconds). The other recordings intentionally show
+missing duration/conditions where their evidence cannot establish them. Metrics
+and fingerprints are cross-checked between independent Python and TS code.
+
+The UI exports JSON/CSV and a standalone HTML report, with a sandboxed HTML
+preview. Native browser download completion could not be observed by automation;
+the exact preview HTML was inspected and saved as `verification/phases/phase-3/report.html`.
+Browser tests cover five selections, bounded plot rendering and 390 px layout
+(375 px content, no page overflow). Plots keep equal metre scale and never join
+data gaps. JSON/CSV preserve nulls as null/empty cells. All earlier candidate
+geometry validation tests remain in place.

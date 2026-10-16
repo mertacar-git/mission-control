@@ -1,0 +1,20 @@
+{
+  "id": "7f963a41-cd1b-4131-ad91-3222ff7aa2ff",
+  "name": "Full observed SITL mission",
+  "source": "sitl",
+  "mission_fingerprint": "mcfp1:3f923ee6cff4e53f07ec582af2841baf1f9344314c32a09e416f322addae3371",
+  "completion": "completed",
+  "observed_flight_s": 11.760577422999972,
+  "speedup": 4,
+  "firmware": "Copter-4.6.3",
+  "experiment": null,
+  "metrics": {
+    "max_route_deviation_m": 0.6964483114532148,
+    "recording_gaps": 0,
+    "fence_violation_count": null,
+    "fence_observed_violation_s": null,
+    "battery_used_percentage_points": 11.0,
+    "peak_relative_altitude_m": 10.014,
+    "peak_ground_speed_ms": 4.46
+  }
+}

@@ -2,6 +2,7 @@
 import hashlib
 import json
 import time
+import struct
 from .models import StrictModel, utc_now
 from .planning import validate_planning
 from typing import Literal
@@ -23,7 +24,12 @@ def mission_fingerprint(mission):
     body=mission.model_dump() if hasattr(mission,'model_dump') else mission
     # Operational content, independent of editable name/id and generation labels.
     content={k:body.get(k) for k in ('takeoff_altitude_m','waypoints','planning')}
-    return hashlib.sha256(json.dumps(content,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    def canonical(value):
+        if isinstance(value,(int,float)) and not isinstance(value,bool):return {'f64':struct.pack('>d',float(value) if value else 0.0).hex()}
+        if isinstance(value,list):return [canonical(v) for v in value]
+        if isinstance(value,dict):return {k:canonical(v) for k,v in sorted(value.items())}
+        return value
+    return 'mcfp1:'+hashlib.sha256(json.dumps(canonical(content),sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 def evaluate(manager,action,token=None,ignore_busy=False):
     t=manager.snapshot();mission=manager.active_mission

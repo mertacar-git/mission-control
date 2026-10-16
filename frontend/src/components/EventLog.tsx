@@ -20,7 +20,21 @@ export function eventLabel(event: FlightEvent) {
   if (event.type === 'preflight')
     return `Hazırlık kontrolü · ${actionNames[String(p.action)] ?? p.action} · ${p.ready ? 'hazır' : 'engel veya bilinmeyen ölçüm'}`;
   if (event.type === 'mission_lifecycle')
-    return 'Görev durumu · ' + (({preparing:'hazırlık',loaded:'yüklendi',executing:'yürütülüyor',holding:'bekletiliyor',returning:'eve dönüş',landing:'iniş',completed:'tamamlandı',unknown:'bilinmiyor'} as Record<string,string>)[String(p.state)] ?? String(p.state));
+    return (
+      'Görev durumu · ' +
+      ((
+        {
+          preparing: 'hazırlık',
+          loaded: 'yüklendi',
+          executing: 'yürütülüyor',
+          holding: 'bekletiliyor',
+          returning: 'eve dönüş',
+          landing: 'iniş',
+          completed: 'tamamlandı',
+          unknown: 'bilinmiyor',
+        } as Record<string, string>
+      )[String(p.state)] ?? String(p.state))
+    );
   if (event.type === 'scenario') {
     if (p.status === 'started')
       return (

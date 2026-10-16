@@ -42,6 +42,7 @@ class MAVLinkManager:
         self.observations={}
         self.last_fence_state=None
         self.lifecycle=MissionLifecycle();self.command_requests={}
+        self.speedup=None;self.recording_context_id=None
 
     def claim(self,token):
         if not token or len(token)>100: raise PermissionError('Missing control session.')
@@ -60,6 +61,9 @@ class MAVLinkManager:
             raise RuntimeError('Simulator telemetry is not connected and current.')
 
     async def emit(self,kind,payload):
+        if self.store.active and self.recording_context_id!=self.store.active:
+            self.recording_context_id=self.store.active
+            await self.emit('environment',dict(speedup=self.speedup,firmware='Copter-4.6.3',experiment=None))
         self.sequence+=1
         event=Event(type=kind,payload=payload).model_dump(); event['sequence']=self.sequence
         self.store.append(event)
@@ -108,6 +112,7 @@ class MAVLinkManager:
             self.link=mavutil.mavlink_connection('udpin:127.0.0.1:14550',source_system=255,source_component=190,dialect='ardupilotmega')
             try:
                 await self.simulator.start(speedup)
+                self.speedup=speedup
                 self.reader=asyncio.create_task(self._read(),name='single-mavlink-reader')
                 await self.emit('connection',dict(state=self.state))
             except Exception:

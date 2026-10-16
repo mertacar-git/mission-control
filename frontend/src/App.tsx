@@ -1091,8 +1091,13 @@ export default function App() {
                   </div>
                   {mode === 'local' && status.last_command && (
                     <p>
-                      Son komut: {eventLabel({type:'command',payload:status.last_command,received_utc:''})}. Komut kabulü görev
-                      tamamlanması değildir.
+                      Son komut:{' '}
+                      {eventLabel({
+                        type: 'command',
+                        payload: status.last_command,
+                        received_utc: '',
+                      })}
+                      . Komut kabulü görev tamamlanması değildir.
                     </p>
                   )}
                   <p>

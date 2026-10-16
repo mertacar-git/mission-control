@@ -945,6 +945,21 @@ input[type='range'] {
   font-size: 12px;
   color: var(--muted);
 }
+.multi-record-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.multi-record-selection label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-wrap: anywhere;
+}
+.multi-record-selection input { width: auto; flex: 0 0 auto; }
+.multi-flight { min-width: 0; }
+.multi-flight .row-actions { flex-wrap: wrap; }
 .thresholds {
   display: flex;
   gap: 14px;

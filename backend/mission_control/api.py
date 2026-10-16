@@ -14,6 +14,7 @@ from .scenarios import ScenarioRunner
 from .execution import execution_report
 from .emulator import Emulator
 from .preflight import evaluate
+from .comparison import compare_recordings,FlightComparison
 from typing import Literal
 
 class ScenarioRequest(BaseModel):
@@ -21,6 +22,9 @@ class ScenarioRequest(BaseModel):
 
 class RecordingRequest(BaseModel):
     name: str = Field(default='SITL uçuş kaydı',min_length=1,max_length=100)
+
+class ComparisonRequest(StrictModel):
+    identifiers: list[str] = Field(min_length=2,max_length=5)
 
 class EmulatorRequest(StrictModel):
     profile: Literal['nominal','loss','corruption','reorder','mixed','sensor_gap','restart']='mixed'
@@ -173,6 +177,10 @@ def create_app(database=None,manager_factory=MAVLinkManager):
     def session(identifier):
         try: return store.session(identifier)
         except KeyError: raise HTTPException(404,'Recording not found.')
+    @app.post('/api/v1/recordings/compare',response_model=FlightComparison)
+    def compare(body:ComparisonRequest):
+        try:return compare_recordings([session(identifier) for identifier in body.identifiers])
+        except ValueError as exc:raise HTTPException(422,str(exc))
     @app.get('/api/v1/recordings/{identifier}')
     def get_recording(identifier:str): return session(identifier)
     @app.get('/api/v1/recordings/{identifier}/csv')
