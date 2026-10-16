@@ -1,0 +1,125 @@
+[
+  {
+    "id": "bea76900-17c5-4eb0-a3b9-a1b268f99b30",
+    "port": "TEST:MCT1",
+    "baud": 115200,
+    "experiment": "SENTETİK TEST; seri sürücüsü ve fiziksel sensör kullanılmadı · Sentetik elle durdurma · arayüz kabulü",
+    "status": "completed",
+    "source": "serial",
+    "transport": "synthetic",
+    "started_utc": "2026-10-16T20:47:57.234083+03:00",
+    "ended_utc": "2026-10-16T20:48:01.68324+03:00",
+    "test_profile": "nominal",
+    "seed": 42,
+    "error": null,
+    "summary": {
+      "state": "fresh",
+      "age_s": 0.03099999999994907,
+      "telemetry": {
+        "source": "serial",
+        "stream_id": "00112233445566778899aabbccddeeff",
+        "boot_id": 0,
+        "sequence": 22,
+        "source_time_ms": 4400,
+        "latitude": 41.0083342,
+        "longitude": 28.9784186,
+        "relative_altitude_m": 22.42548942565918,
+        "ground_speed_ms": 5.0,
+        "battery_voltage_v": 12.57800006866455
+      },
+      "counts": {
+        "accepted": 23,
+        "late_or_duplicate": 0,
+        "foreign": 0,
+        "clock_regression": 0,
+        "sequence_gaps": 0
+      },
+      "experiment": "SENTETİK TEST; seri sürücüsü ve fiziksel sensör kullanılmadı · Sentetik elle durdurma · arayüz kabulü",
+      "discarded_bytes": 0,
+      "invalid_candidates": 0,
+      "duration_s": 4.436999999999898
+    }
+  },
+  {
+    "id": "9b03f7fa-7ae2-452e-931a-aeb9d3c94df6",
+    "port": "TEST:MCT1",
+    "baud": 115200,
+    "experiment": "SENTETİK TEST; seri sürücüsü ve fiziksel sensör kullanılmadı · Sentetik sensör boşluğu · arayüz kabulü",
+    "status": "completed",
+    "source": "serial",
+    "transport": "synthetic",
+    "started_utc": "2026-10-16T20:47:29.381877+03:00",
+    "ended_utc": "2026-10-16T20:47:41.41993+03:00",
+    "test_profile": "sensor_gap",
+    "seed": 42,
+    "error": null,
+    "summary": {
+      "state": "fresh",
+      "age_s": 0.18800000000010186,
+      "telemetry": {
+        "source": "serial",
+        "stream_id": "00112233445566778899aabbccddeeff",
+        "boot_id": 0,
+        "sequence": 59,
+        "source_time_ms": 11800,
+        "latitude": 41.008104,
+        "longitude": 28.9782744,
+        "relative_altitude_m": 18.87837028503418,
+        "ground_speed_ms": 5.0,
+        "battery_voltage_v": 12.541000366210938
+      },
+      "counts": {
+        "accepted": 60,
+        "late_or_duplicate": 0,
+        "foreign": 0,
+        "clock_regression": 0,
+        "sequence_gaps": 0
+      },
+      "experiment": "SENTETİK TEST; seri sürücüsü ve fiziksel sensör kullanılmadı · Sentetik sensör boşluğu · arayüz kabulü",
+      "discarded_bytes": 0,
+      "invalid_candidates": 0,
+      "duration_s": 12.016000000000076
+    }
+  },
+  {
+    "id": "5524405c-4dc5-4940-8bff-a2b84a3ca54e",
+    "port": "TEST:MCT1",
+    "baud": 115200,
+    "experiment": "SENTETİK TEST; seri sürücüsü ve fiziksel sensör kullanılmadı · Tezgâh deneyi",
+    "status": "completed",
+    "source": "serial",
+    "transport": "synthetic",
+    "started_utc": "2026-10-16T20:42:48.093494+03:00",
+    "ended_utc": "2026-10-16T20:42:58.110132+03:00",
+    "test_profile": "mixed",
+    "seed": 42,
+    "error": null,
+    "summary": {
+      "state": "fresh",
+      "age_s": 0.32799999999997453,
+      "telemetry": {
+        "source": "serial",
+        "stream_id": "00112233445566778899aabbccddeeff",
+        "boot_id": 0,
+        "sequence": 48,
+        "source_time_ms": 9600,
+        "latitude": 41.0081921,
+        "longitude": 28.9782215,
+        "relative_altitude_m": 17.011507034301758,
+        "ground_speed_ms": 5.0,
+        "battery_voltage_v": 12.552000045776367
+      },
+      "counts": {
+        "accepted": 34,
+        "late_or_duplicate": 7,
+        "foreign": 0,
+        "clock_regression": 0,
+        "sequence_gaps": 15
+      },
+      "experiment": "SENTETİK TEST; seri sürücüsü ve fiziksel sensör kullanılmadı · Tezgâh deneyi",
+      "discarded_bytes": 369,
+      "invalid_candidates": 6,
+      "duration_s": 10.0
+    }
+  }
+]

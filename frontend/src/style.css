@@ -959,6 +959,22 @@ input[type='range'] {
 }
 .multi-record-selection input { width: auto; flex: 0 0 auto; }
 .multi-flight { min-width: 0; }
+.serial-device { min-width: 0; }
+.serial-settings,.serial-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,200px),1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+.serial-settings label { display: grid; gap: 8px; min-width: 0; }
+.serial-settings input,.serial-settings select { width: 100%; min-width: 0; }
+.serial-metrics strong { display: block; margin-top: 8px; font-size: 22px; overflow-wrap: anywhere; }
+.serial-device .row-actions,.serial-device .replay-bar { display: flex; flex-wrap: wrap; gap: 12px; }
+.serial-device .replay-bar input { flex: 1; min-width: 120px; }
+.serial-device .replay-bar select { width: auto; }
+.serial-device pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.serial-archive > div { border-top: 1px solid var(--line,#344453); padding: 14px 0; overflow-wrap: anywhere; }
+.serial-archive small { display: block; margin: 8px 0; }
 .multi-flight .row-actions { flex-wrap: wrap; }
 .thresholds {
   display: flex;

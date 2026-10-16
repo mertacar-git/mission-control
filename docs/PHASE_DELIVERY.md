@@ -10,7 +10,7 @@ and evidence; uncompleted phases stay explicitly pending.
 | 1 | Action-specific server-authoritative preflight | Passed: 7 real SITL scenarios, 75 backend / 69 frontend tests |
 | 2 | Observed mission lifecycle and connection recovery | Passed: 7 SITL scenarios, actual browser reload flight, 78 backend / 69 frontend tests |
 | 3 | Two-to-five flight comparison and portable exports | Passed: real full-interval flight, Python/TS parity, 81 backend / 71 frontend tests |
-| 4 | Windows serial service and application integration | Pending |
+| 4 | Windows serial service and application integration | Passed: clean Windows install/UI, OS PTY, 88 backend / 76 frontend tests |
 | 5 | Repeatable experiment definitions and immutable runs | Pending |
 | 6 | Unified acceptance runner, evidence and release | Pending |
 
@@ -115,3 +115,27 @@ Browser tests cover five selections, bounded plot rendering and 390 px layout
 (375 px content, no page overflow). Plots keep equal metre scale and never join
 data gaps. JSON/CSV preserve nulls as null/empty cells. All earlier candidate
 geometry validation tests remain in place.
+
+## Phase 4
+
+The read-only Windows receiver runs independently on 127.0.0.1:8767 with a
+per-start access token, restricted Host/Origin, authenticated WebSocket snapshots
+and a separate controller lease. Only enumerated local ports can be opened;
+requests cannot choose a network host, executable or serial write command.
+The main **Seri cihaz** page shows live source, age, measurements, counters,
+capture controls, archive and independent raw-byte replay. Flight replay and
+SITL state cannot become serial telemetry or vice versa.
+
+The PowerShell launcher created a clean Python 3.12.10 environment without
+pymavlink/Shapely. Native Windows acceptance exercised labelled synthetic mixed
+packets, sensor-gap nulls, explicit stop clearing all current telemetry and
+archive playback. The synthetic source does not open an OS serial port. Actual
+pyserial transport is additionally covered through a Linux OS PTY in unit tests.
+Raw captures, metadata and installation proof are under `verification/phases/phase-4`.
+
+Both TS and Python re-decode the PTY and Windows logs with matching counters.
+Golden vectors also cover full uint64 clocks without JS numeric rounding.
+Windows tests: 10 passed, 3 platform/compiler skips. Ubuntu: 88 backend tests
+passed including those PTY/compiler checks. Frontend: 76 tests plus TypeScript
+and production build passed. Physical USB/sensor accuracy remains pending.
+See `SERIAL_DEVICE.md` for setup, API and boundaries.

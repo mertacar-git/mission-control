@@ -2,6 +2,8 @@
 
 The PC receiver and portable packet encoder are ready for board integration.
 No board SDK, wiring, sensor driver or physical-device acceptance is claimed.
+For the integrated **Seri cihaz** screen and isolated Windows service, see
+[Windows serial setup](../docs/SERIAL_DEVICE.md). The CLI below remains available.
 
 ## Windows PC setup
 
@@ -70,7 +72,7 @@ Raw received chunks, timestamps, connection transitions and decoded outcomes
 are stored in a separate versioned JSONL format. Replay recomputes outcomes
 from raw chunks. It cannot send flight or serial commands. This bench does not
 open SITL storage and is not imported as a flight recording in Mission Control.
-Use the standalone viewer for these recordings. The existing public Pages demo
+Use the serial device page or standalone viewer for these recordings. The public Pages demo
 cannot access a local Python serial port.
 
 Port open may toggle DTR/RTS and reset some boards; document observed board

@@ -26,6 +26,7 @@ import { IncidentInspector } from './components/IncidentInspector';
 import { ScenarioLab } from './components/ScenarioLab';
 import { ExecutionComparison } from './components/ExecutionComparison';
 import { EmulatorLab } from './components/EmulatorLab';
+import { SerialDevice } from './components/SerialDevice';
 import { MissionReadiness } from './components/MissionReadiness';
 import { missionStage, routeLength } from './missionPresentation';
 import { MapView } from './MapView';
@@ -57,7 +58,8 @@ type Page =
   | 'recordings'
   | 'analysis'
   | 'experiments'
-  | 'emulator';
+  | 'emulator'
+  | 'serial';
 const names = {
   closed: 'Bağlantı kapalı',
   connecting: 'Bağlanıyor',
@@ -635,6 +637,7 @@ export default function App() {
               ['analysis', 'Uçuş analizi', Compass],
               ['experiments', 'Senaryo laboratuvarı', Radio],
               ['emulator', 'Bilgisayar emülatörü', Database],
+              ['serial', 'Seri cihaz', Radio],
             ] as const
           ).map(([id, label, Icon]) => (
             <button
@@ -672,6 +675,7 @@ export default function App() {
             <strong>Mission Control</strong>
           </div>
           <div className="top-actions">
+            {page==='serial'?<span>Bağımsız seri kaynak</span>:<>
             <div className="mode-picker">
               <button
                 className={mode === 'demo' ? 'selected' : ''}
@@ -690,55 +694,62 @@ export default function App() {
               <i />
               {names[status.state]}
             </span>
+            </>}
           </div>
         </header>
         <main>
           <section className="title-row">
             <div>
               <div className="eyebrow">
-                {page === 'emulator'
-                  ? 'EMÜLATÖR / AYRI TELEMETRİ KAYNAĞI'
-                  : page === 'analysis' && activeRecord
-                    ? activeRecord.session.source === 'sitl'
-                      ? 'KAYDEDİLMİŞ SITL / UÇUŞ ANALİZİ'
-                      : 'KAYDEDİLMİŞ DEMO / UÇUŞ ANALİZİ'
-                    : replay
-                      ? 'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA'
-                      : page === 'experiments' && mode === 'demo'
-                        ? 'GERÇEK SITL / YAYIMLANMIŞ DENEY KAYITLARI'
-                        : mode === 'demo'
-                          ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
-                          : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
+                {page === 'serial'
+                  ? 'SERİ ALICI / AYRI VERİ KAYNAĞI'
+                  : page === 'emulator'
+                    ? 'EMÜLATÖR / AYRI TELEMETRİ KAYNAĞI'
+                    : page === 'analysis' && activeRecord
+                      ? activeRecord.session.source === 'sitl'
+                        ? 'KAYDEDİLMİŞ SITL / UÇUŞ ANALİZİ'
+                        : 'KAYDEDİLMİŞ DEMO / UÇUŞ ANALİZİ'
+                      : replay
+                        ? 'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA'
+                        : page === 'experiments' && mode === 'demo'
+                          ? 'GERÇEK SITL / YAYIMLANMIŞ DENEY KAYITLARI'
+                          : mode === 'demo'
+                            ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
+                            : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
               </div>
               <h1>
-                {page === 'mission'
-                  ? 'Görev planlama'
-                  : page === 'flight'
-                    ? 'Uçuş kontrol merkezi'
-                    : page === 'recordings'
-                      ? 'Uçuş arşivi'
-                      : page === 'emulator'
-                        ? 'Uçuş bilgisayarı emülatörü'
-                        : page === 'experiments'
-                          ? 'Senaryo laboratuvarı'
-                          : 'Uçuş analizi'}
+                {page === 'serial'
+                  ? 'Seri cihaz tezgâhı'
+                  : page === 'mission'
+                    ? 'Görev planlama'
+                    : page === 'flight'
+                      ? 'Uçuş kontrol merkezi'
+                      : page === 'recordings'
+                        ? 'Uçuş arşivi'
+                        : page === 'emulator'
+                          ? 'Uçuş bilgisayarı emülatörü'
+                          : page === 'experiments'
+                            ? 'Senaryo laboratuvarı'
+                            : 'Uçuş analizi'}
               </h1>
               <p>
-                {page === 'emulator'
-                  ? 'Sentetik sensörler · ayrı gönderici süreç · paket doğrulama ve tekrar oynatma.'
-                  : page === 'analysis' && activeRecord
-                    ? activeRecord.session.source === 'sitl'
-                      ? 'Gerçek SITL kaydı · analiz kayıtlı ölçümleri kullanır.'
-                      : 'Tarayıcı modeli kaydı · analiz kayıtlı örnekleri kullanır.'
-                    : replay
-                      ? replay.session.source === 'sitl'
-                        ? 'Gerçek SITL kaydı · kayıtlı ölçümler inceleniyor.'
-                        : 'Tarayıcı modeli kaydı inceleniyor.'
-                      : page === 'experiments' && mode === 'demo'
-                        ? 'Kontrollü hata senaryoları · gerçek gözlemler ve kabul raporları.'
-                        : mode === 'demo'
-                          ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
-                          : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
+                {page === 'serial'
+                  ? 'Windows seri alıcısı · bağımsız kayıt ve oynatma · uçuş komutu içermez.'
+                  : page === 'emulator'
+                    ? 'Sentetik sensörler · ayrı gönderici süreç · paket doğrulama ve tekrar oynatma.'
+                    : page === 'analysis' && activeRecord
+                      ? activeRecord.session.source === 'sitl'
+                        ? 'Gerçek SITL kaydı · analiz kayıtlı ölçümleri kullanır.'
+                        : 'Tarayıcı modeli kaydı · analiz kayıtlı örnekleri kullanır.'
+                      : replay
+                        ? replay.session.source === 'sitl'
+                          ? 'Gerçek SITL kaydı · kayıtlı ölçümler inceleniyor.'
+                          : 'Tarayıcı modeli kaydı inceleniyor.'
+                        : page === 'experiments' && mode === 'demo'
+                          ? 'Kontrollü hata senaryoları · gerçek gözlemler ve kabul raporları.'
+                          : mode === 'demo'
+                            ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
+                            : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
               </p>
             </div>
             <div className="connection-actions">
@@ -777,7 +788,7 @@ export default function App() {
                   onClick={() => void disconnect()}
                 >
                   <X size={16} />
-                  Bağlantıyı kapat
+                  {page==='serial'?(mode==='local'?'SITL oturumunu kapat':'Demo uçuş oturumunu kapat'):'Bağlantıyı kapat'}
                 </button>
               )}
             </div>
@@ -870,7 +881,7 @@ export default function App() {
               )}
             </>
           )}
-          {replay && page !== 'emulator' && (
+          {replay && page !== 'emulator' && page !== 'serial' && (
             <section className="replay-bar panel">
               <div>
                 <strong>{replay.session.name}</strong>
@@ -1250,6 +1261,7 @@ export default function App() {
             />
           )}
           {page === 'emulator' && <EmulatorLab local={localAvailable} />}
+          {page === 'serial' && <SerialDevice local={localAvailable} />}
           {page === 'analysis' && (
             <>
               {activeRecord && (

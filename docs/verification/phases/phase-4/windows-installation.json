@@ -1,0 +1,14 @@
+{
+  "python": "3.12.10",
+  "packages": {
+    "fastapi": "0.115.12",
+    "uvicorn": "0.34.0",
+    "pydantic": "2.11.5",
+    "pyserial": "3.5",
+    "websockets": "15.0.1"
+  },
+  "pymavlink_installed": false,
+  "shapely_installed": false,
+  "bind": "127.0.0.1:8767",
+  "source": "synthetic software test; no physical sensor"
+}

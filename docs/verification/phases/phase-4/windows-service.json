@@ -1,0 +1,59 @@
+{
+  "source": "serial",
+  "transport": "synthetic",
+  "control_owned": false,
+  "run": {
+    "id": "5524405c-4dc5-4940-8bff-a2b84a3ca54e",
+    "port": "TEST:MCT1",
+    "baud": 115200,
+    "experiment": "SENTETİK TEST; seri sürücüsü ve fiziksel sensör kullanılmadı · Tezgâh deneyi",
+    "status": "completed",
+    "source": "serial",
+    "transport": "synthetic",
+    "started_utc": "2026-10-16T20:42:48.093494+03:00",
+    "ended_utc": "2026-10-16T20:42:58.110132+03:00",
+    "test_profile": "mixed",
+    "seed": 42,
+    "error": null,
+    "summary": {
+      "state": "fresh",
+      "age_s": 0.32799999999997453,
+      "telemetry": {
+        "source": "serial",
+        "stream_id": "00112233445566778899aabbccddeeff",
+        "boot_id": 0,
+        "sequence": 48,
+        "source_time_ms": 9600,
+        "latitude": 41.0081921,
+        "longitude": 28.9782215,
+        "relative_altitude_m": 17.011507034301758,
+        "ground_speed_ms": 5.0,
+        "battery_voltage_v": 12.552000045776367
+      },
+      "counts": {
+        "accepted": 34,
+        "late_or_duplicate": 7,
+        "foreign": 0,
+        "clock_regression": 0,
+        "sequence_gaps": 15
+      },
+      "experiment": "SENTETİK TEST; seri sürücüsü ve fiziksel sensör kullanılmadı · Tezgâh deneyi",
+      "discarded_bytes": 369,
+      "invalid_candidates": 6,
+      "duration_s": 10.0
+    }
+  },
+  "state": "unknown",
+  "connection": "closed",
+  "age_s": null,
+  "telemetry": null,
+  "counts": {
+    "accepted": 34,
+    "late_or_duplicate": 7,
+    "foreign": 0,
+    "clock_regression": 0,
+    "sequence_gaps": 15
+  },
+  "discarded_bytes": 369,
+  "invalid_candidates": 6
+}
