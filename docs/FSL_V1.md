@@ -1,7 +1,8 @@
 # FLW Secure Link — FSL v1 draft
 
 Date: 18 October 2026. Status: **application protocol proposal; no FSL endpoint
-or cryptographic implementation exists in the current release**.
+exists in the current release**. A separate [TLS laboratory](FLEET_TLS_LAB.md)
+implements transport acceptance for legacy registry messages, not FSL envelopes.
 
 FSL defines the FLW application contract for civilian equipment metadata and
 sensor reporting over standard TLS. It does not define encryption, key exchange,

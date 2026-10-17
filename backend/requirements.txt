@@ -7,3 +7,4 @@ pytest-asyncio==0.26.0
 httpx==0.28.1
 shapely==2.1.2
 pyserial==3.5
+cryptography==50.0.2

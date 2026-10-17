@@ -1,7 +1,7 @@
 # FLW Cryptography Policy v1 — draft
 
 Owner: FLW Aerospace & Defense. Date: 18 October 2026.
-Status: **design draft, not implemented or independently audited**.
+Status: **design draft, partially exercised by a local TLS laboratory; not independently audited**.
 Scope: civilian equipment registry and sensor reporting. Aircraft commands,
 operational permissions, weapons, video streaming and physical flight are excluded.
 
@@ -13,18 +13,19 @@ name is not evidence of cryptographic assurance or standards certification.
 
 | Property | Current implementation | Required future state |
 |---|---|---|
-| Station identity | Distinct random bearer credentials | Independently provisioned station identity with renewal/revocation |
-| Transport | Registry binds to loopback HTTP; publisher rejects remote plaintext | TLS 1.3 with server identity validation for network deployment |
+| Station identity | Legacy bearer credentials; separate TLS lab maps verified client certificates | Independently provisioned station identity with renewal/revocation |
+| Transport | Legacy loopback HTTP; separate loopback TLS 1.3/mTLS lab | TLS 1.3 with server identity validation for network deployment |
 | Station permissions | Server checks assigned device serial | Preserve server-side checks independently of transport authentication |
 | Keys at rest | Private local files; POSIX mode 0600; Windows ACL must be managed | OS-backed secret storage and verified access controls |
 | Database/backups | SQLite is not application-encrypted | Deployment-specific encryption and recovery testing |
-| Revocation | Manual configuration replacement and restart | Enforced revocation with bounded propagation and audit |
+| Revocation | TLS lab checks local denylist every request; legacy credentials require replacement | Enforced revocation with bounded propagation and audit |
 | Device packets | MCT1/MCS1 CRC and sequence checks | Retain corruption checks; do not confuse CRC with authentication |
 | Audit | Successful registry writes are durable | Security events, retention and restricted export |
 
 This baseline was reviewed against `fleet_service.py`, `fleet_station.py` and
-the serial receiver. Current tests do not demonstrate TLS, mTLS, key rotation,
-storage encryption or end-to-end sensor authenticity.
+the serial receiver. [Local TLS evidence](FLEET_TLS_LAB.md) exercises TLS/mTLS
+and request-time revocation. Key rotation, storage encryption, Internet deployment
+and end-to-end sensor authenticity remain unverified.
 
 ## Policy requirements
 

@@ -213,4 +213,4 @@ The independent [civilian equipment registry service](docs/FLEET_REGISTRY.md) ad
 
 ## FLW security design drafts
 
-[FLW Cryptography Policy v1](docs/FLW_CRYPTO_POLICY.md), [FSL v1 application protocol](docs/FSL_V1.md) and [threat model / acceptance matrix](docs/FSL_THREAT_MODEL.md) define the proposed civilian registry/sensor security profile. They are design drafts, not implemented encryption or audited compliance. Existing USB CRC and local bearer access controls remain unchanged.
+[FLW Cryptography Policy v1](docs/FLW_CRYPTO_POLICY.md), [FSL v1 application protocol](docs/FSL_V1.md) and [threat model / acceptance matrix](docs/FSL_THREAT_MODEL.md) define the proposed civilian registry/sensor security profile. A separate [local TLS 1.3/mTLS laboratory](docs/FLEET_TLS_LAB.md) now verifies two synthetic stations, certificate identity and request-time revocation. FSL envelopes, production identity lifecycle and audited compliance remain pending. Existing USB CRC and legacy bearer access controls remain unchanged.

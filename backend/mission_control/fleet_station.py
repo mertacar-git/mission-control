@@ -2,9 +2,10 @@
 import argparse
 import json
 import time
+import ssl
 from pathlib import Path
 from urllib.parse import urlparse, quote
-from urllib.request import Request, build_opener, HTTPRedirectHandler
+from urllib.request import Request, build_opener, HTTPRedirectHandler, HTTPSHandler
 from urllib.error import HTTPError
 
 
@@ -22,12 +23,14 @@ def endpoint(value):
     return value.rstrip('/')
 
 
-def publish(center, token, duration, boot, interval=0.2):
+def publish(center, token, duration, boot, interval=0.2, tls_context=None):
     center = endpoint(center)
-    opener = build_opener(NoRedirect())
+    if tls_context is not None and not center.startswith('https://'):
+        raise ValueError('Certificate identity requires HTTPS.')
+    opener = build_opener(NoRedirect(), HTTPSHandler(context=tls_context))
     def request(path, body=None):
         req = Request(center+path, data=None if body is None else json.dumps(body).encode(),
-                      headers={'Authorization':'Bearer '+token,'Content-Type':'application/json'})
+                      headers={'Content-Type':'application/json', **({'Authorization':'Bearer '+token} if token else {})})
         with opener.open(req, timeout=5) as response:
             return json.load(response)
     snapshot = request('/api/v1/fleet/snapshot')
@@ -51,10 +54,23 @@ def publish(center, token, duration, boot, interval=0.2):
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--center',default='http://127.0.0.1:8770')
-    parser.add_argument('--token-file',required=True,type=Path)
+    parser.add_argument('--token-file',type=Path)
+    parser.add_argument('--tls-directory',type=Path)
+    parser.add_argument('--identity',choices=('station-a','station-b'))
     parser.add_argument('--seconds',type=int,choices=range(1,61),default=10)
     parser.add_argument('--boot',type=int,default=int(time.time()))
     args=parser.parse_args()
     if not 0 <= args.boot <= 4294967295:
         parser.error('Boot must be uint32.')
-    print(json.dumps(publish(args.center,args.token_file.read_text().strip(),args.seconds,args.boot)))
+    if args.tls_directory:
+        if not args.identity or args.token_file:
+            parser.error('TLS mode requires --identity and excludes --token-file.')
+        context = ssl.create_default_context(cafile=str(args.tls_directory/'ca.crt'))
+        context.minimum_version = ssl.TLSVersion.TLSv1_3
+        context.load_cert_chain(str(args.tls_directory/f'{args.identity}.crt'), str(args.tls_directory/f'{args.identity}.key'))
+        token = None
+    else:
+        if not args.token_file or args.identity:
+            parser.error('Legacy mode requires --token-file; --identity requires TLS mode.')
+        context, token = None, args.token_file.read_text().strip()
+    print(json.dumps(publish(args.center,token,args.seconds,args.boot,tls_context=context)))

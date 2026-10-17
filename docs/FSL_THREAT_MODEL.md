@@ -3,6 +3,10 @@
 Date: 18 October 2026. Draft for civilian equipment and sensor reporting.
 This document describes tests to implement; it does not mark planned tests passed.
 
+Update: [local TLS laboratory](FLEET_TLS_LAB.md) now tests a subset of transport,
+identity and revocation requirements. The matrix below remains the broader FSL
+acceptance plan; it is not a claim that all security checks have passed.
+
 ## Assets and trust boundaries
 
 Protect station/operator credentials, device assignments, accepted report/replay
