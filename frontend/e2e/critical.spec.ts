@@ -315,3 +315,18 @@ test('civilian fleet demo isolates approval from observations and foreign statio
  await expect(page.getByRole('button',{name:'Arm',exact:true})).toHaveCount(0);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
 });
+
+
+test('authenticated registry view keeps scoped credentials in memory and clears unavailable measurements', async ({ page }) => {
+ let available=true;
+ await page.route('http://127.0.0.1:8770/api/v1/fleet/snapshot',route=>route.fulfill({status:available?200:503,contentType:'application/json',body:JSON.stringify({schema_version:1,actor:'center',scope:'civilian-equipment-registry',devices:[{device:{serial:'SIM-REG-001',name:'Bench device',model:'Sensor node',station:'station-a',firmware:'SIM 1',equipment:['BME280']},state:'fresh',age_s:0,measurement:{source:'synthetic',temperature_c:23.5,pressure_pa:101325,humidity_percent:45,sequence:1,boot:1}}]})}));
+ await page.getByRole('button',{name:'Sivil filo prototipi',exact:true}).click();
+ const key=page.getByRole('textbox',{name:'Sicil erişim anahtarı',exact:true});
+ await key.fill('test-only-registry-key');
+ await page.getByRole('button',{name:'Sicile bağlan',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'SIM-REG-001',exact:true})).toBeVisible();
+ await expect(key).toHaveValue('');
+ available=false;
+ await expect(page.getByRole('alert').filter({hasText:'Cihaz siciline ulaşılamıyor.'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'SIM-REG-001',exact:true})).toHaveCount(0);
+});

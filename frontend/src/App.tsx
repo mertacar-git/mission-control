@@ -28,6 +28,7 @@ import { ExperimentLab } from "./components/ExperimentLab";
 import { ExecutionComparison } from "./components/ExecutionComparison";
 import { EmulatorLab } from "./components/EmulatorLab";
 import { FleetLab } from "./components/FleetLab";
+import { FleetRegistry } from "./components/FleetRegistry";
 import { SerialDevice } from "./components/SerialDevice";
 import { MissionReadiness } from "./components/MissionReadiness";
 import { missionStage, routeLength } from "./missionPresentation";
@@ -1300,7 +1301,7 @@ export default function App() {
           )}
           {page === "emulator" && <EmulatorLab local={localAvailable} />}
           {page === "serial" && <SerialDevice local={localAvailable} />}
-          {page === "fleet" && <FleetLab />}
+          {page === "fleet" && <><FleetLab /><FleetRegistry /></>}
           {page === "analysis" && (
             <>
               {activeRecord && (

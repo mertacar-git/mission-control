@@ -208,3 +208,5 @@ Sensor-only USB firmware for ESP32 + MPU6050 + BME280, versioned MCS1 packets an
 ## Civilian fleet workflow prototype
 
 A separate browser-only prototype demonstrates three synthetic devices, two station roles and a center review workflow. It does not connect remote computers or control aircraft. [Delivered scope, usage and distributed next steps](docs/CIVIL_FLEET_PROTOTYPE.md).
+
+The independent [civilian equipment registry service](docs/FLEET_REGISTRY.md) adds persistent enrolment, station-scoped authentication and read-only sensor ingestion. Two separate synthetic publishers were tested over real loopback HTTP. LAN/Internet deployment and operational permissions are not implemented.

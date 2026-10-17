@@ -2,11 +2,13 @@
 
 ## Delivered scope
 
-The **Sivil filo prototipi** page is a browser-only, explicitly synthetic workflow
+The simulation section of **Sivil filo prototipi** is a browser-only, explicitly synthetic workflow
 prototype with three civilian sample devices assigned to two sample stations.
 The device catalogue carries serial, model, firmware and camera/sensor identifiers.
 There is no network adapter, remote computer, real identity provider or aircraft
 control integration. Choosing a role is a simulation control, not authentication.
+The separate authenticated equipment registry panel below it uses a local service;
+see [registry setup and actual software transport acceptance](FLEET_REGISTRY.md).
 
 Station A can create requests for its two devices; station B has its own device.
 The center simulation role reviews requests with a mandatory reason. A request
@@ -43,9 +45,10 @@ remain separate from this workflow.
 
 ## Next implementation boundary
 
-Before remote stations are connected, add server-side authentication and role
-enforcement, station/device enrolment, durable registry/audit storage, authenticated
-ingestion, freshness snapshots and transport tests. Hosting topology (LAN, VPN or
+Before remote stations are connected, extend the local authenticated registry with
+production station/device enrolment and credential lifecycle, TLS deployment and
+operator accounts. Server-side permission processing is not implemented.
+Hosting topology (LAN, VPN or
 Internet) determines certificates and deployment requirements. Browser role
 selection must never authorize a real station or device.
 
