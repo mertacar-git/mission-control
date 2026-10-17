@@ -1,0 +1,26 @@
+
+> mission-control-ui@1.9.0 test
+> vitest run src --reporter=default --reporter=junit --outputFile=/home/flwitch/mission-control-sensor-final-software/frontend-tests.xml
+
+
+ RUN  v3.0.8 /home/flwitch/mission-control-clean-v18/frontend
+
+ ✓ src/chartData.test.ts (1 test) 2ms
+ ✓ src/emulatorTypes.test.ts (1 test) 2ms
+ ✓ src/missionDraft.test.ts (8 tests) 7ms
+ ✓ src/missionPresentation.test.ts (5 tests) 7ms
+ ✓ src/core.test.ts (14 tests) 16ms
+ ✓ src/recording.test.ts (3 tests) 14ms
+ ✓ src/serialRecording.test.ts (7 tests) 24ms
+ ✓ src/incidents.test.ts (5 tests) 8ms
+ ✓ src/flightComparison.test.ts (2 tests) 6ms
+ ✓ src/routeComparison.test.ts (2 tests) 80ms
+ ✓ src/multiFlightComparison.test.ts (2 tests) 31ms
+ ✓ src/planning.test.ts (28 tests) 101ms
+
+ Test Files  12 passed (12)
+      Tests  78 passed (78)
+   Start at  22:47:54
+   Duration  573ms (transform 874ms, setup 0ms, collect 2.02s, tests 300ms, environment 3ms, prepare 1.21s)
+
+JUNIT report written to /home/flwitch/mission-control-sensor-final-software/frontend-tests.xml

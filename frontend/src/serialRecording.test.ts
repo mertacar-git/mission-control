@@ -3,6 +3,8 @@ import raw from '../public/serial-bench/example.jsonl?raw';
 import expected from '../../docs/verification/serial/results.json';
 import golden from '../../prototype/golden-vectors.json';
 import longClock from '../../prototype/long-clock-vector.json';
+import sensorVector from '../../prototype/sensor-vector.json';
+import sensorRaw from '../public/verification/mcs1-synthetic.jsonl?raw';
 import windowsRaw from '../../docs/verification/phases/phase-4/windows-capture.jsonl?raw';
 import windowsExpected from '../../docs/verification/phases/phase-4/windows-service.json';
 import {
@@ -11,6 +13,31 @@ import {
   serialFrameAt,
 } from './serialRecording';
 import { parseRecording } from './recording';
+it('matches sensor wire values, preserves uint64 time and excludes unmeasured flight fields', () => {
+  const bytes = Uint8Array.from(sensorVector.packet_hex.match(/../g)!, (h) =>
+    parseInt(h, 16),
+  );
+  const decoded = decodeSerialPacket(bytes);
+  expect(decoded.source_time_ms).toBe('9007199254740993');
+  expect(decoded.acceleration_z_ms2).toBe(9.75);
+  expect(decoded.pressure_pa).toBe(101325);
+  expect(decoded.latitude).toBeNull();
+  expect(decoded.battery_voltage_v).toBeNull();
+  bytes[50] ^= 1;
+  expect(() => decodeSerialPacket(bytes)).toThrow('CRC');
+});
+it('replays sensor gaps, corrupt packets and stale samples without fabricating measurements', () => {
+  const recording = parseSerialRecording(sensorRaw);
+  expect(recording.summary.counts.accepted).toBe(99);
+  expect(recording.summary.invalid_candidates).toBe(1);
+  expect(recording.summary.counts.sequence_gaps).toBe(1);
+  expect(recording.summary.telemetry).toBeNull();
+  expect(
+    serialFrameAt(recording, 1.8).telemetry?.acceleration_x_ms2,
+  ).toBeNull();
+  expect(serialFrameAt(recording, 1.8).telemetry?.temperature_c).toBe(23.5);
+  expect(serialFrameAt(recording, 0).telemetry?.protocol).toBe('MCS1');
+});
 it('redecodes actual PTY raw bytes with Python-equivalent counters and null measurements', () => {
   const r = parseSerialRecording(raw);
   expect(r.summary.counts).toEqual(expected.result.counts);
@@ -51,7 +78,11 @@ it('rejects backwards or truncated raw recording events', () => {
   lines[lines.length - 1] = JSON.stringify(event);
   expect(() => parseSerialRecording(lines.join('\n'))).toThrow('saati');
 });
-it('preserves the full uint64 clock without rounding it through a JS number',()=>{
-  const bytes=Uint8Array.from(longClock.packet_hex.match(/../g)!,h=>parseInt(h,16));
-  expect(decodeSerialPacket(bytes).source_time_ms).toBe(longClock.source_time_ms);
+it('preserves the full uint64 clock without rounding it through a JS number', () => {
+  const bytes = Uint8Array.from(longClock.packet_hex.match(/../g)!, (h) =>
+    parseInt(h, 16),
+  );
+  expect(decodeSerialPacket(bytes).source_time_ms).toBe(
+    longClock.source_time_ms,
+  );
 });

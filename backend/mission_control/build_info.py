@@ -3,7 +3,7 @@
 import subprocess
 from pathlib import Path
 
-VERSION = "1.8.0"
+VERSION = "1.9.0"
 
 
 def source_info():

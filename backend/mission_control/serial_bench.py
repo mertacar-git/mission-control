@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .emulator_protocol import SIZE, decode
+from . import sensor_protocol
 
 
 class StreamDecoder:
@@ -27,21 +28,23 @@ class StreamDecoder:
         for byte in chunk:
             self.buffer.append(byte)
             while len(self.buffer) >= 4:
-                if self.buffer[:4] != b"MCT1":
+                if self.buffer[:4] not in (b"MCT1", b"MCS1"):
                     del self.buffer[0]
                     self.discarded_bytes += 1
                     continue
-                if len(self.buffer) < SIZE:
+                sensor = self.buffer[:4] == b"MCS1"
+                size = sensor_protocol.SIZE if sensor else SIZE
+                if len(self.buffer) < size:
                     break
-                packet = bytes(self.buffer[:SIZE])
+                packet = bytes(self.buffer[:size])
                 try:
-                    frame = decode(packet)
+                    frame = sensor_protocol.decode(packet) if sensor else decode(packet)
                 except ValueError:
                     self.invalid_candidates += 1
                     self.discarded_bytes += 1
                     del self.buffer[0]
                     continue
-                del self.buffer[:SIZE]
+                del self.buffer[:size]
                 frame["source"] = "serial"
                 frames.append((packet, frame))
         return frames

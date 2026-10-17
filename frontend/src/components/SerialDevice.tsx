@@ -210,7 +210,9 @@ export function SerialDevice({ local }: { local: boolean }) {
         </div>
         <span className="count">
           {replay
-            ? 'KAYIT OYNATMA'
+            ? replay.header.transport === 'synthetic'
+              ? 'SENTETİK ÖRNEK OYNATMA'
+              : 'KAYIT OYNATMA'
             : status?.transport === 'synthetic'
               ? 'SENTETİK TEST'
               : status
@@ -219,8 +221,8 @@ export function SerialDevice({ local }: { local: boolean }) {
         </span>
       </div>
       <p>
-        Ham MCT1 baytları CRC ve sıra kontrolünden geçer. Eksik sensörler boş
-        kalır. Seri alıcı uçuş komutu göndermez.
+        MCT1 ve MCS1 baytları CRC ve sıra kontrolünden geçer. Eksik sensörler
+        boş kalır. Seri alıcı uçuş komutu göndermez.
       </p>
       {local ? (
         <>
@@ -377,6 +379,52 @@ export function SerialDevice({ local }: { local: boolean }) {
         </>
       )}
       {error && <p role="alert">{error}</p>}
+      {telemetry?.protocol === 'MCS1' && (
+        <section className="panel">
+          <h3>Sensör ölçümleri · MCS1</h3>
+          <p role="status">
+            {telemetry.firmware_code === 256
+              ? 'Firmware sözleşmesi uyumlu · 0.1.0'
+              : 'Firmware sürümü tanınmıyor; bu kaydın cihaz uyumluluğu doğrulanmadı.'}
+          </p>
+          <p className="muted">
+            Cihaz kimliği: {telemetry.stream_id} · firmware kodu:{' '}
+            {telemetry.firmware_code ?? '—'}. Kimlik bilgisi cihaz tarafından
+            bildirilir; donanım doğruluğu veya kalibrasyon kanıtı değildir.
+          </p>
+          <div className="serial-metrics">
+            {[
+              ['İvme X', value(telemetry.acceleration_x_ms2, ' m/s²')],
+              ['İvme Y', value(telemetry.acceleration_y_ms2, ' m/s²')],
+              ['İvme Z', value(telemetry.acceleration_z_ms2, ' m/s²')],
+              [
+                'Açısal hız X',
+                value(telemetry.angular_velocity_x_rads, ' rad/s'),
+              ],
+              [
+                'Açısal hız Y',
+                value(telemetry.angular_velocity_y_rads, ' rad/s'),
+              ],
+              [
+                'Açısal hız Z',
+                value(telemetry.angular_velocity_z_rads, ' rad/s'),
+              ],
+              ['Sıcaklık', value(telemetry.temperature_c, ' °C')],
+              ['Basınç', value(telemetry.pressure_pa, ' Pa')],
+              ['Nem', value(telemetry.humidity_percent, ' %')],
+            ].map(([name, v]) => (
+              <div key={name}>
+                <small>{name}</small>
+                <strong>{v}</strong>
+              </div>
+            ))}
+          </div>
+          <p>
+            Konum, uçuş irtifası ve batarya bu sensörlerle ölçülmez. İvme
+            yerçekimini içerir; pusula yönü hesaplanmaz.
+          </p>
+        </section>
+      )}
       <div className="serial-metrics">
         {[
           ['Durum', labels[shown?.state ?? 'unknown'] ?? 'Bilinmiyor'],
@@ -464,6 +512,22 @@ export function SerialDevice({ local }: { local: boolean }) {
         >
           Sentetik seri kayıt örneğini aç
         </button>
+        <button
+          disabled={busy}
+          onClick={() =>
+            void perform(async () => {
+              const response = await fetch(
+                import.meta.env.BASE_URL + 'verification/mcs1-synthetic.jsonl',
+                { cache: 'no-store' },
+              );
+              if (!response.ok)
+                throw Error('Sensör sözleşmesi örneği alınamadı.');
+              open(await response.text());
+            })
+          }
+        >
+          Sentetik sensör sözleşmesi örneğini aç
+        </button>
         {replay && (
           <button
             onClick={() => {
@@ -478,6 +542,11 @@ export function SerialDevice({ local }: { local: boolean }) {
       {replay && (
         <>
           <p>
+            {replay.header.transport === 'synthetic' && (
+              <strong>
+                Sentetik örnek · fiziksel sensör ölçümü değildir.{' '}
+              </strong>
+            )}
             Kayıt kaynağı:{' '}
             {String(replay.header.experiment ?? 'Cihaz kökeni doğrulanmadı')} ·
             canlı uçuş ve seri komut yollarından ayrı

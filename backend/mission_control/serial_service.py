@@ -41,6 +41,17 @@ class ConnectionRequest(BaseModel):
 
 
 class SerialMeasurement(BaseModel):
+    protocol: Literal["MCT1", "MCS1"] = "MCT1"
+    firmware_code: int | None = None
+    acceleration_x_ms2: float | None = None
+    acceleration_y_ms2: float | None = None
+    acceleration_z_ms2: float | None = None
+    angular_velocity_x_rads: float | None = None
+    angular_velocity_y_rads: float | None = None
+    angular_velocity_z_rads: float | None = None
+    temperature_c: float | None = None
+    pressure_pa: float | None = None
+    humidity_percent: float | None = None
     source: Literal["serial"]
     stream_id: str
     boot_id: int

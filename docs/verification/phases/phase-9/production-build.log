@@ -1,0 +1,15 @@
+
+> mission-control-ui@1.9.0 build
+> tsc --noEmit && vite build
+
+vite v6.1.0 building for production...
+transforming...
+✓ 2257 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                            0.62 kB │ gzip:   0.43 kB
+dist/assets/routeComparison-DiP21BnE.js   19.28 kB
+dist/assets/index-0nsPdTXR.css            47.60 kB │ gzip:  13.47 kB
+dist/assets/FlightChart-DMYDDRrv.js      372.02 kB │ gzip: 109.38 kB
+dist/assets/index-C1hCg47j.js            474.43 kB │ gzip: 147.79 kB
+✓ built in 2.74s

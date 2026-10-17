@@ -12,6 +12,21 @@ concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  firmware:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install platformio==6.1.18
+      - name: Compile sensor-only ESP32 firmware (physical acceptance pending)
+        run: python -m platformio run --project-dir prototype/esp32
+      - uses: actions/upload-artifact@v4
+        with:
+          name: esp32-sensor-firmware
+          path: prototype/esp32/.pio/build/esp32dev/firmware.bin
   build:
     runs-on: ubuntu-24.04
     steps:
@@ -47,7 +62,7 @@ jobs:
           path: frontend/dist
   deploy:
     if: github.event_name != 'pull_request'
-    needs: build
+    needs: [build, firmware]
     runs-on: ubuntu-24.04
     environment:
       name: github-pages

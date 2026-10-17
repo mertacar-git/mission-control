@@ -1,0 +1,26 @@
+{
+  "packet_hex": "4d435331010f000102030405060708090a0b0c0d0e0f02000000110000000100000000002000000100000000803f000000c000001c41cdcccc3dcdcc4cbe9a99993e0000bc4180e6c54700003442cc0c6544",
+  "decoded": {
+    "source": "serial",
+    "protocol": "MCS1",
+    "stream_id": "000102030405060708090a0b0c0d0e0f",
+    "boot_id": 2,
+    "sequence": 17,
+    "source_time_ms": 9007199254740993,
+    "firmware_code": 256,
+    "latitude": null,
+    "longitude": null,
+    "relative_altitude_m": null,
+    "ground_speed_ms": null,
+    "battery_voltage_v": null,
+    "acceleration_x_ms2": 1.0,
+    "acceleration_y_ms2": -2.0,
+    "acceleration_z_ms2": 9.75,
+    "angular_velocity_x_rads": 0.10000000149011612,
+    "angular_velocity_y_rads": -0.20000000298023224,
+    "angular_velocity_z_rads": 0.30000001192092896,
+    "temperature_c": 23.5,
+    "pressure_pa": 101325.0,
+    "humidity_percent": 45.0
+  }
+}

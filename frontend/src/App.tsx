@@ -675,7 +675,7 @@ export default function App() {
           >
             Kaynak kodu & kurulum ↗
           </a>
-          <span>v1.8 · ArduCopter 4.6.3</span>
+          <span>v1.9 · ArduCopter 4.6.3</span>
         </div>
       </aside>
       <div className="main-area">

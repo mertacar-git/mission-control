@@ -11,3 +11,4 @@ test-results/
 playwright-report/
 .venv-bench/
 .venv-serial/
+.pio/

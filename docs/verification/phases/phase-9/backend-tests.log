@@ -1,0 +1,16 @@
+........................................................................ [ 66%]
+....................................                                     [100%]
+=============================== warnings summary ===============================
+../.venv/lib/python3.12/site-packages/starlette/testclient.py:37
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/starlette/testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+tests/test_planning.py::test_backend_rejects_invalid_geometry_before_wire_upload_and_start_resume
+tests/test_planning.py::test_backend_rejects_invalid_geometry_before_wire_upload_and_start_resume
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/pydantic/main.py:463: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [input_value='connected', input_type=str])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /home/flwitch/mission-control-sensor-final-software/backend-tests.xml -
+108 passed, 3 warnings in 21.94s

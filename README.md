@@ -200,3 +200,7 @@ rejection and missing measurements. This is deliberately labelled synthetic.
 ## Operator workflow update
 
 The FLW VECTOR identity and consolidated experiment center preserve the v1.8 runtime and existing data formats. [Operator guide, scope and verification](docs/OPERATOR_REFRESH.md).
+
+## ESP32 sensor prototype
+
+Sensor-only USB firmware for ESP32 + MPU6050 + BME280, versioned MCS1 packets and independent raw serial replay. [Integration and synthetic demo](docs/SENSOR_NODE.md) · [Firmware, build and proposed wiring](prototype/esp32/README.md). Physical hardware and calibration acceptance remain pending.

@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mission Control · Seri tezgâh kaydı</title>
+<title>FLW VECTOR · Seri tezgâh kaydı</title>
 <style>body{background:#101923;color:#e1eaf2;font:16px system-ui;margin:0;padding:clamp(16px,4vw,60px)}main{max-width:1000px;margin:auto}h1{font-size:clamp(24px,4vw,38px)}p{color:#aebfcd;line-height:1.6}.badge{color:#72ddc3}section{border:1px solid #344453;background:#172531;border-radius:12px;padding:20px;margin:22px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}strong{display:block;font-size:24px;margin-top:8px}button,select{font:inherit;background:#263f50;color:white;border:1px solid #54738a;border-radius:6px;padding:8px}input{width:100%;margin:20px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#9ac5dd}.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}</style>
-<main><span class="badge">MISSION CONTROL / SERİ KAYIT / ÇEVRİMDIŞI</span>
+<main><span class="badge">FLW VECTOR / SERİ KAYIT / ÇEVRİMDIŞI</span>
 <h1>Donanım tezgâhı · Kayıt inceleme</h1>
 <p id="experiment"></p>
 <p>Kaynak etiketi taşımanın seri porttan yapıldığını belirtir. Bağlı cihazın fiziksel sensör mü yoksa yazılım test verisi mi ürettiği deney notlarıyla ayrıca belirtilmelidir.</p>
@@ -20,7 +20,7 @@ function draw(){const t=Number(seek.value);let row=null;for(const r of recording
  const frame=age!=null&&age<=3?row.telemetry:null;
  document.querySelector('#time').textContent=t.toFixed(2)+' / '+Number(seek.max).toFixed(2)+' s';
  document.querySelector('#state').textContent=frame?'Güncel ölçüm':'Ölçüm bilinmiyor';
- const fields=[['Enlem',frame?.latitude],['Boylam',frame?.longitude],['Göreli irtifa (m)',frame?.relative_altitude_m],['Hız (m/s)',frame?.ground_speed_ms],['Gerilim (V)',frame?.battery_voltage_v],['Açılış / Sıra',frame?frame.boot_id+' / '+frame.sequence:null]];
+ const fields=[['Enlem',frame?.latitude],['Boylam',frame?.longitude],['Göreli irtifa (m)',frame?.relative_altitude_m],['Hız (m/s)',frame?.ground_speed_ms],['Gerilim (V)',frame?.battery_voltage_v],['Açılış / Sıra',frame?frame.boot_id+' / '+frame.sequence:null],['İvme X (m/s²)',frame?.acceleration_x_ms2],['İvme Y (m/s²)',frame?.acceleration_y_ms2],['İvme Z (m/s²)',frame?.acceleration_z_ms2],['Açısal hız X (rad/s)',frame?.angular_velocity_x_rads],['Açısal hız Y (rad/s)',frame?.angular_velocity_y_rads],['Açısal hız Z (rad/s)',frame?.angular_velocity_z_rads],['Sıcaklık (°C)',frame?.temperature_c],['Basınç (Pa)',frame?.pressure_pa],['Nem (%)',frame?.humidity_percent]];
  const cards=document.querySelector('#cards');cards.replaceChildren();for(const [name,value]of fields){const cell=document.createElement('div');cell.textContent=name;const strong=document.createElement('strong');strong.textContent=value==null?'—':typeof value==='number'?value.toFixed(3):value;cell.append(strong);cards.append(cell);}}
 play.onclick=()=>{playing=!playing;if(playing&&Number(seek.value)>=Number(seek.max))seek.value=0;play.textContent=playing?'Duraklat':'Oynat';};seek.oninput=draw;
 function tick(now){if(playing&&last){seek.value=Math.min(Number(seek.max),Number(seek.value)+(now-last)/1000*Number(document.querySelector('#speed').value));if(Number(seek.value)>=Number(seek.max)){playing=false;play.textContent='Oynat';}draw();}last=now;requestAnimationFrame(tick);}draw();requestAnimationFrame(tick);
