@@ -1,0 +1,17 @@
+............                                                             [100%]
+============================== warnings summary ===============================
+..\..\..\work\release-venv\Lib\site-packages\starlette\testclient.py:37
+  C:\Users\garat\Documents\Codex\2026-10-14\ya-x20\work\release-venv\Lib\site-packages\starlette\testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+tests/test_fleet_service.py::test_two_station_processes_report_three_enrolled_devices_over_http
+  C:\Users\garat\Documents\Codex\2026-10-14\ya-x20\work\release-venv\Lib\site-packages\websockets\legacy\__init__.py:6: DeprecationWarning: websockets.legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions
+    warnings.warn(  # deprecated in 14.0 - 2024-11-09
+
+tests/test_fleet_service.py::test_two_station_processes_report_three_enrolled_devices_over_http
+  C:\Users\garat\Documents\Codex\2026-10-14\ya-x20\work\release-venv\Lib\site-packages\uvicorn\protocols\websockets\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated
+    from websockets.server import WebSocketServerProtocol
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: C:\Users\garat\Documents\Codex\2026-10-14\ya-x20\outputs\mission-control\docs\verification\station-enrollment\windows-tests.xml -
+12 passed, 3 warnings in 10.23s

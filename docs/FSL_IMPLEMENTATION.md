@@ -32,8 +32,10 @@ not encryption at rest. Legacy unencrypted Windows test keys remain readable;
 they are not silently converted or represented as protected.
 
 This lab generates station keys locally. Distributed production enrollment needs
-station-local key generation and a CSR signing flow; copying a DPAPI bundle to
-another computer is not supported. No keys or passwords belong in Git or Pages.
+station-local key generation; the subsequent [offline CSR flow](STATION_ENROLLMENT.md)
+now implements that software path. Separate-PC deployment acceptance is pending.
+Copying a DPAPI bundle to another computer is not supported. No keys or passwords
+belong in Git or Pages.
 
 ## Enrollment and publishers
 

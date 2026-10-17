@@ -1,0 +1,24 @@
+........................................................................ [ 60%]
+................................................                         [100%]
+=============================== warnings summary ===============================
+../.venv/lib/python3.12/site-packages/starlette/testclient.py:37
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/starlette/testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+tests/test_fleet_service.py::test_two_station_processes_report_three_enrolled_devices_over_http
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/websockets/legacy/__init__.py:6: DeprecationWarning: websockets.legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions
+    warnings.warn(  # deprecated in 14.0 - 2024-11-09
+
+tests/test_fleet_service.py::test_two_station_processes_report_three_enrolled_devices_over_http
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/uvicorn/protocols/websockets/websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated
+    from websockets.server import WebSocketServerProtocol
+
+tests/test_planning.py::test_backend_rejects_invalid_geometry_before_wire_upload_and_start_resume
+tests/test_planning.py::test_backend_rejects_invalid_geometry_before_wire_upload_and_start_resume
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/pydantic/main.py:463: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [input_value='connected', input_type=str])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+-- generated xml file: /home/flwitch/csr-software-20261018/backend-tests.xml ---
+120 passed, 5 warnings in 28.18s

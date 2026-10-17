@@ -213,4 +213,8 @@ The independent [civilian equipment registry service](docs/FLEET_REGISTRY.md) ad
 
 ## FLW security profile
 
+[Station-local CSR enrollment](docs/STATION_ENROLLMENT.md) generates keys on the
+station, signs only public requests and activates certificates separately.
+Two-computer network acceptance and human account management remain pending.
+
 [FLW Cryptography Policy v1](docs/FLW_CRYPTO_POLICY.md), [FSL v1 application protocol](docs/FSL_V1.md) and [threat model / acceptance matrix](docs/FSL_THREAT_MODEL.md) define the civilian registry/sensor security profile. The [local TLS 1.3/mTLS laboratory](docs/FLEET_TLS_LAB.md) verifies two synthetic stations and certificate identity. [FSL implementation and lifecycle](docs/FSL_IMPLEMENTATION.md) adds offline station renewal, Windows DPAPI-protected key passwords, certificate-bound sessions and durable transactional replay handling. Production identity lifecycle, LAN/Internet deployment and audited compliance remain pending. Existing USB CRC and legacy bearer controls remain unchanged.
