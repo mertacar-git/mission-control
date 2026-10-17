@@ -1,8 +1,9 @@
-# FLW Secure Link — FSL v1 draft
+# FLW Secure Link — FSL v1 specification and local profile
 
-Date: 18 October 2026. Status: **application protocol proposal; no FSL endpoint
-exists in the current release**. A separate [TLS laboratory](FLEET_TLS_LAB.md)
-implements transport acceptance for legacy registry messages, not FSL envelopes.
+Date: 18 October 2026. Status: **local equipment.report profile implemented;
+production protocol review remains pending**. The [implementation contract](FSL_IMPLEMENTATION.md)
+defines the delivered endpoints, quotas, lifecycle and test scope. Broader proposed
+operations below are not implemented unless explicitly listed there.
 
 FSL defines the FLW application contract for civilian equipment metadata and
 sensor reporting over standard TLS. It does not define encryption, key exchange,
@@ -13,7 +14,7 @@ operational-approval message is defined.
 
 MCT1/MCS1 remains the USB packet layer. A station decodes and validates those
 packets before forming an FSL report. The station-to-center network hop is TLS
-1.3; station authentication is planned as mTLS with application authorization.
+1.3; the local profile uses mTLS with application authorization.
 This protects that hop, not an untrusted USB device, station memory or disk.
 A successfully authenticated station may still report false physical readings.
 
@@ -84,22 +85,24 @@ update live freshness. If validity is uncertain, show unknown instead of success
 
 The response distinguishes accepted-new, duplicate-known and rejected, with a
 stable report ID and server receipt time. Rejection reasons must not leak secrets
-or unrelated devices. Exact endpoints/error codes are an implementation decision
-to close before compatibility freeze; this is not a ready-to-use wire API.
+or unrelated devices. Local endpoints/error codes are specified in the
+[implementation contract](FSL_IMPLEMENTATION.md); production compatibility is not frozen.
 
 ## Compatibility
 
 Current `/api/v1/fleet` endpoints remain the legacy local registry API. They do
-not accept this envelope or implement sessions, certificate identity or FSL
-deduplication. Implement a separately versioned boundary; do not silently rename
+not accept this envelope or implement FSL sessions/deduplication. The TLS server
+adds certificate identity to legacy routes and exposes a separate `/api/v1/fsl`
+boundary. Do not silently rename
 legacy traffic FSL. Preserve MCT1/MCS1 and historical readers. Unknown protocol
 versions fail explicitly; insecure fallback is not a migration strategy.
 
 ## Decisions still open
 
-Session expiry and replay-record retention must be aligned so retained sessions
-cannot outlive replay evidence. Close storage quotas, failover behavior, certificate
-profiles, enrolment/renewal and authenticated user roles before rollout. Choose
+The local profile aligns 900-second sessions and replay retention, bounds storage
+quotas and restores session/replay state on restart. Production failover, certificate
+profiles, distributed enrollment/renewal and authenticated user roles still need
+deployment decisions before rollout. Choose
 standard implementation libraries and deployment profiles through review; do not
 invent cryptographic code to fill these gaps.
 

@@ -69,21 +69,24 @@ class Registry:
         self.db.execute('INSERT INTO audit(received_utc_ms,actor,kind,serial) VALUES(?,?,?,?)',
                         (int(time.time()*1000), actor, kind, serial))
 
+    def write_measurement(self, serial, frame, actor):
+        """Caller holds lock/transaction; freshness must follow successful commit."""
+        device = self.db.execute('SELECT station FROM devices WHERE serial=?', (serial,)).fetchone()
+        if not device:
+            raise HTTPException(404, 'Device not enrolled.')
+        if device['station'] != actor:
+            raise HTTPException(403, 'Station does not own this device.')
+        old = self.db.execute('SELECT * FROM reports WHERE serial=?', (serial,)).fetchone()
+        if old and (frame.boot < old['boot'] or (frame.boot == old['boot'] and
+            (frame.sequence <= old['sequence'] or frame.source_time_ms < int(old['source_ms'])))):
+            raise HTTPException(409, 'Duplicate, old boot, sequence or clock regression.')
+        self.db.execute('INSERT OR REPLACE INTO reports VALUES(?,?,?,?,?)',
+                        (serial, frame.boot, frame.sequence, str(frame.source_time_ms), frame.model_dump_json()))
+        self.log(actor, 'measurement', serial)
     def receive(self, serial, frame, actor):
         with self.lock:
             with self.db:
-                device = self.db.execute('SELECT station FROM devices WHERE serial=?', (serial,)).fetchone()
-                if not device:
-                    raise HTTPException(404, 'Device not enrolled.')
-                if device['station'] != actor:
-                    raise HTTPException(403, 'Station does not own this device.')
-                old = self.db.execute('SELECT * FROM reports WHERE serial=?', (serial,)).fetchone()
-                if old and (frame.boot < old['boot'] or (frame.boot == old['boot'] and
-                    (frame.sequence <= old['sequence'] or frame.source_time_ms < int(old['source_ms'])))):
-                    raise HTTPException(409, 'Duplicate, old boot, sequence or clock regression.')
-                self.db.execute('INSERT OR REPLACE INTO reports VALUES(?,?,?,?,?)',
-                                (serial, frame.boot, frame.sequence, str(frame.source_time_ms), frame.model_dump_json()))
-                self.log(actor, 'measurement', serial)
+                self.write_measurement(serial, frame, actor)
             # Promote freshness only after the durable transaction succeeds.
             self.received[serial] = self.clock()
 

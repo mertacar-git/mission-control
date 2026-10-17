@@ -7,6 +7,12 @@ Update: [local TLS laboratory](FLEET_TLS_LAB.md) now tests a subset of transport
 identity and revocation requirements. The matrix below remains the broader FSL
 acceptance plan; it is not a claim that all security checks have passed.
 
+The subsequent [FSL implementation](FSL_IMPLEMENTATION.md) also tests local
+renewal, session expiry/quotas, duplicate/changed messages, restart persistence,
+atomic storage failure, parser limits and OS-specific key custody. These are
+local software checks; production deployment, recovery and independent review
+are still pending.
+
 ## Assets and trust boundaries
 
 Protect station/operator credentials, device assignments, accepted report/replay
@@ -25,18 +31,18 @@ accuracy need separate controls; no numeric security score is generated.
 
 | ID | Threat | Required mitigation/evidence | Current status |
 |---|---|---|---|
-| SEC-01 | Network observation/tampering | TLS 1.3; tampered traffic must fail without writes | Planned; local HTTP is not encrypted |
-| SEC-02 | Impersonated endpoint | Reject untrusted chain, wrong host and expired certificate | HTTPS publisher verifies by library default; negative TLS deployment tests pending |
-| SEC-03 | Foreign station/device writes | Principal-bound assignment check; no state mutation on denial | Existing registry scope tests pass; FSL identity binding pending |
-| SEC-04 | Stolen identity | Per-station revoke/expire; stop writes and sessions within policy bound | Automated lifecycle pending |
-| SEC-05 | Duplicate/replayed report | Atomic durable replay state across restart/failover | Legacy boot/sequence checks tested; FSL sessions/deduplication pending |
-| SEC-06 | Credential leak | No URI/redirect/log/bundle/storage exposure; restricted key custody | Some local controls exist; full scan/OS custody review pending |
+| SEC-01 | Network observation/tampering | TLS 1.3; tampered traffic must fail without writes | TLS 1.3 negotiated in local test; tampered-record/network deployment acceptance pending |
+| SEC-02 | Impersonated endpoint | Reject untrusted chain, wrong host and expired certificate | Local wrong-host/untrusted-CA and expired-client tests pass; expired-server deployment test pending |
+| SEC-03 | Foreign station/device writes | Principal-bound assignment check; no state mutation on denial | Registry and FSL certificate/session ownership tests pass locally |
+| SEC-04 | Stolen identity | Per-station revoke/expire; stop writes and sessions within policy bound | Local revocation/renewal and session expiry tested; distributed lifecycle pending |
+| SEC-05 | Duplicate/replayed report | Atomic durable replay state across restart/failover | FSL durable deduplication/restart tested; failover acceptance pending |
+| SEC-06 | Credential leak | No URI/redirect/log/bundle/storage exposure; restricted key custody | Windows DPAPI and Linux permission tests pass; full scan/recovery/OS review pending |
 | SEC-07 | Fake sensor values | Preserve reported source; do not claim physical truth from transport identity | Source labels exist; physical calibration pending |
-| SEC-08 | Compromised proxy/forged identity headers | Protected service hop; ignore untrusted identity headers | Proxy deployment pending |
+| SEC-08 | Compromised proxy/forged identity headers | Protected service hop; ignore untrusted identity headers | Direct TLS ignores forged identity headers; proxy deployment pending |
 | SEC-09 | Disk/backup theft | Protect database, WAL, exports and backups; verified restore | Storage encryption/recovery pending |
-| SEC-10 | Exhausted resources/parser ambiguity | Bounded bodies/sessions; duplicate-key rejection; rate/quota tests | FSL parser and deployment limits pending |
-| SEC-11 | Backend write failure | No ACK/freshness promotion before durable commit | Legacy transaction-failure test passes; FSL equivalent pending |
-| SEC-12 | Loss of connectivity/clock certainty | Unknown/stale state; no automatic trust or queued live replay | Legacy freshness/restart tests pass; session tests pending |
+| SEC-10 | Exhausted resources/parser ambiguity | Bounded bodies/sessions; duplicate-key rejection; rate/quota tests | FSL body/parser/session quota tests pass; network resource/rate acceptance pending |
+| SEC-11 | Backend write failure | No ACK/freshness promotion before durable commit | Legacy and FSL transaction-failure tests pass locally |
+| SEC-12 | Loss of connectivity/clock certainty | Unknown/stale state; no automatic trust or queued live replay | Local restart preserves replay without live freshness; distributed loss/clock acceptance pending |
 
 ## Test matrix and required outcomes
 

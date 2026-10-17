@@ -9,13 +9,15 @@ from pathlib import Path
 import httpx
 import pytest
 from mission_control.fleet_tls import initialize, server
+from mission_control.key_custody import key_password
 
 
 def context(directory, identity=None):
     ctx = ssl.create_default_context(cafile=str(directory/'ca.crt'))
     ctx.minimum_version = ssl.TLSVersion.TLSv1_3
     if identity:
-        ctx.load_cert_chain(str(directory/f'{identity}.crt'), str(directory/f'{identity}.key'))
+        key = directory/f'{identity}.key'
+        ctx.load_cert_chain(str(directory/f'{identity}.crt'), str(key), password=key_password(key))
     return ctx
 
 
@@ -84,12 +86,12 @@ def test_real_tls_identity_revocation_and_negative_certificates(tmp_path):
         foreign = tmp_path/'foreign-ca'
         initialize(foreign)
         foreign_client = context(directory)
-        foreign_client.load_cert_chain(str(foreign/'station-a.crt'), str(foreign/'station-a.key'))
+        foreign_client.load_cert_chain(str(foreign/'station-a.crt'), str(foreign/'station-a.key'), password=key_password(foreign/'station-a.key'))
         with httpx.Client(base_url=url, verify=foreign_client, trust_env=False) as client:
             with pytest.raises(httpx.TransportError):
                 client.get('/api/v1/fleet/snapshot')
         untrusted = ssl.create_default_context()
-        untrusted.load_cert_chain(str(directory/'center.crt'), str(directory/'center.key'))
+        untrusted.load_cert_chain(str(directory/'center.crt'), str(directory/'center.key'), password=key_password(directory/'center.key'))
         with httpx.Client(base_url=url, verify=untrusted, trust_env=False) as client:
             with pytest.raises(httpx.TransportError):
                 client.get('/api/v1/fleet/snapshot')

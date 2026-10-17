@@ -1,7 +1,8 @@
 # Civilian registry TLS laboratory
 
 Implemented on 18 October 2026. Local acceptance foundation, not an Internet
-deployment or the FSL application protocol. No aircraft commands are provided.
+deployment. [FSL sessions and lifecycle](FSL_IMPLEMENTATION.md) extend this
+transport laboratory. No aircraft commands are provided.
 
 ## Run
 
@@ -14,21 +15,24 @@ python -m mission_control.fleet_tls
 
 The service listens only on `127.0.0.1:8771`. Initialization requires a new
 `.runtime/fleet-tls` directory and never overwrites an existing identity.
-Certificates expire after seven days. The local test CA private key is not
-persisted; renewal requires a new laboratory directory. Do not install this CA
+Certificates expire after seven days. New laboratories retain the CA key in a
+separate `<directory>-authority` directory for offline renewal. Older labs discarded
+that key and require a new lab for renewal. Do not install this CA
 as a system-wide trust anchor or distribute the complete directory to stations.
-Each station needs only its own key/certificate and `ca.crt`. Private keys are
-unencrypted local files with POSIX 0600; Windows file ACLs must be managed.
+Each station needs only its own key/certificate and `ca.crt`. New Windows keys use
+DPAPI-protected PEM passwords; Linux keys use POSIX 0600. See the lifecycle guide
+for machine binding and remaining custody limitations.
 
 Enroll equipment with the center certificate using a Python HTTPS client:
 
 ```python
 import ssl
 import httpx
+from mission_control.key_custody import key_password
 
 ctx = ssl.create_default_context(cafile='.runtime/fleet-tls/ca.crt')
 ctx.minimum_version = ssl.TLSVersion.TLSv1_3
-ctx.load_cert_chain('.runtime/fleet-tls/center.crt', '.runtime/fleet-tls/center.key')
+ctx.load_cert_chain('.runtime/fleet-tls/center.crt', '.runtime/fleet-tls/center.key', password=key_password('.runtime/fleet-tls/center.key'))
 with httpx.Client(base_url='https://127.0.0.1:8771', verify=ctx, trust_env=False) as client:
     for station in ('station-a', 'station-b'):
         response = client.post('/api/v1/fleet/devices', json={
@@ -79,10 +83,11 @@ wrong hostname, TLS 1.2 rejection, negotiated TLS 1.3, and revocation on a reuse
 connection. Certificates are generated in temporary directories; no private key
 or credential is checked into source control. All owned processes are stopped.
 
-Still pending: independent two-PC LAN/Internet acceptance, production CA/CSR
-provisioning and renewal, OS-backed custody, operator accounts, security-denial
-audit, resource limits, encrypted backup recovery, FSL sessions/replay envelopes,
-and independent review. This local experiment does not satisfy the whole policy.
+Local renewal, Windows DPAPI passwords and FSL sessions/replay envelopes are now
+covered by [the next implementation](FSL_IMPLEMENTATION.md). Still pending:
+independent two-PC LAN/Internet acceptance, production CA/CSR provisioning,
+operator accounts, security-denial audit, resource hardening, encrypted backup
+recovery and independent review. This local experiment does not satisfy the whole policy.
 
 References: [Python SSL](https://docs.python.org/3/library/ssl.html),
 [X.509 certificate builder](https://cryptography.io/en/stable/x509/reference/),

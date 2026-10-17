@@ -13,10 +13,10 @@ name is not evidence of cryptographic assurance or standards certification.
 
 | Property | Current implementation | Required future state |
 |---|---|---|
-| Station identity | Legacy bearer credentials; separate TLS lab maps verified client certificates | Independently provisioned station identity with renewal/revocation |
+| Station identity | Legacy bearer credentials; TLS lab maps verified certificates with offline renewal | Independently provisioned station identity with renewal/revocation |
 | Transport | Legacy loopback HTTP; separate loopback TLS 1.3/mTLS lab | TLS 1.3 with server identity validation for network deployment |
 | Station permissions | Server checks assigned device serial | Preserve server-side checks independently of transport authentication |
-| Keys at rest | Private local files; POSIX mode 0600; Windows ACL must be managed | OS-backed secret storage and verified access controls |
+| Keys at rest | New Windows PEM passwords use DPAPI; Linux keys use mode 0600; Windows ACL acceptance pending | OS-backed secret storage and verified access controls |
 | Database/backups | SQLite is not application-encrypted | Deployment-specific encryption and recovery testing |
 | Revocation | TLS lab checks local denylist every request; legacy credentials require replacement | Enforced revocation with bounded propagation and audit |
 | Device packets | MCT1/MCS1 CRC and sequence checks | Retain corruption checks; do not confuse CRC with authentication |
@@ -24,8 +24,10 @@ name is not evidence of cryptographic assurance or standards certification.
 
 This baseline was reviewed against `fleet_service.py`, `fleet_station.py` and
 the serial receiver. [Local TLS evidence](FLEET_TLS_LAB.md) exercises TLS/mTLS
-and request-time revocation. Key rotation, storage encryption, Internet deployment
-and end-to-end sensor authenticity remain unverified.
+and request-time revocation. [FSL lifecycle evidence](FSL_IMPLEMENTATION.md) adds
+local station renewal, durable deduplication and Windows DPAPI tests. Production
+key provisioning/recovery, database encryption, Internet deployment and end-to-end
+sensor authenticity remain unverified.
 
 ## Policy requirements
 

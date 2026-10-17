@@ -96,6 +96,11 @@ TLS termination, allowed host/origin configuration, rate limiting and account
 management still require a deployment phase; this service is not publicly exposed.
 Do not distribute the center's private configuration to station computers.
 
+The subsequent [TLS/FSL lifecycle implementation](FSL_IMPLEMENTATION.md) is a
+separate loopback service with certificate-bound sessions, local station renewal
+and durable replay checks. The browser panel described here still uses the
+legacy HTTP service. Its earlier acceptance counts below describe that delivery.
+
 The automated transport test launches two separate publisher processes against
 an actual loopback HTTP server and checks three enrolled devices. It validates
 software transport and scopes, not physical equipment or an Internet deployment.

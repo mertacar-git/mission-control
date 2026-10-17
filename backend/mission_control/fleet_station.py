@@ -3,10 +3,12 @@ import argparse
 import json
 import time
 import ssl
+from uuid import uuid4
 from pathlib import Path
 from urllib.parse import urlparse, quote
 from urllib.request import Request, build_opener, HTTPRedirectHandler, HTTPSHandler
 from urllib.error import HTTPError
+from .key_custody import key_password
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -23,10 +25,12 @@ def endpoint(value):
     return value.rstrip('/')
 
 
-def publish(center, token, duration, boot, interval=0.2, tls_context=None):
+def publish(center, token, duration, boot, interval=0.2, tls_context=None, fsl=False):
     center = endpoint(center)
     if tls_context is not None and not center.startswith('https://'):
         raise ValueError('Certificate identity requires HTTPS.')
+    if fsl and tls_context is None:
+        raise ValueError('FSL publisher requires certificate authentication.')
     opener = build_opener(NoRedirect(), HTTPSHandler(context=tls_context))
     def request(path, body=None):
         req = Request(center+path, data=None if body is None else json.dumps(body).encode(),
@@ -39,13 +43,19 @@ def publish(center, token, duration, boot, interval=0.2, tls_context=None):
     serials = [row['device']['serial'] for row in snapshot['devices']]
     if not serials:
         raise ValueError('No equipment enrolled for this station.')
+    session = request('/api/v1/fsl/sessions', {})['session_id'] if fsl else None
     start = time.monotonic()
     sequence = 0
     while time.monotonic()-start < duration:
         for serial in serials:
-            request('/api/v1/fleet/devices/'+quote(serial,safe='')+'/measurements',
-                    dict(source='synthetic',boot=boot,sequence=sequence,source_time_ms=int((time.monotonic()-start)*1000),
-                         temperature_c=23.5,pressure_pa=101325,humidity_percent=45))
+            frame = dict(source='synthetic',boot=boot,sequence=sequence,source_time_ms=int((time.monotonic()-start)*1000),
+                         temperature_c=23.5,pressure_pa=101325,humidity_percent=45)
+            if fsl:
+                request('/api/v1/fsl/reports', dict(protocol='FSL', version=1, message_id=str(uuid4()),
+                    session_id=session, station_id=snapshot['actor'], device_id=serial, sequence=str(sequence),
+                    type='equipment.report', payload=frame))
+            else:
+                request('/api/v1/fleet/devices/'+quote(serial,safe='')+'/measurements', frame)
         sequence += 1
         time.sleep(interval)
     return dict(source='synthetic',actor=snapshot['actor'],devices=len(serials),cycles=sequence)
@@ -57,6 +67,7 @@ if __name__ == '__main__':
     parser.add_argument('--token-file',type=Path)
     parser.add_argument('--tls-directory',type=Path)
     parser.add_argument('--identity',choices=('station-a','station-b'))
+    parser.add_argument('--fsl',action='store_true')
     parser.add_argument('--seconds',type=int,choices=range(1,61),default=10)
     parser.add_argument('--boot',type=int,default=int(time.time()))
     args=parser.parse_args()
@@ -67,10 +78,13 @@ if __name__ == '__main__':
             parser.error('TLS mode requires --identity and excludes --token-file.')
         context = ssl.create_default_context(cafile=str(args.tls_directory/'ca.crt'))
         context.minimum_version = ssl.TLSVersion.TLSv1_3
-        context.load_cert_chain(str(args.tls_directory/f'{args.identity}.crt'), str(args.tls_directory/f'{args.identity}.key'))
+        key = args.tls_directory/f'{args.identity}.key'
+        context.load_cert_chain(str(args.tls_directory/f'{args.identity}.crt'), str(key), password=key_password(key))
         token = None
     else:
         if not args.token_file or args.identity:
             parser.error('Legacy mode requires --token-file; --identity requires TLS mode.')
         context, token = None, args.token_file.read_text().strip()
-    print(json.dumps(publish(args.center,token,args.seconds,args.boot,tls_context=context)))
+    if args.fsl and not args.tls_directory:
+        parser.error('--fsl requires certificate mode.')
+    print(json.dumps(publish(args.center,token,args.seconds,args.boot,tls_context=context,fsl=args.fsl)))
