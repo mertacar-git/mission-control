@@ -619,16 +619,24 @@ export default function App() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <a className="brand" href="https://mertacar-git.github.io/portfolio/">
-          <span className="brand-mark">
-            <Compass size={22} />
+        <button
+          className="brand"
+          aria-label="FLW VECTOR · görev planlama"
+          onClick={() => setPage('mission')}
+        >
+          <img
+            className="vector-mark"
+            src={import.meta.env.BASE_URL + 'brand/vector-mark.svg'}
+            alt=""
+            width="48"
+            height="48"
+          />
+          <span className="brand-wordmark">
+            <span className="brand-parent">FLW</span>
+            <b>VECTOR</b>
+            <small>AEROSPACE &amp; DEFENSE</small>
           </span>
-          <span>
-            MISSION
-            <br />
-            <b>CONTROL</b>
-          </span>
-        </a>
+        </button>
         <div className="sidebar-label">ÇALIŞMA ALANI</div>
         <nav>
           {(
@@ -673,30 +681,33 @@ export default function App() {
       <div className="main-area">
         <header className="topbar">
           <div className="breadcrumb">
-            Çalışma alanı <ChevronRight size={13} />{' '}
-            <strong>Mission Control</strong>
+            Çalışma alanı <ChevronRight size={13} /> <strong>FLW VECTOR</strong>
           </div>
           <div className="top-actions">
-            {page==='serial'?<span>Bağımsız seri kaynak</span>:<>
-            <div className="mode-picker">
-              <button
-                className={mode === 'demo' ? 'selected' : ''}
-                onClick={() => changeMode('demo')}
-              >
-                Demo
-              </button>
-              <button
-                className={mode === 'local' ? 'selected' : ''}
-                onClick={() => changeMode('local')}
-              >
-                Yerel SITL
-              </button>
-            </div>
-            <span className={'connection ' + status.state}>
-              <i />
-              {names[status.state]}
-            </span>
-            </>}
+            {page === 'serial' ? (
+              <span>Bağımsız seri kaynak</span>
+            ) : (
+              <>
+                <div className="mode-picker">
+                  <button
+                    className={mode === 'demo' ? 'selected' : ''}
+                    onClick={() => changeMode('demo')}
+                  >
+                    Demo
+                  </button>
+                  <button
+                    className={mode === 'local' ? 'selected' : ''}
+                    onClick={() => changeMode('local')}
+                  >
+                    Yerel SITL
+                  </button>
+                </div>
+                <span className={'connection ' + status.state}>
+                  <i />
+                  {names[status.state]}
+                </span>
+              </>
+            )}
           </div>
         </header>
         <main>
@@ -790,7 +801,11 @@ export default function App() {
                   onClick={() => void disconnect()}
                 >
                   <X size={16} />
-                  {page==='serial'?(mode==='local'?'SITL oturumunu kapat':'Demo uçuş oturumunu kapat'):'Bağlantıyı kapat'}
+                  {page === 'serial'
+                    ? mode === 'local'
+                      ? 'SITL oturumunu kapat'
+                      : 'Demo uçuş oturumunu kapat'
+                    : 'Bağlantıyı kapat'}
                 </button>
               )}
             </div>
@@ -1256,7 +1271,12 @@ export default function App() {
             />
           )}
           {page === 'experiments' && (
-            <ExperimentLab local={mode === 'local'} replaying={!!replay} mission={mission} onReplay={openReplay} />
+            <ExperimentLab
+              local={mode === 'local'}
+              replaying={!!replay}
+              mission={mission}
+              onReplay={openReplay}
+            />
           )}
           {page === 'experiments' && (
             <ScenarioLab
@@ -1469,7 +1489,7 @@ export default function App() {
                 Model, kurulum ve doğrulama ↗
               </a>
             </div>
-            <span>Mert Açar · Mission Control</span>
+            <span>FLW Aerospace &amp; Defense · VECTOR</span>
           </footer>
           <input
             className="hidden"

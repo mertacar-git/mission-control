@@ -1,4 +1,8 @@
-# Mission Control
+# FLW VECTOR
+
+**FLW Aerospace & Defense** · Mission planning and flight analysis.
+Formerly Mission Control; existing repository URLs and recording formats are preserved.
+[Brand assets and usage](docs/BRAND.md).
 
 Plan a mission, fly one virtual UAV, watch telemetry, record the flight, replay it and export a report.
 

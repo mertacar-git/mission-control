@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>FLW VECTOR monochrome mark</title>
+  <path d="M32 3 57 17.5v29L32 61 7 46.5v-29Z" stroke="#101D2A" stroke-width="2"/>
+  <path fill="#101D2A" fill-rule="evenodd" d="M32 11 51 46 32 35 13 46ZM32 24l-8 15 8-4 8 4Z"/>
+  <path d="m22 45 10 6 10-6-10-4Z" fill="#101D2A"/>
+</svg>

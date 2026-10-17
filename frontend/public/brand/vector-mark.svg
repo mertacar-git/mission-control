@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>FLW VECTOR</title>
+  <desc>Angular flight vector and split wings within a hexagonal frame.</desc>
+  <path d="M32 3 57 17.5v29L32 61 7 46.5v-29Z" fill="#101D2A" stroke="#456272" stroke-width="2"/>
+  <path d="M32 11 51 46 32 35 13 46Z" fill="#A7EDC3"/>
+  <path d="m32 24 8 15-8-4-8 4Z" fill="#101D2A"/>
+  <path d="m22 45 10 6 10-6-10-4Z" fill="#86B8ED"/>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 128" fill="none">
+  <title>FLW VECTOR — FLW Aerospace &amp; Defense</title>
+  <rect width="560" height="128" rx="14" fill="#0B1017"/>
+  <path d="M64 8 112 36v56l-48 28L16 92V36Z" fill="#101D2A" stroke="#456272" stroke-width="3"/>
+  <path d="m64 24 35 66-35-20-35 20Z" fill="#A7EDC3"/>
+  <path d="m64 48 15 28-15-6-15 6Z" fill="#101D2A"/>
+  <path d="m45 88 19 11 19-11-19-7Z" fill="#86B8ED"/>
+  <text x="142" y="45" fill="#A7EDC3" font-family="Arial,sans-serif" font-weight="700" font-size="20" letter-spacing="5">FLW</text>
+  <text x="138" y="91" fill="#F1F4F8" font-family="Arial,sans-serif" font-weight="700" font-size="48" letter-spacing="5">VECTOR</text>
+  <text x="142" y="116" fill="#99A8B9" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">AEROSPACE &amp; DEFENSE</text>
+</svg>
