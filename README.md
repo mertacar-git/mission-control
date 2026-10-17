@@ -210,3 +210,7 @@ Sensor-only USB firmware for ESP32 + MPU6050 + BME280, versioned MCS1 packets an
 A separate browser-only prototype demonstrates three synthetic devices, two station roles and a center review workflow. It does not connect remote computers or control aircraft. [Delivered scope, usage and distributed next steps](docs/CIVIL_FLEET_PROTOTYPE.md).
 
 The independent [civilian equipment registry service](docs/FLEET_REGISTRY.md) adds persistent enrolment, station-scoped authentication and read-only sensor ingestion. Two separate synthetic publishers were tested over real loopback HTTP. LAN/Internet deployment and operational permissions are not implemented.
+
+## FLW security design drafts
+
+[FLW Cryptography Policy v1](docs/FLW_CRYPTO_POLICY.md), [FSL v1 application protocol](docs/FSL_V1.md) and [threat model / acceptance matrix](docs/FSL_THREAT_MODEL.md) define the proposed civilian registry/sensor security profile. They are design drafts, not implemented encryption or audited compliance. Existing USB CRC and local bearer access controls remain unchanged.

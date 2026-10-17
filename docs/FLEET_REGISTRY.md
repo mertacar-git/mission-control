@@ -1,5 +1,9 @@
 # Civilian equipment registry — local distributed foundation
 
+Proposed security requirements are documented separately in the
+[FLW policy](FLW_CRYPTO_POLICY.md) and [FSL draft](FSL_V1.md). The current service
+does not implement those TLS/session/key-lifecycle requirements.
+
 This service persists device metadata, received sensor reports and audit events
 in its own SQLite database. It never opens the SITL/serial stores, sends flight
 commands, approves operations or controls an aircraft. The browser's synthetic
