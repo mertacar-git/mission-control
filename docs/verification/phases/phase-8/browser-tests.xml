@@ -1,0 +1,90 @@
+<testsuites id="" name="" tests="12" failures="0" skipped="0" errors="0" time="11.247451">
+<testsuite name="critical.spec.ts" timestamp="2026-10-17T19:28:58.199Z" hostname="desktop" tests="6" failures="0" skipped="0" time="5.16" errors="0">
+<testcase name="offline planning, undo, explicit upload review and demo flight commands" classname="critical.spec.ts" time="1.63">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-offline-planning--36cc8-ew-and-demo-flight-commands-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="published SITL experiment opens isolated replay with working charts" classname="critical.spec.ts" time="0.71">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-published-SITL-ex-7fa88--replay-with-working-charts-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="five-record report, portable HTML and explicit conditions" classname="critical.spec.ts" time="0.764">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-five-record-repor-55967-TML-and-explicit-conditions-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="serial sample remains an independent source and preserves missing fields" classname="critical.spec.ts" time="0.939">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-serial-sample-rem-77723-nd-preserves-missing-fields-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="failed experiment evidence request shows an error rather than fabricated results" classname="critical.spec.ts" time="0.532">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-failed-experiment-53b5d-her-than-fabricated-results-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="unavailable experiment backend blocks mutations and retry recovers" classname="critical.spec.ts" time="0.585">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-unavailable-exper-5c8a4-utations-and-retry-recovers-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="critical.spec.ts" timestamp="2026-10-17T19:28:58.199Z" hostname="mobile-390" tests="6" failures="0" skipped="0" time="4.424" errors="0">
+<testcase name="offline planning, undo, explicit upload review and demo flight commands" classname="critical.spec.ts" time="1.139">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-offline-planning--36cc8-ew-and-demo-flight-commands-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="published SITL experiment opens isolated replay with working charts" classname="critical.spec.ts" time="0.677">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-published-SITL-ex-7fa88--replay-with-working-charts-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="five-record report, portable HTML and explicit conditions" classname="critical.spec.ts" time="0.708">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-five-record-repor-55967-TML-and-explicit-conditions-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="serial sample remains an independent source and preserves missing fields" classname="critical.spec.ts" time="0.846">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-serial-sample-rem-77723-nd-preserves-missing-fields-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="failed experiment evidence request shows an error rather than fabricated results" classname="critical.spec.ts" time="0.483">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-failed-experiment-53b5d-her-than-fabricated-results-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="unavailable experiment backend blocks mutations and retry recovers" classname="critical.spec.ts" time="0.571">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-unavailable-exper-5c8a4-utations-and-retry-recovers-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

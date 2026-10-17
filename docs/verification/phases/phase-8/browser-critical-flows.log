@@ -1,0 +1,39 @@
+
+> mission-control-ui@1.8.0 test:e2e
+> playwright test
+
+
+Running 12 tests using 1 worker
+
+  ✓   1 [desktop] › e2e/critical.spec.ts:9:1 › offline planning, undo, explicit upload review and demo flight commands (1.6s)
+  ✓   2 [desktop] › e2e/critical.spec.ts:56:1 › published SITL experiment opens isolated replay with working charts (710ms)
+  ✓   3 [desktop] › e2e/critical.spec.ts:100:1 › five-record report, portable HTML and explicit conditions (764ms)
+  ✓   4 [desktop] › e2e/critical.spec.ts:134:1 › serial sample remains an independent source and preserves missing fields (939ms)
+  ✓   5 [desktop] › e2e/critical.spec.ts:189:1 › failed experiment evidence request shows an error rather than fabricated results (532ms)
+[WebServer] 10:29:03 PM [vite] http proxy error: /api/v1/missions
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 10:29:03 PM [vite] http proxy error: /api/v1/status
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 10:29:03 PM [vite] http proxy error: /api/v1/scenarios
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+  ✓   6 [desktop] › e2e/critical.spec.ts:210:1 › unavailable experiment backend blocks mutations and retry recovers (585ms)
+  ✓   7 [mobile-390] › e2e/critical.spec.ts:9:1 › offline planning, undo, explicit upload review and demo flight commands (1.1s)
+  ✓   8 [mobile-390] › e2e/critical.spec.ts:56:1 › published SITL experiment opens isolated replay with working charts (677ms)
+  ✓   9 [mobile-390] › e2e/critical.spec.ts:100:1 › five-record report, portable HTML and explicit conditions (708ms)
+  ✓  10 [mobile-390] › e2e/critical.spec.ts:134:1 › serial sample remains an independent source and preserves missing fields (846ms)
+  ✓  11 [mobile-390] › e2e/critical.spec.ts:189:1 › failed experiment evidence request shows an error rather than fabricated results (483ms)
+[WebServer] 10:29:08 PM [vite] http proxy error: /api/v1/missions
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 10:29:08 PM [vite] http proxy error: /api/v1/status
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 10:29:08 PM [vite] http proxy error: /api/v1/scenarios
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+  ✓  12 [mobile-390] › e2e/critical.spec.ts:210:1 › unavailable experiment backend blocks mutations and retry recovers (571ms)
+
+  12 passed (11.2s)

@@ -1,9 +1,9 @@
-import { useState, useMemo } from 'react';
-import type { Coordinate, Recording } from '../types';
-import { analyzeExecution, executionCSV } from '../flightComparison';
-import { download, frames } from '../analysis';
-import { RouteOverlay } from './RouteOverlay';
-import { MultiFlightComparison } from './MultiFlightComparison';
+import { useState, useMemo } from "react";
+import type { Coordinate, Recording } from "../types";
+import { analyzeExecution, executionCSV } from "../flightComparison";
+import { download, frames } from "../analysis";
+import { RouteOverlay } from "./RouteOverlay";
+import { MultiFlightComparison } from "./MultiFlightComparison";
 function trace(recording: Recording) {
   const segments: Coordinate[][] = [];
   let current: Coordinate[] = [],
@@ -11,7 +11,7 @@ function trace(recording: Recording) {
   for (const row of frames(recording)) {
     if (
       !row.position_fresh ||
-      row.connection !== 'connected' ||
+      row.connection !== "connected" ||
       row.latitude === null ||
       row.longitude === null ||
       row.elapsed_s - previous > 3
@@ -21,7 +21,7 @@ function trace(recording: Recording) {
     }
     if (
       row.position_fresh &&
-      row.connection === 'connected' &&
+      row.connection === "connected" &&
       row.latitude !== null &&
       row.longitude !== null
     )
@@ -53,9 +53,9 @@ export function ExecutionComparison({
   onSelectRecording: (r: Recording) => void;
 }) {
   const [corridor, setCorridor] = useState(5),
-    [otherId, setOtherId] = useState('');
+    [otherId, setOtherId] = useState("");
   const [published, setPublished] = useState<Recording[]>([]),
-    [error, setError] = useState('');
+    [error, setError] = useState("");
   const list = [...recordings, ...published].filter(
     (r, i, all) => all.findIndex((v) => v.session.id === r.session.id) === i,
   );
@@ -70,7 +70,7 @@ export function ExecutionComparison({
     );
   const traceA = useMemo(() => trace(recording), [recording]),
     traceB = useMemo(() => (other ? trace(other) : []), [other]);
-  const fmt = (v: number | null, d = 1) => (v === null ? '—' : v.toFixed(d));
+  const fmt = (v: number | null, d = 1) => (v === null ? "—" : v.toFixed(d));
   async function examples() {
     try {
       const loaded = await Promise.all(
@@ -78,7 +78,7 @@ export function ExecutionComparison({
           fetch(import.meta.env.BASE_URL + `comparison/flight-${h}.json`).then(
             (r) => {
               if (!r.ok)
-                throw Error('Yayımlanmış karşılaştırma kaydı bulunamadı.');
+                throw Error("Yayımlanmış karşılaştırma kaydı bulunamadı.");
               return r.json() as Promise<Recording>;
             },
           ),
@@ -152,7 +152,9 @@ export function ExecutionComparison({
                 ...list.filter((r) => r.session.id !== recording.session.id),
               ].map((r) => (
                 <option key={r.session.id} value={r.session.id}>
-                  {r.session.name} · {r.session.source}
+                  {r.session.name} ·{" "}
+                  {new Date(r.session.started_utc).toLocaleString("tr-TR")} ·{" "}
+                  {r.session.id.slice(0, 8)} · {r.session.source}
                 </option>
               ))}
             </select>
@@ -168,7 +170,9 @@ export function ExecutionComparison({
                 .filter((r) => r.session.id !== recording.session.id)
                 .map((r) => (
                   <option key={r.session.id} value={r.session.id}>
-                    {r.session.name} · {r.session.source}
+                    {r.session.name} ·{" "}
+                    {new Date(r.session.started_utc).toLocaleString("tr-TR")} ·{" "}
+                    {r.session.id.slice(0, 8)} · {r.session.source}
                   </option>
                 ))}
             </select>
@@ -187,10 +191,10 @@ export function ExecutionComparison({
             <h3>{recording.session.name}</h3>
             <p>
               Kaynak: {recording.session.source} · örneklerden hesaplanan hat
-              oranı{' '}
+              oranı{" "}
               {result.observed_survey_fraction === null
-                ? '—'
-                : fmt(result.observed_survey_fraction * 100) + '%'}
+                ? "—"
+                : fmt(result.observed_survey_fraction * 100) + "%"}
             </p>
             <button
               className="secondary small"
@@ -204,10 +208,10 @@ export function ExecutionComparison({
               <h3>{other.session.name}</h3>
               <p>
                 Kaynak: {other.session.source} · örneklerden hesaplanan hat
-                oranı{' '}
+                oranı{" "}
                 {second!.observed_survey_fraction === null
-                  ? '—'
-                  : fmt(second!.observed_survey_fraction! * 100) + '%'}
+                  ? "—"
+                  : fmt(second!.observed_survey_fraction! * 100) + "%"}
               </p>
               <button
                 className="secondary small"
@@ -302,14 +306,14 @@ export function ExecutionComparison({
               {result.legs.map((l) => (
                 <tr key={l.index}>
                   <td>
-                    {l.index === 0 ? 'H → 1' : `${l.index} → ${l.index + 1}`}
+                    {l.index === 0 ? "H → 1" : `${l.index} → ${l.index + 1}`}
                   </td>
                   <td>
                     {
                       {
-                        survey: 'Tarama',
-                        connector: 'Bağlantı',
-                        unclassified: 'Bilinmiyor',
+                        survey: "Tarama",
+                        connector: "Bağlantı",
+                        unclassified: "Bilinmiyor",
                       }[l.kind]
                     }
                   </td>
@@ -337,7 +341,7 @@ export function ExecutionComparison({
             className="secondary small"
             onClick={() =>
               download(
-                'execution-report.json',
+                "execution-report.json",
                 JSON.stringify(
                   {
                     report: result,
@@ -363,7 +367,7 @@ export function ExecutionComparison({
           <button
             className="secondary small"
             onClick={() =>
-              download('execution-legs.csv', executionCSV(result), 'text/csv')
+              download("execution-legs.csv", executionCSV(result), "text/csv")
             }
           >
             Rota parçaları CSV indir

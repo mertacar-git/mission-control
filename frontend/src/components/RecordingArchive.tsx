@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { FileJson, Play, ArrowDownToLine, Database } from 'lucide-react';
-import { analyze, frames, download } from '../analysis';
-import type { Recording } from '../types';
+import { useState } from "react";
+import { FileJson, Play, ArrowDownToLine, Database } from "lucide-react";
+import { analyze, frames, download } from "../analysis";
+import type { Recording } from "../types";
 type Props = {
   recordings: Recording[];
   local: boolean;
@@ -20,14 +20,14 @@ export function RecordingArchive({
   onReplay,
   onAnalyze,
 }: Props) {
-  const [query, setQuery] = useState(''),
-    [source, setSource] = useState('all');
+  const [query, setQuery] = useState(""),
+    [source, setSource] = useState("all");
   const filtered = recordings.filter(
     (recording) =>
-      (source === 'all' || recording.session.source === source) &&
-      recording.session.name
-        .toLocaleLowerCase('tr')
-        .includes(query.toLocaleLowerCase('tr')),
+      (source === "all" || recording.session.source === source) &&
+      (recording.session.name + " " + recording.session.id)
+        .toLocaleLowerCase("tr")
+        .includes(query.toLocaleLowerCase("tr")),
   );
   return (
     <section className="panel recordings-panel">
@@ -61,7 +61,7 @@ export function RecordingArchive({
           Kayıtlarda ara
           <input
             type="search"
-            placeholder="Görev veya kayıt adı"
+            placeholder="Görev, kayıt adı veya kimlik"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -84,13 +84,21 @@ export function RecordingArchive({
       {filtered.length === 0 && (
         <div className="archive-empty">
           <Database size={28} />
-          <h3>Eşleşen kayıt bulunamadı</h3>
-          <p>Aramayı veya kaynak filtresini değiştirin.</p>
+          <h3>
+            {recordings.length
+              ? "Eşleşen kayıt bulunamadı"
+              : "Henüz uçuş kaydı yok"}
+          </h3>
+          <p>
+            {recordings.length
+              ? "Aramayı veya kaynak filtresini değiştirin."
+              : "Bir uçuş kaydı oluşturun veya mevcut JSON kaydını içe aktarın."}
+          </p>
           <button
             className="secondary"
             onClick={() => {
-              setQuery('');
-              setSource('all');
+              setQuery("");
+              setSource("all");
             }}
           >
             Filtreleri temizle
@@ -100,15 +108,16 @@ export function RecordingArchive({
       <div className="recording-grid">
         {filtered.map((r) => (
           <article className="recording-card" key={r.session.id}>
-            <span className={'recording-source ' + r.session.source}>
-              {r.session.source === 'sitl' ? 'SITL KAYDI' : 'DEMO KAYDI'}
+            <span className={"recording-source " + r.session.source}>
+              {r.session.source === "sitl" ? "SITL KAYDI" : "DEMO KAYDI"}
             </span>
             <h3>{r.session.name}</h3>
             <p>
               {frames(r).length} örnek · {analyze(r).duration_s.toFixed(1)} s
             </p>
             <span className="muted">
-              {new Date(r.session.started_utc).toLocaleString('tr-TR')}
+              {new Date(r.session.started_utc).toLocaleString("tr-TR")} ·{" "}
+              {r.session.id.slice(0, 8)}
             </span>
             <div>
               <button className="primary small" onClick={() => onReplay(r)}>
@@ -127,7 +136,10 @@ export function RecordingArchive({
                 className="icon-button"
                 aria-label={`${r.session.name} JSON indir`}
                 onClick={() =>
-                  download('flight-session.json', JSON.stringify(r, null, 2))
+                  download(
+                    "flight-" + r.session.id + ".json",
+                    JSON.stringify(r, null, 2),
+                  )
                 }
               >
                 <ArrowDownToLine size={17} />

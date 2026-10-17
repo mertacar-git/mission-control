@@ -1,11 +1,11 @@
-import { useMissionDraft, moveWaypoint } from './missionDraft';
-import { SurveyPlanner } from './components/SurveyPlanner';
-import { fenceState, validatePlanning, defaultPlanning } from './planning';
-import { missionFingerprint, type EditLayer, type Waypoint } from './types';
-import { parseRecording } from './recording';
-import { MissionEditor } from './components/MissionEditor';
-import { RecordingArchive } from './components/RecordingArchive';
-import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { useMissionDraft, moveWaypoint } from "./missionDraft";
+import { SurveyPlanner } from "./components/SurveyPlanner";
+import { fenceState, validatePlanning, defaultPlanning } from "./planning";
+import { missionFingerprint, type EditLayer, type Waypoint } from "./types";
+import { parseRecording } from "./recording";
+import { MissionEditor } from "./components/MissionEditor";
+import { RecordingArchive } from "./components/RecordingArchive";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import {
   Activity,
   ChevronRight,
@@ -19,20 +19,20 @@ import {
   Square,
   Wifi,
   X,
-} from 'lucide-react';
-import { FlightChart } from './components/TelemetryChart';
-import { EventLog, eventLabel } from './components/EventLog';
-import { IncidentInspector } from './components/IncidentInspector';
-import { ScenarioLab } from './components/ScenarioLab';
-import { ExperimentLab } from './components/ExperimentLab';
-import { ExecutionComparison } from './components/ExecutionComparison';
-import { EmulatorLab } from './components/EmulatorLab';
-import { SerialDevice } from './components/SerialDevice';
-import { MissionReadiness } from './components/MissionReadiness';
-import { missionStage, routeLength } from './missionPresentation';
-import { MapView } from './MapView';
-import { DemoVehicle, sampleRecording } from './demo';
-import { api, subscribe } from './api';
+} from "lucide-react";
+import { FlightChart } from "./components/TelemetryChart";
+import { EventLog, eventLabel } from "./components/EventLog";
+import { IncidentInspector } from "./components/IncidentInspector";
+import { ScenarioLab } from "./components/ScenarioLab";
+import { ExperimentLab } from "./components/ExperimentLab";
+import { ExecutionComparison } from "./components/ExecutionComparison";
+import { EmulatorLab } from "./components/EmulatorLab";
+import { SerialDevice } from "./components/SerialDevice";
+import { MissionReadiness } from "./components/MissionReadiness";
+import { missionStage, routeLength } from "./missionPresentation";
+import { MapView } from "./MapView";
+import { DemoVehicle, sampleRecording } from "./demo";
+import { api, subscribe } from "./api";
 import {
   analyze,
   download,
@@ -40,7 +40,7 @@ import {
   frameAt,
   eventsAt,
   toCSV,
-} from './analysis';
+} from "./analysis";
 import {
   emptyTelemetry,
   newMission,
@@ -51,25 +51,25 @@ import {
   type Telemetry,
   type Action,
   type FlightEvent,
-} from './types';
+} from "./types";
 
 type Page =
-  | 'mission'
-  | 'flight'
-  | 'recordings'
-  | 'analysis'
-  | 'experiments'
-  | 'emulator'
-  | 'serial';
+  | "mission"
+  | "flight"
+  | "recordings"
+  | "analysis"
+  | "experiments"
+  | "emulator"
+  | "serial";
 const names = {
-  closed: 'Bağlantı kapalı',
-  connecting: 'Bağlanıyor',
-  connected: 'Bağlı',
-  stale: 'Veri gecikmiş',
-  disconnected: 'Bağlantı kesildi',
+  closed: "Bağlantı kapalı",
+  connecting: "Bağlanıyor",
+  connected: "Bağlı",
+  stale: "Veri gecikmiş",
+  disconnected: "Bağlantı kesildi",
 };
 const initialStatus: Status = {
-  state: 'closed',
+  state: "closed",
   telemetry: emptyTelemetry(),
   recording_id: null,
   mission: null,
@@ -77,28 +77,28 @@ const initialStatus: Status = {
   events: [],
   event_sequence: 0,
   simulator_owned: false,
-  simulator_revision: '—',
+  simulator_revision: "—",
 };
 const actions: [Action, string][] = [
-  ['arm', 'Arm'],
-  ['start', 'Görevi başlat'],
-  ['hold', 'Beklet'],
-  ['resume', 'Devam et'],
-  ['return', 'Eve dön'],
-  ['land', 'İniş'],
+  ["arm", "Arm"],
+  ["start", "Görevi başlat"],
+  ["hold", "Beklet"],
+  ["resume", "Devam et"],
+  ["return", "Eve dön"],
+  ["land", "İniş"],
 ];
-const localAvailable = ['localhost', '127.0.0.1'].includes(location.hostname);
+const localAvailable = ["localhost", "127.0.0.1"].includes(location.hostname);
 function readSaved<T>(key: string, fallback: T): T {
   try {
-    return JSON.parse(localStorage.getItem(key) ?? 'null') ?? fallback;
+    return JSON.parse(localStorage.getItem(key) ?? "null") ?? fallback;
   } catch {
     return fallback;
   }
 }
-function value(number: number | null, unit = '', digits = 1) {
+function value(number: number | null, unit = "", digits = 1) {
   return number === null
-    ? '—'
-    : number.toFixed(digits) + (unit ? ' ' + unit : '');
+    ? "—"
+    : number.toFixed(digits) + (unit ? " " + unit : "");
 }
 function stat(label: string, number: string, hint: string) {
   return (
@@ -113,14 +113,14 @@ export default function App() {
   const { mission, setMission, undo, redo, canUndo, canRedo } = useMissionDraft(
     () => {
       try {
-        return validateMission(readSaved('mc-draft-v1', newMission()));
+        return validateMission(readSaved("mc-draft-v1", newMission()));
       } catch {
         return newMission();
       }
     },
   );
   const [selectedWaypoint, setSelectedWaypoint] = useState(0);
-  const [editLayer, setEditLayer] = useState<EditLayer>('waypoints');
+  const [editLayer, setEditLayer] = useState<EditLayer>("waypoints");
   const [previewRoute, setPreviewRoute] = useState<Waypoint[] | null>(null);
   const [mapFocus, setMapFocus] = useState<{
     latitude: number;
@@ -143,19 +143,19 @@ export default function App() {
     );
   }, [mission.waypoints.length]);
   const operationPending = useRef(false);
-  const [mode, setMode] = useState<'demo' | 'local'>(() =>
-      ['localhost', '127.0.0.1'].includes(location.hostname) &&
-      sessionStorage.getItem('mc-mode') === 'local'
-        ? 'local'
-        : 'demo',
+  const [mode, setMode] = useState<"demo" | "local">(() =>
+      ["localhost", "127.0.0.1"].includes(location.hostname) &&
+      sessionStorage.getItem("mc-mode") === "local"
+        ? "local"
+        : "demo",
     ),
-    [page, setPage] = useState<Page>('mission'),
+    [page, setPage] = useState<Page>("mission"),
     [status, setStatus] = useState<Status>(initialStatus);
   const [missions, setMissions] = useState<Mission[]>(() =>
-    readSaved('mc-missions-v1', []),
+    readSaved("mc-missions-v1", []),
   );
   const [recordings, setRecordings] = useState<Recording[]>(() => {
-    const raw = readSaved<unknown>('mc-recordings-v1', []);
+    const raw = readSaved<unknown>("mc-recordings-v1", []);
     const data = (Array.isArray(raw) ? raw : []).flatMap((value) => {
       try {
         return [parseRecording(value)];
@@ -165,11 +165,11 @@ export default function App() {
     });
     return [
       sampleRecording(newMission()),
-      ...data.filter((r) => r?.session?.id !== 'sample-demo-flight'),
+      ...data.filter((r) => r?.session?.id !== "sample-demo-flight"),
     ];
   });
   const [history, setHistory] = useState<Telemetry[]>([]),
-    [notice, setNotice] = useState(''),
+    [notice, setNotice] = useState(""),
     [busy, setBusy] = useState(false),
     [replay, setReplay] = useState<Recording | null>(null),
     [replayTime, setReplayTime] = useState(0),
@@ -191,7 +191,7 @@ export default function App() {
     : status.telemetry;
   const route =
     replay?.session.mission ??
-    (page === 'mission' ? mission : (status.mission ?? mission));
+    (page === "mission" ? mission : (status.mission ?? mission));
   const trace = replay
     ? replayFrames.filter((r) => r.elapsed_s <= replayTime)
     : history;
@@ -206,7 +206,7 @@ export default function App() {
     ? analyze(activeRecord, altThreshold, batThreshold)
     : null;
   const chartRows = (
-    page === 'analysis' && activeRecord ? frames(activeRecord) : trace
+    page === "analysis" && activeRecord ? frames(activeRecord) : trace
   ).slice(-1200);
 
   useEffect(() => {
@@ -217,10 +217,10 @@ export default function App() {
   }, [replay]);
   useEffect(() => {
     try {
-      localStorage.setItem('mc-draft-v1', JSON.stringify(mission));
+      localStorage.setItem("mc-draft-v1", JSON.stringify(mission));
     } catch {
       setNotice(
-        'Görev tarayıcıya kaydedilemedi; JSON ile dışa aktarabilirsiniz.',
+        "Görev tarayıcıya kaydedilemedi; JSON ile dışa aktarabilirsiniz.",
       );
     }
   }, [mission]);
@@ -240,23 +240,23 @@ export default function App() {
       ];
       try {
         localStorage.setItem(
-          'mc-recordings-v1',
+          "mc-recordings-v1",
           JSON.stringify(
-            next.filter((r) => r.session.id !== 'sample-demo-flight'),
+            next.filter((r) => r.session.id !== "sample-demo-flight"),
           ),
         );
       } catch {
-        setNotice('Tarayıcı kayıt alanı dolu; kaydı JSON ile dışa aktarın.');
+        setNotice("Tarayıcı kayıt alanı dolu; kaydı JSON ile dışa aktarın.");
       }
       return next;
     });
     setSelected(recording);
   }
   useEffect(() => {
-    if (mode !== 'demo') return;
+    if (mode !== "demo") return;
     const timer = setInterval(() => {
       const vehicle = demo.current;
-      if (vehicle.state.state === 'connected') {
+      if (vehicle.state.state === "connected") {
         vehicle.tick(0.5);
         refreshDemo();
         setHistory((previous) =>
@@ -267,7 +267,7 @@ export default function App() {
     return () => clearInterval(timer);
   }, [mode]);
   useEffect(() => {
-    if (mode !== 'local') return;
+    if (mode !== "local") return;
     void api
       .missions()
       .then(setMissions)
@@ -277,15 +277,15 @@ export default function App() {
       ws: WebSocket | null = null;
     const receive = (event: FlightEvent) => {
       if (disposed) return;
-      if (event.type === 'snapshot') {
+      if (event.type === "snapshot") {
         const next = event.payload as unknown as Status;
         if (lastSequence && next.event_sequence > lastSequence + 1)
           setNotice(
-            'Yeniden bağlantı sırasında olay boşluğu var. Güncel backend durumu alındı; komut tekrarlanmadı.',
+            "Yeniden bağlantı sırasında olay boşluğu var. Güncel backend durumu alındı; komut tekrarlanmadı.",
           );
         if (lastSequence && next.event_sequence < lastSequence)
           setNotice(
-            'Backend yeniden başlatıldı; güncel durum alındı. Komutlar otomatik tekrarlanmaz.',
+            "Backend yeniden başlatıldı; güncel durum alındı. Komutlar otomatik tekrarlanmaz.",
           );
         lastSequence = next.event_sequence;
         setStatus(next);
@@ -293,10 +293,10 @@ export default function App() {
       }
       if (event.sequence && lastSequence && event.sequence > lastSequence + 1)
         setNotice(
-          'Canlı olay akışında boşluk var. Backend kayıtları ayrıca korunur.',
+          "Canlı olay akışında boşluk var. Backend kayıtları ayrıca korunur.",
         );
       lastSequence = event.sequence ?? lastSequence;
-      if (event.type === 'telemetry') {
+      if (event.type === "telemetry") {
         const t = event.payload as unknown as Telemetry;
         setStatus((previous) => ({
           ...previous,
@@ -321,7 +321,7 @@ export default function App() {
       ws = subscribe(receive, () => {
         if (!disposed)
           setNotice(
-            'Backend olay akışı kapalı; bağlantı durumunu kontrol edin.',
+            "Backend olay akışı kapalı; bağlantı durumunu kontrol edin.",
           );
       });
     };
@@ -336,7 +336,7 @@ export default function App() {
       .catch(() => {
         if (!disposed)
           setNotice(
-            'Yerel backend bulunamadı. simulator/run-backend.sh ile başlatın.',
+            "Yerel backend bulunamadı. simulator/run-backend.sh ile başlatın.",
           );
       });
     const timer = setInterval(() => {
@@ -350,10 +350,10 @@ export default function App() {
           if (!disposed)
             setStatus((previous) => ({
               ...previous,
-              state: 'disconnected',
+              state: "disconnected",
               telemetry: {
                 ...previous.telemetry,
-                connection: 'disconnected',
+                connection: "disconnected",
                 position_fresh: false,
                 latitude: null,
                 longitude: null,
@@ -368,7 +368,7 @@ export default function App() {
               },
             }));
         });
-      if (latest.current.state !== 'closed')
+      if (latest.current.state !== "closed")
         void api.renew().catch(() => api.claim().catch(() => {}));
       if (!ws || ws.readyState === WebSocket.CLOSED) {
         connectSocket();
@@ -401,7 +401,7 @@ export default function App() {
     if (operationPending.current) return;
     operationPending.current = true;
     setBusy(true);
-    setNotice('');
+    setNotice("");
     try {
       await fn();
     } catch (error) {
@@ -411,15 +411,15 @@ export default function App() {
       setBusy(false);
     }
   }
-  function changeMode(next: 'demo' | 'local') {
+  function changeMode(next: "demo" | "local") {
     if (next === mode) return;
-    if (status.state !== 'closed') {
-      setNotice('Mod değiştirmeden önce açık bağlantıyı kapatın.');
+    if (status.state !== "closed") {
+      setNotice("Mod değiştirmeden önce açık bağlantıyı kapatın.");
       return;
     }
-    if (next === 'local' && !localAvailable) {
+    if (next === "local" && !localAvailable) {
       setNotice(
-        'Yerel SITL modu için projeyi bilgisayarınızda çalıştırın. Bu public yayın yalnızca tarayıcı demosudur. README kurulum adımlarını içerir.',
+        "Yerel SITL modu için projeyi bilgisayarınızda çalıştırın. Bu public yayın yalnızca tarayıcı demosudur. README kurulum adımlarını içerir.",
       );
       return;
     }
@@ -428,15 +428,15 @@ export default function App() {
     setHistory([]);
     setStatus({
       ...initialStatus,
-      telemetry: emptyTelemetry(next === 'local' ? 'sitl' : 'demo'),
+      telemetry: emptyTelemetry(next === "local" ? "sitl" : "demo"),
     });
     setMode(next);
-    sessionStorage.setItem('mc-mode', next);
-    setNotice('');
+    sessionStorage.setItem("mc-mode", next);
+    setNotice("");
   }
   async function connect() {
     await perform(async () => {
-      if (mode === 'demo') {
+      if (mode === "demo") {
         demo.current = new DemoVehicle();
         demo.current.connect();
         refreshDemo();
@@ -449,7 +449,7 @@ export default function App() {
     });
   }
   async function stopRecording() {
-    if (mode === 'demo') {
+    if (mode === "demo") {
       const r = demo.current.stopRecording();
       if (r) persistRecording(r);
       refreshDemo();
@@ -465,7 +465,7 @@ export default function App() {
   async function disconnect() {
     await perform(async () => {
       if (status.recording_id) await stopRecording();
-      if (mode === 'demo') {
+      if (mode === "demo") {
         demo.current.disconnect();
         refreshDemo();
       } else setStatus(await api.disconnect());
@@ -476,37 +476,37 @@ export default function App() {
     await perform(async () => {
       const checked = validateMission(mission);
       let saved = checked;
-      if (mode === 'local') saved = await api.save(checked);
+      if (mode === "local") saved = await api.save(checked);
       setMissions((previous) => {
         const next = [saved, ...previous.filter((m) => m.id !== saved.id)];
-        localStorage.setItem('mc-missions-v1', JSON.stringify(next));
+        localStorage.setItem("mc-missions-v1", JSON.stringify(next));
         return next;
       });
-      setNotice('Görev kaydedildi.');
+      setNotice("Görev kaydedildi.");
     });
   }
   async function uploadMission(approved?: Mission) {
     setBusy(true);
-    setNotice('');
+    setNotice("");
     try {
       const checked = validateMission(approved ?? mission);
       const validation = validatePlanning(checked);
       if (!validation.valid)
-        throw Error(validation.issues.map((i) => i.message).join(' '));
-      if (mode === 'demo') {
+        throw Error(validation.issues.map((i) => i.message).join(" "));
+      if (mode === "demo") {
         demo.current.upload(checked);
         refreshDemo();
       } else {
         const remote = await api.validate(checked);
         if (!remote.valid)
-          throw Error(remote.issues.map((i) => i.message).join(' '));
+          throw Error(remote.issues.map((i) => i.message).join(" "));
         await api.save(checked);
         await api.upload(checked.id);
         setStatus(await api.status());
       }
       setNotice(
-        'Görev yükleme ve geri okuma doğrulandı' +
-          (mode === 'demo' ? ' · demo modeli.' : '.'),
+        "Görev yükleme ve geri okuma doğrulandı" +
+          (mode === "demo" ? " · demo modeli." : "."),
       );
     } catch (error) {
       setNotice(error instanceof Error ? error.message : String(error));
@@ -516,7 +516,7 @@ export default function App() {
     }
   }
   async function startRecording() {
-    if (mode === 'demo') {
+    if (mode === "demo") {
       demo.current.startRecording(mission.name);
       refreshDemo();
     } else {
@@ -526,24 +526,24 @@ export default function App() {
   }
   async function command(action: Action) {
     if (replayRef.current) {
-      setNotice('Tekrar oynatmada canlı komutlar kapalıdır.');
+      setNotice("Tekrar oynatmada canlı komutlar kapalıdır.");
       return;
     }
     await perform(async () => {
-      if (action === 'start' && !status.recording_id) await startRecording();
-      if (mode === 'demo') {
+      if (action === "start" && !status.recording_id) await startRecording();
+      if (mode === "demo") {
         demo.current.command(action);
         refreshDemo();
       } else {
         await api.command(action);
         setStatus(await api.status());
       }
-      if (action === 'start') setPage('flight');
+      if (action === "start") setPage("flight");
     });
   }
   function editWaypoint(
     index: number,
-    field: 'latitude' | 'longitude' | 'altitude_m',
+    field: "latitude" | "longitude" | "altitude_m",
     v: number,
   ) {
     setMission((previous) => ({
@@ -556,7 +556,7 @@ export default function App() {
   function addPoint(latitude = 41.0082, longitude = 28.9784) {
     if (!editing) return;
     if (mission.waypoints.length >= 50) {
-      setNotice('En fazla 50 rota noktası ekleyebilirsiniz.');
+      setNotice("En fazla 50 rota noktası ekleyebilirsiniz.");
       return;
     }
     setMission((previous) => ({
@@ -569,25 +569,25 @@ export default function App() {
   }
   async function importFile(
     event: ChangeEvent<HTMLInputElement>,
-    kind: 'mission' | 'recording',
+    kind: "mission" | "recording",
   ) {
     const file = event.target.files?.[0];
     if (!file) return;
     await perform(async () => {
-      if (file.size > 20_000_000) throw Error('Dosya 20 MB sınırını aşıyor.');
+      if (file.size > 20_000_000) throw Error("Dosya 20 MB sınırını aşıyor.");
       const json = JSON.parse(await file.text());
-      if (kind === 'mission') {
-        if (!editing) throw Error('Görev düzenleme kilitli.');
+      if (kind === "mission") {
+        if (!editing) throw Error("Görev düzenleme kilitli.");
         setMission(validateMission(json));
-        setNotice('Görev JSON dosyası yüklendi.');
+        setNotice("Görev JSON dosyası yüklendi.");
       } else {
         const r = parseRecording(json);
         persistRecording(r);
-        setPage('recordings');
-        setNotice('Kayıt içe aktarıldı.');
+        setPage("recordings");
+        setNotice("Kayıt içe aktarıldı.");
       }
     });
-    event.target.value = '';
+    event.target.value = "";
   }
   async function loadLocalRecordings() {
     await perform(async () => {
@@ -609,9 +609,9 @@ export default function App() {
     setSelected(recording);
     setPlaying(false);
     setReplayTime(frames(recording)[0]?.elapsed_s ?? 0);
-    setPage('flight');
+    setPage("flight");
     setNotice(
-      'Tekrar oynatma açık. Canlı komutlar devre dışı; arka plandaki simülatör kendiliğinden durdurulmaz.',
+      "Tekrar oynatma açık. Canlı komutlar devre dışı; arka plandaki simülatör kendiliğinden durdurulmaz.",
     );
   }
   const events = replay ? eventsAt(replay, replayTime) : status.events;
@@ -622,11 +622,11 @@ export default function App() {
         <button
           className="brand"
           aria-label="FLW VECTOR · görev planlama"
-          onClick={() => setPage('mission')}
+          onClick={() => setPage("mission")}
         >
           <img
             className="vector-mark"
-            src={import.meta.env.BASE_URL + 'brand/vector-mark.svg'}
+            src={import.meta.env.BASE_URL + "brand/vector-mark.svg"}
             alt=""
             width="48"
             height="48"
@@ -641,18 +641,18 @@ export default function App() {
         <nav>
           {(
             [
-              ['mission', 'Görev planlama', MapPin],
-              ['flight', 'Uçuş takibi', Activity],
-              ['recordings', 'Uçuş kayıtları', Database],
-              ['analysis', 'Uçuş analizi', Compass],
-              ['experiments', 'Senaryo laboratuvarı', Radio],
-              ['emulator', 'Bilgisayar emülatörü', Database],
-              ['serial', 'Seri cihaz', Radio],
+              ["mission", "Görev planlama", MapPin],
+              ["flight", "Uçuş takibi", Activity],
+              ["recordings", "Uçuş kayıtları", Database],
+              ["analysis", "Uçuş analizi", Compass],
+              ["experiments", "Deney merkezi", Radio],
+              ["emulator", "Bilgisayar emülatörü", Database],
+              ["serial", "Seri cihaz", Radio],
             ] as const
           ).map(([id, label, Icon]) => (
             <button
               key={id}
-              className={page === id ? 'active' : ''}
+              className={page === id ? "active" : ""}
               onClick={() => setPage(id)}
             >
               <Icon size={17} />
@@ -684,25 +684,25 @@ export default function App() {
             Çalışma alanı <ChevronRight size={13} /> <strong>FLW VECTOR</strong>
           </div>
           <div className="top-actions">
-            {page === 'serial' ? (
+            {page === "serial" ? (
               <span>Bağımsız seri kaynak</span>
             ) : (
               <>
                 <div className="mode-picker">
                   <button
-                    className={mode === 'demo' ? 'selected' : ''}
-                    onClick={() => changeMode('demo')}
+                    className={mode === "demo" ? "selected" : ""}
+                    onClick={() => changeMode("demo")}
                   >
                     Demo
                   </button>
                   <button
-                    className={mode === 'local' ? 'selected' : ''}
-                    onClick={() => changeMode('local')}
+                    className={mode === "local" ? "selected" : ""}
+                    onClick={() => changeMode("local")}
                   >
                     Yerel SITL
                   </button>
                 </div>
-                <span className={'connection ' + status.state}>
+                <span className={"connection " + status.state}>
                   <i />
                   {names[status.state]}
                 </span>
@@ -714,67 +714,67 @@ export default function App() {
           <section className="title-row">
             <div>
               <div className="eyebrow">
-                {page === 'serial'
-                  ? 'SERİ ALICI / AYRI VERİ KAYNAĞI'
-                  : page === 'emulator'
-                    ? 'EMÜLATÖR / AYRI TELEMETRİ KAYNAĞI'
-                    : page === 'analysis' && activeRecord
-                      ? activeRecord.session.source === 'sitl'
-                        ? 'KAYDEDİLMİŞ SITL / UÇUŞ ANALİZİ'
-                        : 'KAYDEDİLMİŞ DEMO / UÇUŞ ANALİZİ'
+                {page === "serial"
+                  ? "SERİ ALICI / AYRI VERİ KAYNAĞI"
+                  : page === "emulator"
+                    ? "EMÜLATÖR / AYRI TELEMETRİ KAYNAĞI"
+                    : page === "analysis" && activeRecord
+                      ? activeRecord.session.source === "sitl"
+                        ? "KAYDEDİLMİŞ SITL / UÇUŞ ANALİZİ"
+                        : "KAYDEDİLMİŞ DEMO / UÇUŞ ANALİZİ"
                       : replay
-                        ? 'KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA'
-                        : page === 'experiments' && mode === 'demo'
-                          ? 'GERÇEK SITL / YAYIMLANMIŞ DENEY KAYITLARI'
-                          : mode === 'demo'
-                            ? 'TARAYICI DEMOSU / SİMÜLE VERİ'
-                            : 'YEREL ARDUPILOT / CANLI SİMÜLATÖR'}
+                        ? "KAYDEDİLMİŞ UÇUŞ / TEKRAR OYNATMA"
+                        : page === "experiments" && mode === "demo"
+                          ? "GERÇEK SITL / YAYIMLANMIŞ DENEY KAYITLARI"
+                          : mode === "demo"
+                            ? "TARAYICI DEMOSU / SİMÜLE VERİ"
+                            : "YEREL ARDUPILOT / CANLI SİMÜLATÖR"}
               </div>
               <h1>
-                {page === 'serial'
-                  ? 'Seri cihaz tezgâhı'
-                  : page === 'mission'
-                    ? 'Görev planlama'
-                    : page === 'flight'
-                      ? 'Uçuş kontrol merkezi'
-                      : page === 'recordings'
-                        ? 'Uçuş arşivi'
-                        : page === 'emulator'
-                          ? 'Uçuş bilgisayarı emülatörü'
-                          : page === 'experiments'
-                            ? 'Senaryo laboratuvarı'
-                            : 'Uçuş analizi'}
+                {page === "serial"
+                  ? "Seri cihaz tezgâhı"
+                  : page === "mission"
+                    ? "Görev planlama"
+                    : page === "flight"
+                      ? "Uçuş kontrol merkezi"
+                      : page === "recordings"
+                        ? "Uçuş arşivi"
+                        : page === "emulator"
+                          ? "Uçuş bilgisayarı emülatörü"
+                          : page === "experiments"
+                            ? "Deney merkezi"
+                            : "Uçuş analizi"}
               </h1>
               <p>
-                {page === 'serial'
-                  ? 'Windows seri alıcısı · bağımsız kayıt ve oynatma · uçuş komutu içermez.'
-                  : page === 'emulator'
-                    ? 'Sentetik sensörler · ayrı gönderici süreç · paket doğrulama ve tekrar oynatma.'
-                    : page === 'analysis' && activeRecord
-                      ? activeRecord.session.source === 'sitl'
-                        ? 'Gerçek SITL kaydı · analiz kayıtlı ölçümleri kullanır.'
-                        : 'Tarayıcı modeli kaydı · analiz kayıtlı örnekleri kullanır.'
+                {page === "serial"
+                  ? "Windows seri alıcısı · bağımsız kayıt ve oynatma · uçuş komutu içermez."
+                  : page === "emulator"
+                    ? "Sentetik sensörler · ayrı gönderici süreç · paket doğrulama ve tekrar oynatma."
+                    : page === "analysis" && activeRecord
+                      ? activeRecord.session.source === "sitl"
+                        ? "Gerçek SITL kaydı · analiz kayıtlı ölçümleri kullanır."
+                        : "Tarayıcı modeli kaydı · analiz kayıtlı örnekleri kullanır."
                       : replay
-                        ? replay.session.source === 'sitl'
-                          ? 'Gerçek SITL kaydı · kayıtlı ölçümler inceleniyor.'
-                          : 'Tarayıcı modeli kaydı inceleniyor.'
-                        : page === 'experiments' && mode === 'demo'
-                          ? 'Kontrollü hata senaryoları · gerçek gözlemler ve kabul raporları.'
-                          : mode === 'demo'
-                            ? 'Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır.'
-                            : 'ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör.'}
+                        ? replay.session.source === "sitl"
+                          ? "Gerçek SITL kaydı · kayıtlı ölçümler inceleniyor."
+                          : "Tarayıcı modeli kaydı inceleniyor."
+                        : page === "experiments" && mode === "demo"
+                          ? "Kontrollü hata senaryoları · gerçek gözlemler ve kabul raporları."
+                          : mode === "demo"
+                            ? "Örnek araç modeli · tüm işlemler bu tarayıcıda çalışır."
+                            : "ArduCopter 4.6.3 · uygulamanın başlattığı yerel simülatör."}
               </p>
             </div>
             <div className="connection-actions">
-              {['mission', 'flight'].includes(page) &&
+              {["mission", "flight"].includes(page) &&
                 !replay &&
-                status.state === 'closed' && (
+                status.state === "closed" && (
                   <button
                     className="secondary"
                     onClick={() =>
                       openReplay(
                         recordings.find(
-                          (r) => r.session.id === 'sample-demo-flight',
+                          (r) => r.session.id === "sample-demo-flight",
                         ) ?? recordings[0],
                       )
                     }
@@ -783,15 +783,15 @@ export default function App() {
                     Örnek uçuşu incele
                   </button>
                 )}
-              {status.state === 'closed' ? (
-                !['mission', 'flight'].includes(page) ? null : (
+              {status.state === "closed" ? (
+                !["mission", "flight"].includes(page) ? null : (
                   <button
                     className="primary"
                     disabled={busy || !!replay || !!status.scenario_active}
                     onClick={() => void connect()}
                   >
                     <Wifi size={16} />
-                    {mode === 'demo' ? 'Demoya bağlan' : 'SITL başlat & bağlan'}
+                    {mode === "demo" ? "Demoya bağlan" : "SITL başlat & bağlan"}
                   </button>
                 )
               ) : (
@@ -801,11 +801,11 @@ export default function App() {
                   onClick={() => void disconnect()}
                 >
                   <X size={16} />
-                  {page === 'serial'
-                    ? mode === 'local'
-                      ? 'SITL oturumunu kapat'
-                      : 'Demo uçuş oturumunu kapat'
-                    : 'Bağlantıyı kapat'}
+                  {page === "serial"
+                    ? mode === "local"
+                      ? "SITL oturumunu kapat"
+                      : "Demo uçuş oturumunu kapat"
+                    : "Bağlantıyı kapat"}
                 </button>
               )}
             </div>
@@ -816,15 +816,15 @@ export default function App() {
               <span>{notice}</span>
               <button
                 aria-label="Bildirimi kapat"
-                onClick={() => setNotice('')}
+                onClick={() => setNotice("")}
               >
                 <X size={15} />
               </button>
             </div>
           )}
-          {(page === 'mission' || page === 'flight') && (
+          {(page === "mission" || page === "flight") && (
             <>
-              {page === 'mission' && status.state === 'closed' && !replay ? (
+              {page === "mission" && status.state === "closed" && !replay ? (
                 <>
                   <div className="telemetry-caption">
                     <span>GÖREV ÖZETİ</span>
@@ -832,86 +832,86 @@ export default function App() {
                   </div>
                   <div className="metrics">
                     {stat(
-                      'ROTA NOKTASI',
+                      "ROTA NOKTASI",
                       String(mission.waypoints.length),
-                      'Sıralı görev noktaları',
+                      "Sıralı görev noktaları",
                     )}
                     {stat(
-                      'PLANLANAN MESAFE',
-                      routeLength(mission).toFixed(0) + ' m',
-                      'Başlangıç noktası dahil',
+                      "PLANLANAN MESAFE",
+                      routeLength(mission).toFixed(0) + " m",
+                      "Başlangıç noktası dahil",
                     )}
                     {stat(
-                      'KALKIŞ İRTİFASI',
-                      mission.takeoff_altitude_m + ' m',
-                      'Eve göre planlanan irtifa',
+                      "KALKIŞ İRTİFASI",
+                      mission.takeoff_altitude_m + " m",
+                      "Eve göre planlanan irtifa",
                     )}
-                    {stat('GÖREV SONU', 'İniş', 'Son rota noktasında')}
+                    {stat("GÖREV SONU", "İniş", "Son rota noktasında")}
                   </div>
                 </>
               ) : (
                 <>
                   <div className="telemetry-caption">
                     <span>
-                      <i className={replay ? 'replay-dot' : 'live-dot'} />
-                      {replay ? 'KAYITTAN TELEMETRİ' : 'ARAÇ TELEMETRİSİ'}
+                      <i className={replay ? "replay-dot" : "live-dot"} />
+                      {replay ? "KAYITTAN TELEMETRİ" : "ARAÇ TELEMETRİSİ"}
                     </span>
                     <span>
                       {replay
                         ? replay.session.name
                         : status.recording_id
-                          ? '● Uçuş kaydı alınıyor'
-                          : 'Kayıt beklemede'}
+                          ? "● Uçuş kaydı alınıyor"
+                          : "Kayıt beklemede"}
                     </span>
                   </div>
                   <div className="metrics">
                     {stat(
-                      'EVE GÖRE İRTİFA',
-                      value(shown.relative_altitude_m, 'm'),
-                      'm · eve göre',
+                      "EVE GÖRE İRTİFA",
+                      value(shown.relative_altitude_m, "m"),
+                      "m · eve göre",
                     )}
                     {stat(
-                      'YER HIZI',
-                      value(shown.ground_speed_ms, 'm/s'),
-                      'm/s · yer referansı',
+                      "YER HIZI",
+                      value(shown.ground_speed_ms, "m/s"),
+                      "m/s · yer referansı",
                     )}
                     {stat(
-                      'BATARYA',
-                      value(shown.battery_pct, '%', 0),
-                      value(shown.battery_voltage_v, 'V', 2),
+                      "BATARYA",
+                      value(shown.battery_pct, "%", 0),
+                      value(shown.battery_voltage_v, "V", 2),
                     )}
                     {stat(
-                      'UÇUŞ MODU',
-                      shown.flight_mode ?? '—',
+                      "UÇUŞ MODU",
+                      shown.flight_mode ?? "—",
                       shown.armed === null
-                        ? 'Durum bilinmiyor'
+                        ? "Durum bilinmiyor"
                         : shown.armed
-                          ? 'ARMED · motorlar açık'
-                          : mode === 'local'
+                          ? "ARMED · motorlar açık"
+                          : mode === "local"
                             ? shown.navigation_ready
-                              ? 'DISARMED · EKF hazır'
-                              : 'DISARMED · EKF bekleniyor'
-                            : 'DISARMED',
+                              ? "DISARMED · EKF hazır"
+                              : "DISARMED · EKF bekleniyor"
+                            : "DISARMED",
                     )}
                   </div>
                 </>
               )}
             </>
           )}
-          {replay && page !== 'emulator' && page !== 'serial' && (
+          {replay && page !== "emulator" && page !== "serial" && (
             <section className="replay-bar panel">
               <div>
                 <strong>{replay.session.name}</strong>
                 <span>
-                  {replay.session.source === 'sitl'
-                    ? 'Gerçek SITL kaydı'
-                    : 'Demo kaydı'}{' '}
+                  {replay.session.source === "sitl"
+                    ? "Gerçek SITL kaydı"
+                    : "Demo kaydı"}{" "}
                   · canlı komutlar kapalı
                 </span>
               </div>
               <button
                 className="icon-button"
-                aria-label={playing ? 'Oynatmayı duraklat' : 'Kaydı oynat'}
+                aria-label={playing ? "Oynatmayı duraklat" : "Kaydı oynat"}
                 onClick={() => setPlaying(!playing)}
               >
                 {playing ? <Pause size={18} /> : <Play size={18} />}
@@ -929,12 +929,12 @@ export default function App() {
                 {Math.max(
                   0,
                   replayTime - (replayFrames[0]?.elapsed_s ?? 0),
-                ).toFixed(1)}{' '}
-                /{' '}
+                ).toFixed(1)}{" "}
+                /{" "}
                 {Math.max(
                   0,
                   replayEnd - (replayFrames[0]?.elapsed_s ?? 0),
-                ).toFixed(1)}{' '}
+                ).toFixed(1)}{" "}
                 s
               </span>
               <select
@@ -951,25 +951,25 @@ export default function App() {
                 onClick={() => {
                   setReplay(null);
                   setPlaying(false);
-                  setNotice('');
+                  setNotice("");
                 }}
               >
                 Canlı görünüme dön
               </button>
             </section>
           )}
-          {(page === 'mission' || page === 'flight') && (
+          {(page === "mission" || page === "flight") && (
             <div
               className={
-                'workspace ' +
-                (page === 'flight' ? 'flight-workspace' : 'planning-workspace')
+                "workspace " +
+                (page === "flight" ? "flight-workspace" : "planning-workspace")
               }
             >
               <div className="workspace-main">
                 <MapView
                   onLayerChange={(key) => {
                     setEditLayer(key);
-                    if (key !== 'waypoints' && !mission.planning)
+                    if (key !== "waypoints" && !mission.planning)
                       setMission((m) => ({
                         ...m,
                         schema_version: 2,
@@ -977,12 +977,12 @@ export default function App() {
                       }));
                   }}
                   layer={
-                    page === 'mission' && mission.planning
+                    page === "mission" && mission.planning
                       ? editLayer
-                      : 'waypoints'
+                      : "waypoints"
                   }
                   previewRoute={
-                    page === 'mission' && !replay ? previewRoute : null
+                    page === "mission" && !replay ? previewRoute : null
                   }
                   onAreaMove={(area, index, point) => {
                     if (editing)
@@ -999,19 +999,19 @@ export default function App() {
                       }));
                   }}
                   selectedIndex={
-                    replay || page !== 'mission' ? null : selectedWaypoint
+                    replay || page !== "mission" ? null : selectedWaypoint
                   }
                   focusPoint={replay ? null : mapFocus}
                   onSelect={selectWaypoint}
                   mission={route}
                   telemetry={shown}
                   trace={trace}
-                  editing={editing && page === 'mission'}
+                  editing={editing && page === "mission"}
                   onAdd={(lat, lon) => {
                     if (!editing) return;
-                    if (mission.planning && editLayer !== 'waypoints') {
+                    if (mission.planning && editLayer !== "waypoints") {
                       if (mission.planning[editLayer].length >= 60) {
-                        setNotice('Alan en fazla 60 köşe içerebilir.');
+                        setNotice("Alan en fazla 60 köşe içerebilir.");
                         return;
                       }
                       setMission((m) => ({
@@ -1039,12 +1039,12 @@ export default function App() {
                     }))
                   }
                 />
-                {page === 'mission' && !replay && (
+                {page === "mission" && !replay && (
                   <SurveyPlanner
-                    local={mode === 'local'}
+                    local={mode === "local"}
                     mission={mission}
                     setMission={setMission}
-                    layer={mission.planning ? editLayer : 'waypoints'}
+                    layer={mission.planning ? editLayer : "waypoints"}
                     setLayer={setEditLayer}
                     editing={editing}
                     onFocus={setMapFocus}
@@ -1056,19 +1056,19 @@ export default function App() {
                     <span className="eyebrow">UÇUŞ KONTROLLERİ</span>
                     <h2>
                       {replay
-                        ? 'Kayıt inceleniyor'
-                        : mode === 'local' && status.mission_lifecycle
+                        ? "Kayıt inceleniyor"
+                        : mode === "local" && status.mission_lifecycle
                           ? ({
-                              preparing: 'Hazırlık',
-                              loaded: 'Görev yüklendi',
-                              executing: 'Görev yürütülüyor',
-                              holding: 'Görev bekletiliyor',
-                              returning: 'Eve dönüş',
-                              landing: 'İniş',
-                              completed: 'Görev tamamlandı',
-                              unknown: 'Görev durumu bilinmiyor',
+                              preparing: "Hazırlık",
+                              loaded: "Görev yüklendi",
+                              executing: "Görev yürütülüyor",
+                              holding: "Görev bekletiliyor",
+                              returning: "Eve dönüş",
+                              landing: "İniş",
+                              completed: "Görev tamamlandı",
+                              unknown: "Görev durumu bilinmiyor",
                             }[status.mission_lifecycle.state] ??
-                            'Görev durumu bilinmiyor')
+                            "Görev durumu bilinmiyor")
                           : missionStage(shown, route.waypoints.length)}
                     </h2>
                   </div>
@@ -1077,53 +1077,53 @@ export default function App() {
                       <button
                         key={action}
                         className={
-                          action === 'start'
-                            ? 'primary small'
-                            : 'secondary small'
+                          action === "start"
+                            ? "primary small"
+                            : "secondary small"
                         }
                         disabled={
                           busy ||
                           !!status.scenario_active ||
                           !!replay ||
-                          status.state !== 'connected' ||
-                          (mode === 'local' &&
-                            ['arm', 'start', 'resume'].includes(action) &&
+                          status.state !== "connected" ||
+                          (mode === "local" &&
+                            ["arm", "start", "resume"].includes(action) &&
                             !status.preflight?.[
-                              action as 'arm' | 'start' | 'resume'
+                              action as "arm" | "start" | "resume"
                             ]?.ready) ||
-                          (action === 'arm' && shown.armed === true) ||
-                          (action === 'start' &&
+                          (action === "arm" && shown.armed === true) ||
+                          (action === "start" &&
                             (!uploadMatches ||
                               shown.armed !== true ||
-                              shown.flight_mode === 'AUTO')) ||
-                          (action === 'arm' &&
-                            mode === 'local' &&
+                              shown.flight_mode === "AUTO")) ||
+                          (action === "arm" &&
+                            mode === "local" &&
                             !shown.navigation_ready) ||
-                          (['hold', 'resume', 'return', 'land'].includes(
+                          (["hold", "resume", "return", "land"].includes(
                             action,
                           ) &&
                             shown.armed !== true)
                         }
                         onClick={() => void command(action)}
                       >
-                        {action === 'start' ? (
+                        {action === "start" ? (
                           <Play size={14} />
-                        ) : action === 'hold' ? (
+                        ) : action === "hold" ? (
                           <Pause size={14} />
-                        ) : action === 'return' ? (
+                        ) : action === "return" ? (
                           <RotateCcw size={14} />
                         ) : null}
                         {label}
                       </button>
                     ))}
                   </div>
-                  {mode === 'local' && status.last_command && (
+                  {mode === "local" && status.last_command && (
                     <p>
-                      Son komut:{' '}
+                      Son komut:{" "}
                       {eventLabel({
-                        type: 'command',
+                        type: "command",
                         payload: status.last_command,
-                        received_utc: '',
+                        received_utc: "",
                       })}
                       . Komut kabulü görev tamamlanması değildir.
                     </p>
@@ -1134,27 +1134,27 @@ export default function App() {
                   </p>
                   <p
                     className={
-                      'fence-state ' +
+                      "fence-state " +
                       fenceState(
                         replay?.session.mission ?? status.mission,
                         shown,
                       )
                     }
                   >
-                    Görev sınırı:{' '}
+                    Görev sınırı:{" "}
                     {
                       {
-                        unconfigured: 'Tanımlanmadı',
-                        inside: 'İçeride',
-                        outside: 'İHLAL GÖZLENDİ',
-                        unknown: 'Bilinmiyor / güncel ölçüm yok',
+                        unconfigured: "Tanımlanmadı",
+                        inside: "İçeride",
+                        outside: "İHLAL GÖZLENDİ",
+                        unknown: "Bilinmiyor / güncel ölçüm yok",
                       }[
                         fenceState(
                           replay?.session.mission ?? status.mission,
                           shown,
                         )
                       ]
-                    }{' '}
+                    }{" "}
                     · Otomatik komut gönderilmez.
                   </p>
                 </section>
@@ -1165,7 +1165,7 @@ export default function App() {
                       <h2>İrtifa ve yer hızı</h2>
                     </div>
                     <span className="muted">
-                      {shown.source === 'demo' ? 'Demo verisi' : 'SITL ölçümü'}
+                      {shown.source === "demo" ? "Demo verisi" : "SITL ölçümü"}
                     </span>
                   </div>
                   <FlightChart
@@ -1179,10 +1179,10 @@ export default function App() {
                   <MissionReadiness
                     status={status}
                     matches={uploadMatches}
-                    local={mode === 'local'}
+                    local={mode === "local"}
                   />
                 )}
-                {page === 'mission' && !replay ? (
+                {page === "mission" && !replay ? (
                   <MissionEditor
                     selectedIndex={selectedWaypoint}
                     onSelect={selectWaypoint}
@@ -1197,7 +1197,7 @@ export default function App() {
                     missions={missions}
                     setMission={setMission}
                     editing={editing}
-                    connected={status.state === 'connected'}
+                    connected={status.state === "connected"}
                     editWaypoint={editWaypoint}
                     addPoint={addPoint}
                     saveMission={saveMission}
@@ -1210,7 +1210,7 @@ export default function App() {
                     <span className="eyebrow">UÇUŞ OTURUMU</span>
                     <h2>{route.name}</h2>
                     <p>
-                      {route.waypoints.length} rota noktası ·{' '}
+                      {route.waypoints.length} rota noktası ·{" "}
                       {route.takeoff_altitude_m} m kalkış
                     </p>
                     <div className="session-facts">
@@ -1220,19 +1220,19 @@ export default function App() {
                       </span>
                       <span>
                         Görev indeksi
-                        <strong>{shown.mission_index ?? '—'}</strong>
+                        <strong>{shown.mission_index ?? "—"}</strong>
                       </span>
                       <span>
                         Konum
                         <strong>
                           {shown.position_fresh
-                            ? 'Güncel'
-                            : 'Gecikmiş / bilinmiyor'}
+                            ? "Güncel"
+                            : "Gecikmiş / bilinmiyor"}
                         </strong>
                       </span>
                       <span>
                         Heartbeat yaşı
-                        <strong>{value(shown.heartbeat_age_s, 's')}</strong>
+                        <strong>{value(shown.heartbeat_age_s, "s")}</strong>
                       </span>
                     </div>
                   </section>
@@ -1241,21 +1241,21 @@ export default function App() {
               </div>
             </div>
           )}
-          {page === 'recordings' && (
+          {page === "recordings" && (
             <RecordingArchive
               recordings={recordings}
-              local={mode === 'local'}
+              local={mode === "local"}
               busy={busy}
               onImport={() => fileRecording.current?.click()}
               onLoad={loadLocalRecordings}
               onReplay={openReplay}
               onAnalyze={(recording) => {
                 setSelected(recording);
-                setPage('analysis');
+                setPage("analysis");
               }}
             />
           )}
-          {replay && page === 'flight' && (
+          {replay && page === "flight" && (
             <IncidentInspector
               recording={replay}
               time={replayTime}
@@ -1270,24 +1270,32 @@ export default function App() {
               }}
             />
           )}
-          {page === 'experiments' && (
+          {page === "experiments" && (
             <ExperimentLab
-              local={mode === 'local'}
+              local={mode === "local"}
               replaying={!!replay}
               mission={mission}
+              transportBusy={
+                !!status.scenario_active ||
+                status.state !== "closed" ||
+                !!status.recording_id
+              }
               onReplay={openReplay}
             />
           )}
-          {page === 'experiments' && (
-            <ScenarioLab
-              local={mode === 'local'}
-              replaying={!!replay}
-              onReplay={openReplay}
-            />
+          {page === "experiments" && (
+            <details className="panel legacy-archive">
+              <summary>Önceki sürümlerden deney kayıtları</summary>
+              <ScenarioLab
+                local={mode === "local"}
+                replaying={!!replay}
+                onReplay={openReplay}
+              />
+            </details>
           )}
-          {page === 'emulator' && <EmulatorLab local={localAvailable} />}
-          {page === 'serial' && <SerialDevice local={localAvailable} />}
-          {page === 'analysis' && (
+          {page === "emulator" && <EmulatorLab local={localAvailable} />}
+          {page === "serial" && <SerialDevice local={localAvailable} />}
+          {page === "analysis" && (
             <>
               {activeRecord && (
                 <ExecutionComparison
@@ -1300,7 +1308,7 @@ export default function App() {
               <section className="panel analysis-head">
                 <div>
                   <span className="eyebrow">KAYIT ANALİZİ</span>
-                  <h2>{activeRecord?.session.name ?? 'Bir kayıt seçin'}</h2>
+                  <h2>{activeRecord?.session.name ?? "Bir kayıt seçin"}</h2>
                   <p>
                     Yalnızca gözlenen, güncel ölçümler kullanılır. Veri
                     boşlukları uçuş izinde birleştirilmez.
@@ -1343,24 +1351,24 @@ export default function App() {
                 <>
                   <div className="metrics analysis-metrics">
                     {stat(
-                      'KAYIT SÜRESİ',
-                      value(report.duration_s, 's'),
-                      'Örnek zamanları arası',
+                      "KAYIT SÜRESİ",
+                      value(report.duration_s, "s"),
+                      "Örnek zamanları arası",
                     )}
                     {stat(
-                      'EN YÜKSEK İRTİFA',
-                      value(report.peak_relative_altitude_m, 'm'),
-                      'Eve göre irtifa',
+                      "EN YÜKSEK İRTİFA",
+                      value(report.peak_relative_altitude_m, "m"),
+                      "Eve göre irtifa",
                     )}
                     {stat(
-                      'GÖZLENEN MESAFE',
-                      value(report.observed_ground_distance_m, 'm'),
-                      'Gecikmiş örnekler hariç',
+                      "GÖZLENEN MESAFE",
+                      value(report.observed_ground_distance_m, "m"),
+                      "Gecikmiş örnekler hariç",
                     )}
                     {stat(
-                      'ROTA SAPMASI',
-                      value(report.max_route_deviation_m, 'm'),
-                      'Planlanan parçalara uzaklık',
+                      "ROTA SAPMASI",
+                      value(report.max_route_deviation_m, "m"),
+                      "Planlanan parçalara uzaklık",
                     )}
                   </div>
                   <section className="panel chart-panel">
@@ -1373,15 +1381,15 @@ export default function App() {
                         <strong>
                           {activeRecord?.session.mission?.planning
                             ? report.fence_violation_count
-                            : '—'}
+                            : "—"}
                         </strong>
                       </span>
                       <span>
                         Gözlenen ihlal süresi
                         <strong>
                           {activeRecord?.session.mission?.planning
-                            ? value(report.fence_observed_violation_s ?? 0, 's')
-                            : '—'}
+                            ? value(report.fence_observed_violation_s ?? 0, "s")
+                            : "—"}
                         </strong>
                       </span>
                       <span>
@@ -1401,7 +1409,7 @@ export default function App() {
                         <strong>
                           {value(
                             report.battery_used_percentage_points,
-                            'yüzde puan',
+                            "yüzde puan",
                           )}
                         </strong>
                       </span>
@@ -1417,7 +1425,7 @@ export default function App() {
                         className="primary small"
                         onClick={() =>
                           download(
-                            'flight-report.json',
+                            "flight-report.json",
                             JSON.stringify(
                               {
                                 ...report,
@@ -1438,9 +1446,9 @@ export default function App() {
                         className="secondary small"
                         onClick={() =>
                           download(
-                            'flight-telemetry.csv',
+                            "flight-telemetry.csv",
                             toCSV(frames(activeRecord!)),
-                            'text/csv',
+                            "text/csv",
                           )
                         }
                       >
@@ -1460,11 +1468,11 @@ export default function App() {
           )}
           <footer>
             <span>
-              <i className={status.recording_id ? 'record-dot' : ''} />
-              {status.recording_id ? 'Uçuş kaydı açık' : 'Uçuş kaydı kapalı'}
+              <i className={status.recording_id ? "record-dot" : ""} />
+              {status.recording_id ? "Uçuş kaydı açık" : "Uçuş kaydı kapalı"}
             </span>
             <div>
-              {status.state === 'connected' && !replay && (
+              {status.state === "connected" && !replay && (
                 <button
                   disabled={busy || !!status.scenario_active}
                   onClick={() =>
@@ -1477,8 +1485,8 @@ export default function App() {
                     <Square size={12} />
                   ) : (
                     <Radio size={12} />
-                  )}{' '}
-                  {status.recording_id ? 'Kaydı durdur' : 'Kayıt başlat'}
+                  )}{" "}
+                  {status.recording_id ? "Kaydı durdur" : "Kayıt başlat"}
                 </button>
               )}
               <a
@@ -1496,7 +1504,7 @@ export default function App() {
             type="file"
             accept="application/json,.json"
             ref={fileMission}
-            onChange={(e) => void importFile(e, 'mission')}
+            onChange={(e) => void importFile(e, "mission")}
             aria-label="Görev JSON dosyası"
           />
           <input
@@ -1504,7 +1512,7 @@ export default function App() {
             type="file"
             accept="application/json,.json"
             ref={fileRecording}
-            onChange={(e) => void importFile(e, 'recording')}
+            onChange={(e) => void importFile(e, "recording")}
             aria-label="Uçuş kaydı JSON dosyası"
           />
         </main>

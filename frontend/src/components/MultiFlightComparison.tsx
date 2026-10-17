@@ -207,7 +207,7 @@ export function MultiFlightComparison({
       .map((s) => s.outerHTML)
       .join('');
     const document =
-      '<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Uçuş karşılaştırması</title><style>body{font:16px system-ui;background:#111d29;color:#e1eaf2;max-width:1000px;margin:30px auto;padding:20px}svg{width:100%;height:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>Mission Control · Uçuş karşılaştırması</h1><p>' +
+      '<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Uçuş karşılaştırması</title><style>body{font:16px system-ui;background:#111d29;color:#e1eaf2;max-width:1000px;margin:30px auto;padding:20px}svg{width:100%;height:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>FLW VECTOR · Uçuş karşılaştırması</h1><p>' +
       esc(result.assumptions) +
       '</p>' +
       figures +

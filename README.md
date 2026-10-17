@@ -196,3 +196,7 @@ includes a Linux pseudo-terminal; physical board/sensor acceptance is pending.
 Open the [synthetic serial replay demo](https://mertacar-git.github.io/mission-control/serial-bench/)
 to inspect the real pyserial/pseudo-terminal capture, CRC recovery, duplicate
 rejection and missing measurements. This is deliberately labelled synthetic.
+
+## Operator workflow update
+
+The FLW VECTOR identity and consolidated experiment center preserve the v1.8 runtime and existing data formats. [Operator guide, scope and verification](docs/OPERATOR_REFRESH.md).
