@@ -296,3 +296,22 @@ test('sensor contract replay shows sensor gaps and never invents flight measurem
     ),
   ).toBeTruthy();
 });
+
+
+test('civilian fleet demo isolates approval from observations and foreign station requests', async ({ page }) => {
+ await page.getByRole('button',{name:'Sivil filo prototipi',exact:true}).click();
+ await expect(page.getByText('Bu ekran sentetik bir iş akışı prototipidir.',{exact:false})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Kalkış talebi · SIM-FLW-0003',exact:true})).toHaveCount(0);
+ await page.getByRole('button',{name:'Kalkış talebi · SIM-FLW-0001',exact:true}).click();
+ await page.getByRole('combobox',{name:'Simülasyon rolü',exact:true}).selectOption('center');
+ await page.getByLabel('Karar gerekçesi',{exact:true}).fill('Örnek görev incelendi');
+ await page.getByRole('button',{name:'Onayla',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'SIM-FLW-0001 · Kalkış · Onaylandı',exact:true})).toBeVisible();
+ const card=page.locator('.fleet-grid article').filter({hasText:'SIM-FLW-0001'});
+ await expect(card.getByText('Yerde',{exact:true})).toBeVisible();
+ await page.getByRole('combobox',{name:'Simülasyon rolü',exact:true}).selectOption('station-a');
+ await page.getByRole('combobox',{name:'Ayrı simülasyon gözlemi · SIM-FLW-0001',exact:true}).selectOption('airborne');
+ await expect(card.locator('dd').filter({hasText:'Havada'})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Arm',exact:true})).toHaveCount(0);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+});

@@ -1,0 +1,118 @@
+<testsuites id="" name="" tests="16" failures="0" skipped="0" errors="0" time="14.635864999999999">
+<testsuite name="critical.spec.ts" timestamp="2026-10-17T20:07:18.132Z" hostname="desktop" tests="8" failures="0" skipped="0" time="6.918" errors="0">
+<testcase name="offline planning, undo, explicit upload review and demo flight commands" classname="critical.spec.ts" time="1.32">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-offline-planning--36cc8-ew-and-demo-flight-commands-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="published SITL experiment opens isolated replay with working charts" classname="critical.spec.ts" time="0.716">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-published-SITL-ex-7fa88--replay-with-working-charts-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="five-record report, portable HTML and explicit conditions" classname="critical.spec.ts" time="0.762">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-five-record-repor-55967-TML-and-explicit-conditions-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="serial sample remains an independent source and preserves missing fields" classname="critical.spec.ts" time="0.897">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-serial-sample-rem-77723-nd-preserves-missing-fields-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="failed experiment evidence request shows an error rather than fabricated results" classname="critical.spec.ts" time="0.444">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-failed-experiment-53b5d-her-than-fabricated-results-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="unavailable experiment backend blocks mutations and retry recovers" classname="critical.spec.ts" time="0.595">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-unavailable-exper-5c8a4-utations-and-retry-recovers-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="sensor contract replay shows sensor gaps and never invents flight measurements" classname="critical.spec.ts" time="0.761">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-sensor-contract-r-8783e-invents-flight-measurements-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="civilian fleet demo isolates approval from observations and foreign station requests" classname="critical.spec.ts" time="1.423">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-civilian-fleet-de-7698f-nd-foreign-station-requests-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="critical.spec.ts" timestamp="2026-10-17T20:07:18.132Z" hostname="mobile-390" tests="8" failures="0" skipped="0" time="6.227" errors="0">
+<testcase name="offline planning, undo, explicit upload review and demo flight commands" classname="critical.spec.ts" time="1.235">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-offline-planning--36cc8-ew-and-demo-flight-commands-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="published SITL experiment opens isolated replay with working charts" classname="critical.spec.ts" time="0.716">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-published-SITL-ex-7fa88--replay-with-working-charts-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="five-record report, portable HTML and explicit conditions" classname="critical.spec.ts" time="0.842">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-five-record-repor-55967-TML-and-explicit-conditions-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="serial sample remains an independent source and preserves missing fields" classname="critical.spec.ts" time="0.909">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-serial-sample-rem-77723-nd-preserves-missing-fields-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="failed experiment evidence request shows an error rather than fabricated results" classname="critical.spec.ts" time="0.433">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-failed-experiment-53b5d-her-than-fabricated-results-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="unavailable experiment backend blocks mutations and retry recovers" classname="critical.spec.ts" time="0.519">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-unavailable-exper-5c8a4-utations-and-retry-recovers-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="sensor contract replay shows sensor gaps and never invents flight measurements" classname="critical.spec.ts" time="0.691">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-sensor-contract-r-8783e-invents-flight-measurements-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="civilian fleet demo isolates approval from observations and foreign station requests" classname="critical.spec.ts" time="0.882">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|browser-artifacts/critical-civilian-fleet-de-7698f-nd-foreign-station-requests-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

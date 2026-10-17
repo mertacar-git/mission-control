@@ -1,0 +1,43 @@
+
+> mission-control-ui@1.9.0 test:e2e
+> playwright test
+
+
+Running 16 tests using 1 worker
+
+  ✓   1 [desktop] › e2e/critical.spec.ts:9:1 › offline planning, undo, explicit upload review and demo flight commands (1.3s)
+  ✓   2 [desktop] › e2e/critical.spec.ts:56:1 › published SITL experiment opens isolated replay with working charts (716ms)
+  ✓   3 [desktop] › e2e/critical.spec.ts:100:1 › five-record report, portable HTML and explicit conditions (762ms)
+  ✓   4 [desktop] › e2e/critical.spec.ts:134:1 › serial sample remains an independent source and preserves missing fields (897ms)
+  ✓   5 [desktop] › e2e/critical.spec.ts:189:1 › failed experiment evidence request shows an error rather than fabricated results (444ms)
+[WebServer] 11:07:23 PM [vite] http proxy error: /api/v1/missions
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:07:23 PM [vite] http proxy error: /api/v1/status
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:07:23 PM [vite] http proxy error: /api/v1/scenarios
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+  ✓   6 [desktop] › e2e/critical.spec.ts:210:1 › unavailable experiment backend blocks mutations and retry recovers (595ms)
+  ✓   7 [desktop] › e2e/critical.spec.ts:254:1 › sensor contract replay shows sensor gaps and never invents flight measurements (761ms)
+  ✓   8 [desktop] › e2e/critical.spec.ts:301:1 › civilian fleet demo isolates approval from observations and foreign station requests (1.4s)
+  ✓   9 [mobile-390] › e2e/critical.spec.ts:9:1 › offline planning, undo, explicit upload review and demo flight commands (1.2s)
+  ✓  10 [mobile-390] › e2e/critical.spec.ts:56:1 › published SITL experiment opens isolated replay with working charts (716ms)
+  ✓  11 [mobile-390] › e2e/critical.spec.ts:100:1 › five-record report, portable HTML and explicit conditions (842ms)
+  ✓  12 [mobile-390] › e2e/critical.spec.ts:134:1 › serial sample remains an independent source and preserves missing fields (909ms)
+  ✓  13 [mobile-390] › e2e/critical.spec.ts:189:1 › failed experiment evidence request shows an error rather than fabricated results (433ms)
+[WebServer] 11:07:30 PM [vite] http proxy error: /api/v1/missions
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:07:30 PM [vite] http proxy error: /api/v1/status
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:07:30 PM [vite] http proxy error: /api/v1/scenarios
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+  ✓  14 [mobile-390] › e2e/critical.spec.ts:210:1 › unavailable experiment backend blocks mutations and retry recovers (519ms)
+  ✓  15 [mobile-390] › e2e/critical.spec.ts:254:1 › sensor contract replay shows sensor gaps and never invents flight measurements (691ms)
+  ✓  16 [mobile-390] › e2e/critical.spec.ts:301:1 › civilian fleet demo isolates approval from observations and foreign station requests (882ms)
+
+  16 passed (14.6s)

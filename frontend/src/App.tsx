@@ -27,6 +27,7 @@ import { ScenarioLab } from "./components/ScenarioLab";
 import { ExperimentLab } from "./components/ExperimentLab";
 import { ExecutionComparison } from "./components/ExecutionComparison";
 import { EmulatorLab } from "./components/EmulatorLab";
+import { FleetLab } from "./components/FleetLab";
 import { SerialDevice } from "./components/SerialDevice";
 import { MissionReadiness } from "./components/MissionReadiness";
 import { missionStage, routeLength } from "./missionPresentation";
@@ -60,7 +61,8 @@ type Page =
   | "analysis"
   | "experiments"
   | "emulator"
-  | "serial";
+  | "serial"
+  | "fleet";
 const names = {
   closed: "Bağlantı kapalı",
   connecting: "Bağlanıyor",
@@ -648,6 +650,7 @@ export default function App() {
               ["experiments", "Deney merkezi", Radio],
               ["emulator", "Bilgisayar emülatörü", Database],
               ["serial", "Seri cihaz", Radio],
+              ["fleet", "Sivil filo prototipi", Database],
             ] as const
           ).map(([id, label, Icon]) => (
             <button
@@ -684,7 +687,9 @@ export default function App() {
             Çalışma alanı <ChevronRight size={13} /> <strong>FLW VECTOR</strong>
           </div>
           <div className="top-actions">
-            {page === "serial" ? (
+            {page === "fleet" ? (
+              <span>Bağımsız sivil filo simülasyonu</span>
+            ) : page === "serial" ? (
               <span>Bağımsız seri kaynak</span>
             ) : (
               <>
@@ -714,7 +719,7 @@ export default function App() {
           <section className="title-row">
             <div>
               <div className="eyebrow">
-                {page === "serial"
+                {page === "fleet" ? "SİVİL FİLO / TARAYICI SİMÜLASYONU" : page === "serial"
                   ? "SERİ ALICI / AYRI VERİ KAYNAĞI"
                   : page === "emulator"
                     ? "EMÜLATÖR / AYRI TELEMETRİ KAYNAĞI"
@@ -731,7 +736,7 @@ export default function App() {
                             : "YEREL ARDUPILOT / CANLI SİMÜLATÖR"}
               </div>
               <h1>
-                {page === "serial"
+                {page === "fleet" ? "Sivil filo prototipi" : page === "serial"
                   ? "Seri cihaz tezgâhı"
                   : page === "mission"
                     ? "Görev planlama"
@@ -746,7 +751,7 @@ export default function App() {
                             : "Uçuş analizi"}
               </h1>
               <p>
-                {page === "serial"
+                {page === "fleet" ? "Üç sentetik cihaz · iki örnek istasyon · talep ve gözlem ayrı." : page === "serial"
                   ? "Windows seri alıcısı · bağımsız kayıt ve oynatma · uçuş komutu içermez."
                   : page === "emulator"
                     ? "Sentetik sensörler · ayrı gönderici süreç · paket doğrulama ve tekrar oynatma."
@@ -898,7 +903,7 @@ export default function App() {
               )}
             </>
           )}
-          {replay && page !== "emulator" && page !== "serial" && (
+          {replay && page !== "emulator" && page !== "serial" && page !== "fleet" && (
             <section className="replay-bar panel">
               <div>
                 <strong>{replay.session.name}</strong>
@@ -1295,6 +1300,7 @@ export default function App() {
           )}
           {page === "emulator" && <EmulatorLab local={localAvailable} />}
           {page === "serial" && <SerialDevice local={localAvailable} />}
+          {page === "fleet" && <FleetLab />}
           {page === "analysis" && (
             <>
               {activeRecord && (

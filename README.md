@@ -204,3 +204,7 @@ The FLW VECTOR identity and consolidated experiment center preserve the v1.8 run
 ## ESP32 sensor prototype
 
 Sensor-only USB firmware for ESP32 + MPU6050 + BME280, versioned MCS1 packets and independent raw serial replay. [Integration and synthetic demo](docs/SENSOR_NODE.md) · [Firmware, build and proposed wiring](prototype/esp32/README.md). Physical hardware and calibration acceptance remain pending.
+
+## Civilian fleet workflow prototype
+
+A separate browser-only prototype demonstrates three synthetic devices, two station roles and a center review workflow. It does not connect remote computers or control aircraft. [Delivered scope, usage and distributed next steps](docs/CIVIL_FLEET_PROTOTYPE.md).

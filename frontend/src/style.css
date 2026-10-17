@@ -2048,3 +2048,21 @@ footer button {
     flex-wrap: wrap;
   }
 }
+
+/* Civilian workflow simulator: isolated from vehicle controls. */
+.fleet-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:18px; margin:24px 0; }
+.fleet-grid .panel { min-width:0; padding:20px; }
+.fleet-grid dl { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:18px 0; }
+.fleet-grid dd { margin:0; text-align:right; font-weight:600; }
+.fleet-grid dt { color:var(--muted); }
+.fleet-lab label { display:grid; gap:8px; margin:14px 0; }
+.fleet-lab .row-actions { flex-wrap:wrap; }
+.fleet-lab .row-actions button { white-space:normal; }
+.fleet-lab p, .fleet-lab li { overflow-wrap:anywhere; }
+.fleet-stations { display:flex; flex-wrap:wrap; gap:12px; margin:18px 0; }
+.fleet-stations span { border:1px solid var(--border); border-radius:8px; padding:10px; }
+
+.fleet-lab {padding:24px;}
+.fleet-lab .thresholds {display:grid;grid-template-columns:minmax(180px,240px) minmax(220px,1fr);gap:18px;}
+.fleet-lab input, .fleet-lab select {width:100%;max-width:100%;min-width:0;}
+@media(max-width:640px){.fleet-lab {padding:18px;}.fleet-lab .thresholds {grid-template-columns:minmax(0,1fr);}}
