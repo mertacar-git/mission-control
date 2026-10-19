@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { operatorBase } from '../operatorApi';
 
 interface User { username: string; role: 'admin' | 'operator'; active: boolean }
 interface Audit { id: number; utc_ms: number; actor: string; event: string; subject: string }
-const base = 'https://127.0.0.1:8772/api/v1/operators';
+const base = operatorBase;
 
 export function OperatorAdministration({ token, username, role, onSessionEnd }: {
   token: string; username: string; role: 'admin' | 'operator'; onSessionEnd: (message: string) => void;

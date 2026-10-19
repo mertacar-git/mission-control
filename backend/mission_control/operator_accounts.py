@@ -21,6 +21,12 @@ from .key_custody import key_password
 from .fleet_service import Device
 
 
+class OperatorError(HTTPException):
+    def __init__(self, status, detail, code):
+        super().__init__(status, detail)
+        self.code = code
+
+
 class Login(Strict):
     username: str = Field(pattern=r'^[a-z][a-z0-9_-]{2,39}$')
     password: str = Field(min_length=15, max_length=128, repr=False)
@@ -150,6 +156,14 @@ def create_operator_app(database, clock=time.time, tls_directory=None, registry_
     async def invalid_input(request, exception):
         # FastAPI's default error can echo rejected password input.
         return JSONResponse({'detail': 'Invalid account request.'}, status_code=422)
+
+    @app.exception_handler(HTTPException)
+    async def operator_error(request, exception):
+        codes = {401: 'session_expired', 403: 'permission_denied', 429: 'rate_limited'}
+        code = getattr(exception, 'code', codes.get(exception.status_code, 'request_rejected'))
+        if exception.detail == 'Invalid credentials.':
+            code = 'invalid_credentials'
+        return JSONResponse({'detail': exception.detail, 'code': code}, status_code=exception.status_code)
     @app.middleware('http')
     async def headers(request, call_next):
         response = await call_next(request)
@@ -237,13 +251,22 @@ def create_operator_app(database, clock=time.time, tls_directory=None, registry_
         import httpx
         client = app.state.registry_client
         if client is None:
-            raise HTTPException(503, 'Registry gateway is not configured.')
+            raise OperatorError(503, 'Registry gateway is not configured.', 'registry_unavailable')
         try:
             response = client.request(method, path, json=payload)
-        except httpx.TransportError:
-            raise HTTPException(503, 'Registry connection unavailable; no current data.')
+        except httpx.TransportError as error:
+            cause = error
+            certificate_error = False
+            while cause is not None:
+                certificate_error |= isinstance(cause, ssl.SSLCertVerificationError)
+                cause = cause.__cause__
+            raise OperatorError(503, 'Registry certificate verification failed.' if certificate_error else
+                                'Registry connection unavailable; no current data.',
+                                'registry_tls_invalid' if certificate_error else 'registry_unavailable') from None
         if response.status_code not in (200, 201):
-            raise HTTPException(response.status_code if response.status_code in (403,409,422) else 503, 'Registry rejected the request or is unavailable.')
+            code = {403: 'registry_identity_rejected', 409: 'duplicate_device', 422: 'registry_validation_failed'}.get(response.status_code, 'registry_unavailable')
+            raise OperatorError(response.status_code if response.status_code in (403,409,422) else 503,
+                                'Registry rejected the request or is unavailable.', code)
         return response.json()
     @app.get('/api/v1/operators/registry')
     def snapshot(authorization: str | None = Header(default=None)):

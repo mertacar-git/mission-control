@@ -20,19 +20,23 @@ def test_real_mtls_gateway_role_enforcement_and_outage(tmp_path):
             client.post('/api/v1/operators/users', headers=admin, json=dict(username='observer', password=PASSWORD, role='operator')).raise_for_status()
             operator = login(client, 'observer')
             device = dict(serial='BENCH-01', name='Bench', model='Sensor', station='station-a', firmware='SIM', equipment=[])
-            assert client.post('/api/v1/operators/devices', headers=operator, json=device).status_code == 403
+            forbidden = client.post('/api/v1/operators/devices', headers=operator, json=device)
+            assert forbidden.status_code == 403
+            assert forbidden.json()['code'] == 'permission_denied'
             assert client.get('/api/v1/operators/registry', headers=operator).json()['registry']['devices'] == []
             assert client.post('/api/v1/operators/devices', headers=admin, json=device).status_code == 201
             snapshot = client.get('/api/v1/operators/registry', headers=operator).json()
             assert snapshot['user']['role'] == 'operator'
             assert snapshot['registry']['devices'][0]['device']['serial'] == 'BENCH-01'
-            assert client.post('/api/v1/operators/devices', headers=admin, json=device).status_code == 409
+            duplicate = client.post('/api/v1/operators/devices', headers=admin, json=device)
+            assert duplicate.status_code == 409 and duplicate.json()['code'] == 'duplicate_device'
             # A revoked center identity cannot be bypassed with a human bearer.
             import json
             identities = json.loads((directory/'identities.json').read_text())
             (directory/'revoked.json').write_text(json.dumps([next(key for key,value in identities.items() if value=='center')]))
             denied = client.get('/api/v1/operators/registry', headers=operator)
             assert denied.status_code == 403 and 'devices' not in denied.text
+            assert denied.json()['code'] == 'registry_identity_rejected'
 
 
 def test_human_https_socket_login_without_station_private_key(tmp_path):

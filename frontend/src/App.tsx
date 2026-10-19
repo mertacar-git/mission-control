@@ -64,6 +64,8 @@ type Page =
   | "experiments"
   | "emulator"
   | "serial"
+  | "center"
+  | "tools"
   | "fleet";
 const names = {
   closed: "Bağlantı kapalı",
@@ -652,7 +654,9 @@ export default function App() {
               ["experiments", "Deney merkezi", Radio],
               ["emulator", "Bilgisayar emülatörü", Database],
               ["serial", "Seri cihaz", Radio],
-              ["fleet", "Sivil filo prototipi", Database],
+              ["center", "Merkez", Database],
+              ["fleet", "Örnek filo", Database],
+              ["tools", "Geliştirme araçları", Database],
             ] as const
           ).map(([id, label, Icon]) => (
             <button
@@ -689,7 +693,7 @@ export default function App() {
             Çalışma alanı <ChevronRight size={13} /> <strong>FLW VECTOR</strong>
           </div>
           <div className="top-actions">
-            {page === "fleet" ? (
+            {page === "center" || page === "tools" ? <span>Sivil cihaz sicili · uçuş kontrolünden bağımsız</span> : page === "fleet" ? (
               <span>Bağımsız sivil filo simülasyonu</span>
             ) : page === "serial" ? (
               <span>Bağımsız seri kaynak</span>
@@ -721,7 +725,7 @@ export default function App() {
           <section className="title-row">
             <div>
               <div className="eyebrow">
-                {page === "fleet" ? "SİVİL FİLO / TARAYICI SİMÜLASYONU" : page === "serial"
+                {page === "center" ? "GÜVENLİ MERKEZ / CİHAZ SİCİLİ" : page === "tools" ? "GELİŞTİRME / ESKİ ARAYÜZLER" : page === "fleet" ? "SİVİL FİLO / TARAYICI SİMÜLASYONU" : page === "serial"
                   ? "SERİ ALICI / AYRI VERİ KAYNAĞI"
                   : page === "emulator"
                     ? "EMÜLATÖR / AYRI TELEMETRİ KAYNAĞI"
@@ -738,7 +742,7 @@ export default function App() {
                             : "YEREL ARDUPILOT / CANLI SİMÜLATÖR"}
               </div>
               <h1>
-                {page === "fleet" ? "Sivil filo prototipi" : page === "serial"
+                {page === "center" ? "Merkez" : page === "tools" ? "Geliştirme araçları" : page === "fleet" ? "Örnek filo" : page === "serial"
                   ? "Seri cihaz tezgâhı"
                   : page === "mission"
                     ? "Görev planlama"
@@ -753,7 +757,7 @@ export default function App() {
                             : "Uçuş analizi"}
               </h1>
               <p>
-                {page === "fleet" ? "Üç sentetik cihaz · iki örnek istasyon · talep ve gözlem ayrı." : page === "serial"
+                {page === "center" ? "Cihaz kaydı, istasyon ölçümleri ve kullanıcı yönetimi." : page === "tools" ? "Eski yerel HTTP sicili; yeni merkezden ayrı tutulur." : page === "fleet" ? "Üç sentetik cihaz · iki örnek istasyon · talep ve gözlem ayrı." : page === "serial"
                   ? "Windows seri alıcısı · bağımsız kayıt ve oynatma · uçuş komutu içermez."
                   : page === "emulator"
                     ? "Sentetik sensörler · ayrı gönderici süreç · paket doğrulama ve tekrar oynatma."
@@ -801,7 +805,7 @@ export default function App() {
                     {mode === "demo" ? "Demoya bağlan" : "SITL başlat & bağlan"}
                   </button>
                 )
-              ) : (
+              ) : ["center", "fleet", "tools"].includes(page) ? null : (
                 <button
                   className="secondary"
                   disabled={busy || !!replay || !!status.scenario_active}
@@ -905,7 +909,7 @@ export default function App() {
               )}
             </>
           )}
-          {replay && page !== "emulator" && page !== "serial" && page !== "fleet" && (
+          {replay && page !== "emulator" && page !== "serial" && page !== "fleet" && page !== "center" && page !== "tools" && (
             <section className="replay-bar panel">
               <div>
                 <strong>{replay.session.name}</strong>
@@ -1302,7 +1306,9 @@ export default function App() {
           )}
           {page === "emulator" && <EmulatorLab local={localAvailable} />}
           {page === "serial" && <SerialDevice local={localAvailable} />}
-          {page === "fleet" && <><OperatorCenter /><FleetLab /><FleetRegistry /></>}
+          {page === "center" && <OperatorCenter />}
+          {page === "fleet" && <FleetLab />}
+          {page === "tools" && <FleetRegistry />}
           {page === "analysis" && (
             <>
               {activeRecord && (

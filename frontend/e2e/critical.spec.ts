@@ -9,7 +9,7 @@ test('operator readings age out while a registry request is stalled', async ({ p
     if (reads > 1) { await new Promise(resolve => setTimeout(resolve, 5000)); return route.abort().catch(() => {}); }
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ user: { username: 'observer', role: 'operator' }, registry: { schema_version: 1, devices: [{ device: { serial: 'STALE-SENSOR', name: 'Bench', model: 'Synthetic', station: 'station-a', firmware: 'SIM' }, state: 'fresh', age_s: 2, measurement: { source: 'synthetic', temperature_c: 24, humidity_percent: 45, pressure_pa: 101325 } }] } }) });
   });
-  await page.getByRole('button', { name: 'Sivil filo prototipi', exact: true }).click();
+  await page.getByRole('button', { name: 'Merkez', exact: true }).click();
   await page.getByLabel('Merkez kullanıcı adı', { exact: true }).fill('observer');
   await page.getByLabel('Merkez parolası', { exact: true }).fill('test-only long passphrase');
   await page.getByRole('button', { name: 'Merkeze giriş yap', exact: true }).click();
@@ -35,7 +35,7 @@ test('admin can review users, disable a selected account and change password wit
     if (path === '/password') { mutations.push(path); body = { password_changed: true, reauthentication_required: true }; }
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
   });
-  await page.getByRole('button', { name: 'Sivil filo prototipi', exact: true }).click();
+  await page.getByRole('button', { name: 'Merkez', exact: true }).click();
   await page.getByRole('textbox', { name: 'Merkez kullanıcı adı', exact: true }).fill('admin');
   await page.getByLabel('Merkez parolası', { exact: true }).fill('test-only long passphrase');
   await page.getByRole('button', { name: 'Merkeze giriş yap', exact: true }).click();
@@ -68,7 +68,7 @@ test('operator center clears password, isolates roles and removes readings after
     };
     return route.fulfill({ status: expired ? 401 : 200, contentType: 'application/json', body: JSON.stringify(body) });
   });
-  await page.getByRole('button', { name: 'Sivil filo prototipi', exact: true }).click();
+  await page.getByRole('button', { name: 'Merkez', exact: true }).click();
   await page.getByRole('textbox', { name: 'Merkez kullanıcı adı', exact: true }).fill('observer');
   const password = page.getByLabel('Merkez parolası', { exact: true });
   await password.fill('test-only long passphrase');
@@ -382,7 +382,7 @@ test('sensor contract replay shows sensor gaps and never invents flight measurem
 
 
 test('civilian fleet demo isolates approval from observations and foreign station requests', async ({ page }) => {
- await page.getByRole('button',{name:'Sivil filo prototipi',exact:true}).click();
+ await page.getByRole('button',{name:'Örnek filo',exact:true}).click();
  await expect(page.getByText('Bu ekran sentetik bir iş akışı prototipidir.',{exact:false})).toBeVisible();
  await expect(page.getByRole('button',{name:'Kalkış talebi · SIM-FLW-0003',exact:true})).toHaveCount(0);
  await page.getByRole('button',{name:'Kalkış talebi · SIM-FLW-0001',exact:true}).click();
@@ -403,7 +403,7 @@ test('civilian fleet demo isolates approval from observations and foreign statio
 test('authenticated registry view keeps scoped credentials in memory and clears unavailable measurements', async ({ page }) => {
  let available=true;
  await page.route('http://127.0.0.1:8770/api/v1/fleet/snapshot',route=>route.fulfill({status:available?200:503,contentType:'application/json',body:JSON.stringify({schema_version:1,actor:'center',scope:'civilian-equipment-registry',devices:[{device:{serial:'SIM-REG-001',name:'Bench device',model:'Sensor node',station:'station-a',firmware:'SIM 1',equipment:['BME280']},state:'fresh',age_s:0,measurement:{source:'synthetic',temperature_c:23.5,pressure_pa:101325,humidity_percent:45,sequence:1,boot:1}}]})}));
- await page.getByRole('button',{name:'Sivil filo prototipi',exact:true}).click();
+ await page.getByRole('button',{name:'Geliştirme araçları',exact:true}).click();
  const key=page.getByRole('textbox',{name:'Sicil erişim anahtarı',exact:true});
  await key.fill('test-only-registry-key');
  await page.getByRole('button',{name:'Sicile bağlan',exact:true}).click();
@@ -412,4 +412,46 @@ test('authenticated registry view keeps scoped credentials in memory and clears 
  available=false;
  await expect(page.getByRole('alert').filter({hasText:'Cihaz siciline ulaşılamıyor.'})).toBeVisible();
  await expect(page.getByRole('heading',{name:'SIM-REG-001',exact:true})).toHaveCount(0);
+});
+
+test('center enrollment, duplicate rejection and search stay separate from the example fleet', async ({ page }) => {
+  const devices: object[] = [];
+  await page.route('https://127.0.0.1:8772/api/v1/operators/**', async route => {
+    const path = new URL(route.request().url()).pathname;
+    let body: object = [];
+    let status = 200;
+    if (path.endsWith('/login')) body = { token: 'test-only-enrollment', username: 'admin', role: 'admin' };
+    if (path.endsWith('/registry')) body = { user: { username: 'admin', role: 'admin' }, registry: { schema_version: 1, devices } };
+    if (path.endsWith('/devices')) {
+      const device = route.request().postDataJSON();
+      if (devices.length) { status = 409; body = { detail: 'Duplicate', code: 'duplicate_device' }; }
+      else { devices.push({ device, state: 'unknown', age_s: null, measurement: null }); status = 201; body = device; }
+    }
+    return route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
+  });
+  await page.getByRole('button', { name: 'Merkez', exact: true }).click();
+  await expect(page.getByText('Simülasyon rolü', { exact: true })).toHaveCount(0);
+  await page.getByLabel('Merkez kullanıcı adı', { exact: true }).fill('admin');
+  await page.getByLabel('Merkez parolası', { exact: true }).fill('test-only long passphrase');
+  await page.getByRole('button', { name: 'Merkeze giriş yap', exact: true }).click();
+  await expect(page.getByText('Sicilde cihaz yok.', { exact: true })).toBeVisible();
+  await page.getByText('Cihaz kaydı oluştur', { exact: true }).click();
+  async function fillDevice() {
+    await page.getByLabel('Cihaz seri numarası', { exact: true }).fill('MCS-BENCH-01');
+    await page.getByLabel('Cihaz adı', { exact: true }).fill('Bench sensor');
+    await page.getByLabel('Cihaz modeli', { exact: true }).fill('MCS1 node');
+    await page.getByLabel('Cihaz firmware sürümü', { exact: true }).fill('SIM-1');
+  }
+  await fillDevice();
+  await page.getByRole('button', { name: 'Cihazı kaydet', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'MCS-BENCH-01', exact: true })).toBeVisible();
+  await expect(page.locator('.operator-center article')).toContainText('Veri durumu: Bilinmiyor');
+  await fillDevice();
+  await page.getByRole('button', { name: 'Cihazı kaydet', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('seri numarası');
+  await page.getByLabel('Sicilde ara', { exact: true }).fill('no-such-device');
+  await expect(page.getByText('Aramaya uygun cihaz yok.', { exact: true })).toBeVisible();
+  await page.getByLabel('Sicilde ara', { exact: true }).fill('MCS1');
+  await expect(page.getByRole('heading', { name: 'MCS-BENCH-01', exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
 });
