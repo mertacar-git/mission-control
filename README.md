@@ -213,6 +213,11 @@ The independent [civilian equipment registry service](docs/FLEET_REGISTRY.md) ad
 
 ## FLW security profile
 
+[Human accounts and HTTPS center gateway](docs/OPERATOR_CENTER.md) add server-side
+admin/operator permissions, session expiry/revocation and a local center viewer.
+[Remaining ordered delivery](docs/CENTER_DELIVERY_PLAN.md) separates local software,
+two-PC networking, physical sensor and Internet acceptance.
+
 [Station-local CSR enrollment](docs/STATION_ENROLLMENT.md) generates keys on the
 station, signs only public requests and activates certificates separately.
 Two-computer network acceptance and human account management remain pending.

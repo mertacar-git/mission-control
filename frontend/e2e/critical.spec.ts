@@ -1,5 +1,29 @@
 import { test, expect } from '@playwright/test';
 
+test('operator center clears password, isolates roles and removes readings after session expiry', async ({ page }) => {
+  let expired = false;
+  await page.route('https://127.0.0.1:8772/api/v1/operators/**', route => {
+    const path = new URL(route.request().url()).pathname;
+    const body = path.endsWith('/login') ? { token: 'test-only-human-session', username: 'observer', role: 'operator' } : {
+      user: { username: 'observer', role: 'operator' }, registry: { schema_version: 1, devices: [{ device: { serial: 'HUMAN-SENSOR-001', name: 'Bench', model: 'Sensor node', station: 'station-a', firmware: 'SIM' }, state: 'fresh', age_s: 0, measurement: { source: 'synthetic', temperature_c: 24, humidity_percent: 45, pressure_pa: 101325 } }] }
+    };
+    return route.fulfill({ status: expired ? 401 : 200, contentType: 'application/json', body: JSON.stringify(body) });
+  });
+  await page.getByRole('button', { name: 'Sivil filo prototipi', exact: true }).click();
+  await page.getByRole('textbox', { name: 'Merkez kullanıcı adı', exact: true }).fill('observer');
+  const password = page.getByLabel('Merkez parolası', { exact: true });
+  await password.fill('test-only long passphrase');
+  await page.getByRole('button', { name: 'Merkeze giriş yap', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'HUMAN-SENSOR-001', exact: true })).toBeVisible();
+  await expect(page.getByText('Hesap: observer · Yetki: Operatör', { exact: true })).toBeVisible();
+  expired = true;
+  await expect(page.getByRole('heading', { name: 'HUMAN-SENSOR-001', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('alert').filter({ hasText: 'Oturum sona erdi' })).toBeVisible();
+  await expect(password).toHaveValue('');
+  expect(await page.evaluate(() => Object.values(localStorage).some(value => value.includes('test-only-human-session')))).toBe(false);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test.beforeEach(async ({ page }) => {
   // Tile/network availability must not decide whether planning works.
   await page.route('**/*.tile.openstreetmap.org/**', (route) => route.abort());

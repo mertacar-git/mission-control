@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="84" failures="0" errors="0" time="0.354758906">
+    <testsuite name="src/chartData.test.ts" timestamp="2026-10-17T23:36:14.511Z" hostname="FLWITCH" tests="1" failures="0" errors="0" skipped="0" time="0.002294338">
+        <testcase classname="src/chartData.test.ts" name="breaks plotted lines over missing samples without changing source measurements" time="0.001709141">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/core.test.ts" timestamp="2026-10-17T23:36:14.512Z" hostname="FLWITCH" tests="14" failures="0" errors="0" skipped="0" time="0.041238401">
+        <testcase classname="src/core.test.ts" name="mission contracts &gt; rejects invalid altitude, coordinates and version" time="0.00901148">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="mission contracts &gt; returns a detached mission copy" time="0.001050389">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="demo flight state machine &gt; requires connection, upload and arm before start" time="0.002931454">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="demo flight state machine &gt; runs a mission to landing and preserves a recording" time="0.005229215">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="demo flight state machine &gt; hold stops route progress and resume restores it" time="0.003503554">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="demo flight state machine &gt; does not allow mission replacement while armed" time="0.000934793">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="demo flight state machine &gt; reference flight samples are reproducible" time="0.008347471">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="replay and reporting &gt; aligns event time when recording starts after connection" time="0.001658731">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="replay and reporting &gt; rejects invalid report thresholds" time="0.001549836">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="replay and reporting &gt; does not interpolate missing measurements across gaps" time="0.000657029">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="replay and reporting &gt; empty report preserves unknown values" time="0.000289434">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="replay and reporting &gt; CSV leaves null values empty" time="0.000644006">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="replay and reporting &gt; distance and route deviation are meaningful" time="0.000335879">
+        </testcase>
+        <testcase classname="src/core.test.ts" name="replay and reporting &gt; reads recorded data without changing live vehicle state" time="0.001193349">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/emulatorTypes.test.ts" timestamp="2026-10-17T23:36:14.517Z" hostname="FLWITCH" tests="1" failures="0" errors="0" skipped="0" time="0.00204775">
+        <testcase classname="src/emulatorTypes.test.ts" name="isolates emulator playback, ignores corrupt packets and expires stale readings" time="0.001495928">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/fleet.test.ts" timestamp="2026-10-17T23:36:14.518Z" hostname="FLWITCH" tests="6" failures="0" errors="0" skipped="0" time="0.005867779">
+        <testcase classname="src/fleet.test.ts" name="civilian browser-only fleet workflow &gt; separates approval from observed aircraft state" time="0.002397354">
+        </testcase>
+        <testcase classname="src/fleet.test.ts" name="civilian browser-only fleet workflow &gt; rejects foreign requests, duplicate open requests and empty review reasons" time="0.000501488">
+        </testcase>
+        <testcase classname="src/fleet.test.ts" name="civilian browser-only fleet workflow &gt; expires pending and approved windows at the exact boundary" time="0.000315076">
+        </testcase>
+        <testcase classname="src/fleet.test.ts" name="civilian browser-only fleet workflow &gt; preserves missing observations after station loss and only refreshes its own devices" time="0.000691984">
+        </testcase>
+        <testcase classname="src/fleet.test.ts" name="civilian browser-only fleet workflow &gt; requires observed state to match the request, while rejection remains possible" time="0.000193901">
+        </testcase>
+        <testcase classname="src/fleet.test.ts" name="civilian browser-only fleet workflow &gt; restricts cancellation and allows a new request after expiry" time="0.000717559">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/flightComparison.test.ts" timestamp="2026-10-17T23:36:14.520Z" hostname="FLWITCH" tests="2" failures="0" errors="0" skipped="0" time="0.006501306">
+        <testcase classname="src/flightComparison.test.ts" name="attributes nearby lines by mission index, excludes gaps and does not double-count reversed progress" time="0.003877881">
+        </testcase>
+        <testcase classname="src/flightComparison.test.ts" name="matches independent Python execution analysis of actual SITL data" time="0.001767778">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/incidents.test.ts" timestamp="2026-10-17T23:36:14.521Z" hostname="FLWITCH" tests="5" failures="0" errors="0" skipped="0" time="0.008982735">
+        <testcase classname="src/incidents.test.ts" name="opens real fault recordings and aligns acceptance mode observations with replay" time="0.003565389">
+        </testcase>
+        <testcase classname="src/incidents.test.ts" name="aligns UTC with connection clock, including events before first telemetry" time="0.000706069">
+        </testcase>
+        <testcase classname="src/incidents.test.ts" name="finds preceding command without importing future commands" time="0.001648563">
+        </testcase>
+        <testcase classname="src/incidents.test.ts" name="clears position, battery and mode across recording gaps" time="0.000594612">
+        </testcase>
+        <testcase classname="src/incidents.test.ts" name="bounds context and selects failures and unknown measurements" time="0.001319696">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/missionDraft.test.ts" timestamp="2026-10-17T23:36:14.523Z" hostname="FLWITCH" tests="8" failures="0" errors="0" skipped="0" time="0.006370824">
+        <testcase classname="src/missionDraft.test.ts" name="mission edit history &gt; undoes coordinate edits and restores them with redo" time="0.001752189">
+        </testcase>
+        <testcase classname="src/missionDraft.test.ts" name="mission edit history &gt; clears the redo branch after a new edit" time="0.000395021">
+        </testcase>
+        <testcase classname="src/missionDraft.test.ts" name="mission edit history &gt; isolates imported snapshots from later mutations by the caller" time="0.000370782">
+        </testcase>
+        <testcase classname="src/missionDraft.test.ts" name="mission edit history &gt; bounds history and ignores identical edits and empty undo" time="0.002186441">
+        </testcase>
+        <testcase classname="src/missionDraft.test.ts" name="mission edit history &gt; reorders complete points, renumbers by order and supports undo" time="0.00031652">
+        </testcase>
+        <testcase classname="src/missionDraft.test.ts" name="mission edit history &gt; does not corrupt a route for invalid reorder indices" time="0.000181036">
+        </testcase>
+        <testcase classname="src/missionDraft.test.ts" name="mission edit history &gt; undoes deletion and map dragging without losing the rest of the route" time="0.000266821">
+        </testcase>
+        <testcase classname="src/missionDraft.test.ts" name="mission edit history &gt; filters invalid intermediate coordinates before Leaflet receives them" time="0.000137107">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/missionPresentation.test.ts" timestamp="2026-10-17T23:36:14.525Z" hostname="FLWITCH" tests="5" failures="0" errors="0" skipped="0" time="0.012911714">
+        <testcase classname="src/missionPresentation.test.ts" name="operator presentation &gt; requires a fresh upload after the demo connection closes" time="0.003265158">
+        </testcase>
+        <testcase classname="src/missionPresentation.test.ts" name="operator presentation &gt; distinguishes SITL home/takeoff indices from browser waypoint indices" time="0.001009332">
+        </testcase>
+        <testcase classname="src/missionPresentation.test.ts" name="operator presentation &gt; does not declare success from unknown or disarmed telemetry" time="0.003181819">
+        </testcase>
+        <testcase classname="src/missionPresentation.test.ts" name="operator presentation &gt; shows hold and return before interpreting mission indices" time="0.000582746">
+        </testcase>
+        <testcase classname="src/missionPresentation.test.ts" name="operator presentation &gt; includes home-to-first-point in planning distance" time="0.000626948">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/multiFlightComparison.test.ts" timestamp="2026-10-17T23:36:14.526Z" hostname="FLWITCH" tests="2" failures="0" errors="0" skipped="0" time="0.027997496">
+        <testcase classname="src/multiFlightComparison.test.ts" name="matches independently computed Python metrics and fingerprints on five real flights" time="0.020561606">
+        </testcase>
+        <testcase classname="src/multiFlightComparison.test.ts" name="ignores identity labels but preserves missing endpoints and battery measurements" time="0.006513843">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/planning.test.ts" timestamp="2026-10-17T23:36:14.527Z" hostname="FLWITCH" tests="28" failures="0" errors="0" skipped="0" time="0.087077136">
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; rectangle" time="0.006438043">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; concave endpoints inside but segment outside" time="0.002981138">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; survey edge crosses concavity" time="0.00182152">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; boundary route" time="0.000714058">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; tolerance near boundary" time="0.000775622">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; outside tolerance" time="0.001562896">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; bow tie" time="0.000399761">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; repeated vertex" time="0.00096238">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; home outside" time="0.000542845">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; distance limit" time="0.000516553">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; distance exact" time="0.000244203">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; altitude limit" time="0.000262635">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; radius limit" time="0.000292078">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; zero area" time="0.000203317">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="shared mission geometry contract &gt; overlapping boundary backtrack" time="0.000182045">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="concave survey routing &gt; keeps all L-shape segments inside at 0 degrees" time="0.018141881">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="concave survey routing &gt; keeps all L-shape segments inside at 30 degrees" time="0.006615896">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="concave survey routing &gt; keeps all L-shape segments inside at 90 degrees" time="0.007028456">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="concave survey routing &gt; keeps all L-shape segments inside at 135 degrees" time="0.005133939">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="concave survey routing &gt; handles multiple disjoint scanline intervals in a U shape" time="0.008504243">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="concave survey routing &gt; handles a narrow rotated area without losing all scanlines" time="0.000634742">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="concave survey routing &gt; rejects more than 50 points without truncating" time="0.001626972">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="concave survey routing &gt; rejects invalid areas and settings before generating" time="0.000553636">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="planning compatibility and observed fence state &gt; imports actual schema 2 SITL recordings and reproduces backend boundary metrics" time="0.003854767">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="planning compatibility and observed fence state &gt; compares backend-shaped missions independently of object property order" time="0.010009469">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="planning compatibility and observed fence state &gt; normalizes version 1 without adding mission limits" time="0.000318631">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="planning compatibility and observed fence state &gt; retains planning and generated-route edits as isolated undo snapshots" time="0.001237734">
+        </testcase>
+        <testcase classname="src/planning.test.ts" name="planning compatibility and observed fence state &gt; never treats lost measurements as inside and does not bridge unknown intervals" time="0.000499032">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/recording.test.ts" timestamp="2026-10-17T23:36:14.532Z" hostname="FLWITCH" tests="3" failures="0" errors="0" skipped="0" time="0.024133518">
+        <testcase classname="src/recording.test.ts" name="recording import boundary &gt; imports a detached recording and preserves null measurements" time="0.014663472">
+        </testcase>
+        <testcase classname="src/recording.test.ts" name="recording import boundary &gt; rejects unsupported schema and reversed telemetry time" time="0.005269574">
+        </testcase>
+        <testcase classname="src/recording.test.ts" name="recording import boundary &gt; rejects malformed numeric data instead of treating it as measurement" time="0.002929148">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/routeComparison.test.ts" timestamp="2026-10-17T23:36:14.532Z" hostname="FLWITCH" tests="2" failures="0" errors="0" skipped="0" time="0.102956327">
+        <testcase classname="src/routeComparison.test.ts" name="compares deterministic valid routes and decomposes their distances" time="0.096579478">
+        </testcase>
+        <testcase classname="src/routeComparison.test.ts" name="retains invalid candidates and rejects invalid assumptions and malformed provenance" time="0.001480179">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/serialRecording.test.ts" timestamp="2026-10-17T23:36:14.533Z" hostname="FLWITCH" tests="7" failures="0" errors="0" skipped="0" time="0.026379582">
+        <testcase classname="src/serialRecording.test.ts" name="matches sensor wire values, preserves uint64 time and excludes unmeasured flight fields" time="0.003066275">
+        </testcase>
+        <testcase classname="src/serialRecording.test.ts" name="replays sensor gaps, corrupt packets and stale samples without fabricating measurements" time="0.010548721">
+        </testcase>
+        <testcase classname="src/serialRecording.test.ts" name="redecodes actual PTY raw bytes with Python-equivalent counters and null measurements" time="0.002613445">
+        </testcase>
+        <testcase classname="src/serialRecording.test.ts" name="replays a Windows service capture with the same receiver counters" time="0.003040293">
+        </testcase>
+        <testcase classname="src/serialRecording.test.ts" name="matches the shared C++/Python packet vector and rejects corrupt input" time="0.000854516">
+        </testcase>
+        <testcase classname="src/serialRecording.test.ts" name="rejects backwards or truncated raw recording events" time="0.003520391">
+        </testcase>
+        <testcase classname="src/serialRecording.test.ts" name="preserves the full uint64 clock without rounding it through a JS number" time="0.000623339">
+        </testcase>
+    </testsuite>
+</testsuites>

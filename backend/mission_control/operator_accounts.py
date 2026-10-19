@@ -1,0 +1,261 @@
+"""Independent local HTTPS human accounts. No aircraft or station credential API."""
+import argparse
+import getpass
+import hashlib
+import secrets
+import sqlite3
+import ssl
+import threading
+import time
+from contextlib import asynccontextmanager
+from pathlib import Path
+from typing import Literal
+from fastapi import FastAPI, Header, HTTPException
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from starlette.responses import JSONResponse
+from pydantic import Field
+from .fleet_service import Strict
+from .key_custody import key_password
+from .fleet_service import Device
+
+
+class Login(Strict):
+    username: str = Field(pattern=r'^[a-z][a-z0-9_-]{2,39}$')
+    password: str = Field(min_length=15, max_length=128, repr=False)
+
+
+class NewUser(Login):
+    role: Literal['admin', 'operator']
+
+
+def password_hash(password, salt):
+    return hashlib.scrypt(password.encode('utf-8'), salt=salt, n=131072, r=8, p=1,
+                          maxmem=256*1024*1024, dklen=32)
+
+
+def digest(token):
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+class Accounts:
+    def __init__(self, database, clock=time.time):
+        self.clock, self.lock = clock, threading.RLock()
+        self.db = sqlite3.connect(str(database), check_same_thread=False)
+        self.db.row_factory = sqlite3.Row
+        version = self.db.execute('PRAGMA user_version').fetchone()[0]
+        if version not in (0, 1):
+            self.db.close()
+            raise ValueError('Unsupported account schema.')
+        self.db.executescript('''PRAGMA journal_mode=WAL;
+            CREATE TABLE IF NOT EXISTS users(username TEXT PRIMARY KEY, role TEXT, salt BLOB, hash BLOB, active INTEGER);
+            CREATE TABLE IF NOT EXISTS sessions(digest TEXT PRIMARY KEY, username TEXT, issued REAL, expires REAL);
+            CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY, utc_ms INTEGER, actor TEXT, event TEXT, subject TEXT);
+            CREATE TABLE IF NOT EXISTS failures(username TEXT PRIMARY KEY, count INTEGER, until REAL);
+            PRAGMA user_version=1;''')
+        # Same cost for unknown users; no plaintext dummy password is persisted.
+        self.dummy_salt, self.dummy_hash = secrets.token_bytes(16), secrets.token_bytes(32)
+
+    def log(self, actor, event, subject=''):
+        self.db.execute('INSERT INTO audit(utc_ms,actor,event,subject) VALUES(?,?,?,?)',
+                        (int(self.clock()*1000), actor, event, subject))
+
+    def create(self, user, actor):
+        with self.lock, self.db:
+            if self.db.execute('SELECT COUNT(*) FROM users').fetchone()[0] >= 100:
+                raise HTTPException(429, 'Local account limit reached.')
+            salt = secrets.token_bytes(16)
+            hashed = password_hash(user.password, salt)
+            try:
+                self.db.execute('INSERT INTO users VALUES(?,?,?,?,1)', (user.username, user.role, salt, hashed))
+            except sqlite3.IntegrityError:
+                raise HTTPException(409, 'Username already exists.')
+            self.log(actor, 'user.created', user.username)
+
+    def login(self, credentials):
+        # Serialize expensive KDF calls to bound concurrent memory consumption.
+        with self.lock:
+            now = self.clock()
+            failure = self.db.execute('SELECT * FROM failures WHERE username=?', (credentials.username,)).fetchone()
+            if failure and failure['count'] >= 5 and now < failure['until']:
+                raise HTTPException(429, 'Login temporarily rate limited.')
+            user = self.db.execute('SELECT * FROM users WHERE username=?', (credentials.username,)).fetchone()
+            valid = secrets.compare_digest(password_hash(credentials.password, user['salt'] if user else self.dummy_salt), user['hash'] if user else self.dummy_hash)
+            with self.db:
+                self.db.execute('DELETE FROM failures WHERE until<=?', (now,))
+                if not valid or not user or not user['active']:
+                    if self.db.execute('SELECT COUNT(*) FROM failures').fetchone()[0] >= 1000 and not failure:
+                        raise HTTPException(429, 'Login temporarily rate limited.')
+                    self.db.execute('INSERT INTO failures VALUES(?,1,?) ON CONFLICT(username) DO UPDATE SET count=count+1', (credentials.username, now+300))
+                    self.log(user['username'] if user else 'unknown', 'login.denied')
+                else:
+                    self.db.execute('DELETE FROM failures WHERE username=?', (credentials.username,))
+                    self.db.execute('DELETE FROM sessions WHERE expires<=?', (now,))
+                    if self.db.execute('SELECT COUNT(*) FROM sessions WHERE username=?', (user['username'],)).fetchone()[0] >= 8:
+                        raise HTTPException(429, 'Active session limit reached.')
+                    token = secrets.token_urlsafe(32)
+                    self.db.execute('INSERT INTO sessions VALUES(?,?,?,?)', (digest(token), user['username'], now, now+900))
+                    self.log(user['username'], 'login.accepted')
+            if not valid or not user or not user['active']:
+                raise HTTPException(401, 'Invalid credentials.')
+            return dict(token=token, token_type='Bearer', expires_utc_ms=int((now+900)*1000), username=user['username'], role=user['role'])
+
+    def authenticate(self, authorization, admin=False):
+        with self.lock:
+            token = authorization.removeprefix('Bearer ') if authorization and authorization.startswith('Bearer ') else ''
+            row = self.db.execute('SELECT s.*,u.role,u.active FROM sessions s JOIN users u USING(username) WHERE digest=?', (digest(token),)).fetchone()
+            if not row or not row['active'] or not row['issued'] <= self.clock() < row['expires']:
+                raise HTTPException(401, 'Session unavailable or expired.')
+            if admin and row['role'] != 'admin':
+                with self.db:
+                    self.log(row['username'], 'authorization.denied')
+                raise HTTPException(403, 'Administrator required.')
+            return dict(username=row['username'], role=row['role'])
+
+
+def create_operator_app(database, clock=time.time, tls_directory=None, registry_origin='https://127.0.0.1:8771'):
+    from urllib.parse import urlparse
+    target = urlparse(registry_origin)
+    if target.scheme != 'https' or target.hostname != '127.0.0.1' or target.path or target.query or target.fragment or target.username:
+        raise ValueError('Operator gateway requires a fixed loopback HTTPS registry origin.')
+    @asynccontextmanager
+    async def lifespan(app):
+        Path(database).parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        app.state.accounts = Accounts(database, clock)
+        app.state.registry_client = None
+        try:
+            if tls_directory is not None:
+                import httpx
+                context = ssl.create_default_context(cafile=str(tls_directory/'ca.crt'))
+                context.minimum_version = ssl.TLSVersion.TLSv1_3
+                key = tls_directory/'center.key'
+                context.load_cert_chain(str(tls_directory/'center.crt'), str(key), password=key_password(key))
+                app.state.registry_client = httpx.Client(base_url=registry_origin, verify=context, trust_env=False, follow_redirects=False, timeout=3)
+            yield
+        finally:
+            if app.state.registry_client is not None:
+                app.state.registry_client.close()
+            app.state.accounts.db.close()
+    app = FastAPI(title='FLW VECTOR local human accounts', lifespan=lifespan)
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=['localhost', '127.0.0.1'])
+    app.add_middleware(CORSMiddleware, allow_origins=['http://127.0.0.1:5173','http://localhost:5173','http://127.0.0.1:8000','http://localhost:8000'],
+                       allow_methods=['GET','POST'], allow_headers=['Authorization','Content-Type'])
+    @app.exception_handler(RequestValidationError)
+    async def invalid_input(request, exception):
+        # FastAPI's default error can echo rejected password input.
+        return JSONResponse({'detail': 'Invalid account request.'}, status_code=422)
+    @app.middleware('http')
+    async def headers(request, call_next):
+        response = await call_next(request)
+        response.headers['Cache-Control'] = 'no-store'
+        return response
+    @app.post('/api/v1/operators/login')
+    def login(credentials: Login):
+        return app.state.accounts.login(credentials)
+    @app.get('/api/v1/operators/me')
+    def me(authorization: str | None = Header(default=None)):
+        return app.state.accounts.authenticate(authorization)
+    @app.post('/api/v1/operators/logout')
+    def logout(authorization: str | None = Header(default=None)):
+        accounts = app.state.accounts
+        with accounts.lock, accounts.db:
+            actor = accounts.authenticate(authorization)
+            accounts.db.execute('DELETE FROM sessions WHERE digest=?', (digest(authorization.removeprefix('Bearer ')),))
+            accounts.log(actor['username'], 'logout')
+        return {'logged_out': True}
+    @app.post('/api/v1/operators/users', status_code=201)
+    def create(user: NewUser, authorization: str | None = Header(default=None)):
+        accounts = app.state.accounts
+        with accounts.lock:
+            actor = accounts.authenticate(authorization, admin=True)
+            accounts.create(user, actor['username'])
+        return dict(username=user.username, role=user.role)
+    @app.post('/api/v1/operators/users/{username}/disable')
+    def disable(username: str, authorization: str | None = Header(default=None)):
+        accounts = app.state.accounts
+        with accounts.lock:
+            actor = accounts.authenticate(authorization, admin=True)
+            if username == actor['username']:
+                raise HTTPException(409, 'Self-disable is not supported.')
+            target = accounts.db.execute('SELECT role FROM users WHERE username=?', (username,)).fetchone()
+            if not target:
+                raise HTTPException(404, 'User unavailable.')
+            with accounts.db:
+                accounts.db.execute('UPDATE users SET active=0 WHERE username=?', (username,))
+                accounts.db.execute('DELETE FROM sessions WHERE username=?', (username,))
+                accounts.log(actor['username'], 'user.disabled', username)
+        return {'disabled': True}
+    @app.get('/api/v1/operators/audit')
+    def audit(authorization: str | None = Header(default=None)):
+        accounts = app.state.accounts
+        with accounts.lock:
+            accounts.authenticate(authorization, admin=True)
+            return [dict(row) for row in accounts.db.execute('SELECT * FROM audit ORDER BY id DESC LIMIT 500')]
+    def registry_request(method, path, payload=None):
+        import httpx
+        client = app.state.registry_client
+        if client is None:
+            raise HTTPException(503, 'Registry gateway is not configured.')
+        try:
+            response = client.request(method, path, json=payload)
+        except httpx.TransportError:
+            raise HTTPException(503, 'Registry connection unavailable; no current data.')
+        if response.status_code not in (200, 201):
+            raise HTTPException(response.status_code if response.status_code in (403,409,422) else 503, 'Registry rejected the request or is unavailable.')
+        return response.json()
+    @app.get('/api/v1/operators/registry')
+    def snapshot(authorization: str | None = Header(default=None)):
+        actor = app.state.accounts.authenticate(authorization)
+        return dict(user=actor, registry=registry_request('GET', '/api/v1/fleet/snapshot'))
+    @app.post('/api/v1/operators/devices', status_code=201)
+    def register(device: Device, authorization: str | None = Header(default=None)):
+        accounts = app.state.accounts
+        with accounts.lock:
+            actor = accounts.authenticate(authorization, admin=True)
+            # Durable intent precedes downstream mutation; no cross-service atomicity claim.
+            with accounts.db:
+                accounts.log(actor['username'], 'device.enrollment.requested', device.serial)
+            result = registry_request('POST', '/api/v1/fleet/devices', device.model_dump())
+            with accounts.db:
+                accounts.log(actor['username'], 'device.enrollment.accepted', device.serial)
+        return result
+    return app
+
+
+def operator_server(database, tls_directory, port=8772, registry_origin='https://127.0.0.1:8771'):
+    import uvicorn
+    config = uvicorn.Config(create_operator_app(database, tls_directory=tls_directory, registry_origin=registry_origin), host='127.0.0.1', port=port,
+        access_log=False, proxy_headers=False, ws='none', ssl_certfile=str(tls_directory/'server.crt'),
+        ssl_keyfile=str(tls_directory/'server.key'), ssl_keyfile_password=key_password(tls_directory/'server.key'))
+    config.load()
+    config.ssl.minimum_version = ssl.TLSVersion.TLSv1_3
+    config.ssl.maximum_version = ssl.TLSVersion.TLSv1_3
+    config.ssl.num_tickets = 0
+    return uvicorn.Server(config)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--directory', type=Path, default=Path('.runtime/operators'))
+    parser.add_argument('--tls-directory', type=Path)
+    parser.add_argument('--bootstrap', action='store_true')
+    parser.add_argument('--username', default='admin')
+    args = parser.parse_args()
+    if args.bootstrap:
+        user = NewUser(username=args.username, password=getpass.getpass('New administrator password: '), role='admin')
+        args.directory.mkdir(parents=True, exist_ok=False, mode=0o700)
+        accounts = Accounts(args.directory/'accounts.sqlite3')
+        try:
+            accounts.create(user, 'offline-bootstrap')
+        finally:
+            accounts.db.close()
+        print('Created local administrator. Password was not printed or saved in plaintext.')
+    else:
+        if not args.tls_directory:
+            parser.error('HTTPS requires --tls-directory; plaintext server startup is not supported.')
+        operator_server(args.directory/'accounts.sqlite3', args.tls_directory).run()
+
+
+if __name__ == '__main__':
+    main()
