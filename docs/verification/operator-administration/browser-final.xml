@@ -1,0 +1,174 @@
+<testsuites id="" name="" tests="24" failures="0" skipped="0" errors="0" time="47.839633">
+<testsuite name="critical.spec.ts" timestamp="2026-10-19T20:16:16.535Z" hostname="desktop" tests="12" failures="0" skipped="0" time="24.382" errors="0">
+<testcase name="operator readings age out while a registry request is stalled" classname="critical.spec.ts" time="6.761">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-operator-readings-d786b-registry-request-is-stalled-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="admin can review users, disable a selected account and change password without automatic retries" classname="critical.spec.ts" time="2.093">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-admin-can-review--53d5f-d-without-automatic-retries-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="operator center clears password, isolates roles and removes readings after session expiry" classname="critical.spec.ts" time="2.532">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-operator-center-c-28e86-adings-after-session-expiry-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="offline planning, undo, explicit upload review and demo flight commands" classname="critical.spec.ts" time="1.391">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-offline-planning--36cc8-ew-and-demo-flight-commands-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="published SITL experiment opens isolated replay with working charts" classname="critical.spec.ts" time="1.144">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-published-SITL-ex-7fa88--replay-with-working-charts-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="five-record report, portable HTML and explicit conditions" classname="critical.spec.ts" time="1.035">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-five-record-repor-55967-TML-and-explicit-conditions-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="serial sample remains an independent source and preserves missing fields" classname="critical.spec.ts" time="1.635">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-serial-sample-rem-77723-nd-preserves-missing-fields-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="failed experiment evidence request shows an error rather than fabricated results" classname="critical.spec.ts" time="0.833">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-failed-experiment-53b5d-her-than-fabricated-results-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="unavailable experiment backend blocks mutations and retry recovers" classname="critical.spec.ts" time="1.448">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-unavailable-exper-5c8a4-utations-and-retry-recovers-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="sensor contract replay shows sensor gaps and never invents flight measurements" classname="critical.spec.ts" time="1.502">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-sensor-contract-r-8783e-invents-flight-measurements-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="civilian fleet demo isolates approval from observations and foreign station requests" classname="critical.spec.ts" time="1.391">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-civilian-fleet-de-7698f-nd-foreign-station-requests-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="authenticated registry view keeps scoped credentials in memory and clears unavailable measurements" classname="critical.spec.ts" time="2.617">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-authenticated-reg-b3304-rs-unavailable-measurements-desktop/video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="critical.spec.ts" timestamp="2026-10-19T20:16:16.535Z" hostname="mobile-390" tests="12" failures="0" skipped="0" time="21.838" errors="0">
+<testcase name="operator readings age out while a registry request is stalled" classname="critical.spec.ts" time="6.724">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-operator-readings-d786b-registry-request-is-stalled-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="admin can review users, disable a selected account and change password without automatic retries" classname="critical.spec.ts" time="1.068">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-admin-can-review--53d5f-d-without-automatic-retries-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="operator center clears password, isolates roles and removes readings after session expiry" classname="critical.spec.ts" time="2.521">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-operator-center-c-28e86-adings-after-session-expiry-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="offline planning, undo, explicit upload review and demo flight commands" classname="critical.spec.ts" time="1.225">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-offline-planning--36cc8-ew-and-demo-flight-commands-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="published SITL experiment opens isolated replay with working charts" classname="critical.spec.ts" time="1.398">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-published-SITL-ex-7fa88--replay-with-working-charts-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="five-record report, portable HTML and explicit conditions" classname="critical.spec.ts" time="0.811">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-five-record-repor-55967-TML-and-explicit-conditions-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="serial sample remains an independent source and preserves missing fields" classname="critical.spec.ts" time="0.986">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-serial-sample-rem-77723-nd-preserves-missing-fields-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="failed experiment evidence request shows an error rather than fabricated results" classname="critical.spec.ts" time="1.284">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-failed-experiment-53b5d-her-than-fabricated-results-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="unavailable experiment backend blocks mutations and retry recovers" classname="critical.spec.ts" time="0.805">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-unavailable-exper-5c8a4-utations-and-retry-recovers-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="sensor contract replay shows sensor gaps and never invents flight measurements" classname="critical.spec.ts" time="0.844">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-sensor-contract-r-8783e-invents-flight-measurements-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="civilian fleet demo isolates approval from observations and foreign station requests" classname="critical.spec.ts" time="1.759">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-civilian-fleet-de-7698f-nd-foreign-station-requests-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="authenticated registry view keeps scoped credentials in memory and clears unavailable measurements" classname="critical.spec.ts" time="2.413">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../mission-control-clean-v18/frontend/test-results/browser/critical-authenticated-reg-b3304-rs-unavailable-measurements-mobile-390/video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

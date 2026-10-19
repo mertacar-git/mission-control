@@ -30,6 +30,11 @@ class NewUser(Login):
     role: Literal['admin', 'operator']
 
 
+class PasswordChange(Strict):
+    current_password: str = Field(min_length=1, max_length=128, repr=False)
+    new_password: str = Field(min_length=15, max_length=128, repr=False)
+
+
 def password_hash(password, salt):
     return hashlib.scrypt(password.encode('utf-8'), salt=salt, n=131072, r=8, p=1,
                           maxmem=256*1024*1024, dklen=32)
@@ -171,6 +176,42 @@ def create_operator_app(database, clock=time.time, tls_directory=None, registry_
             actor = accounts.authenticate(authorization, admin=True)
             accounts.create(user, actor['username'])
         return dict(username=user.username, role=user.role)
+    @app.get('/api/v1/operators/users')
+    def users(authorization: str | None = Header(default=None)):
+        accounts = app.state.accounts
+        with accounts.lock:
+            accounts.authenticate(authorization, admin=True)
+            return [dict(username=row['username'], role=row['role'], active=bool(row['active']))
+                    for row in accounts.db.execute('SELECT username,role,active FROM users ORDER BY username')]
+    @app.post('/api/v1/operators/password')
+    def change_password(change: PasswordChange, authorization: str | None = Header(default=None)):
+        accounts = app.state.accounts
+        with accounts.lock:
+            actor = accounts.authenticate(authorization)
+            now = accounts.clock()
+            counter_key = 'password:'+actor['username']
+            failure = accounts.db.execute('SELECT * FROM failures WHERE username=?', (counter_key,)).fetchone()
+            if failure and failure['count'] >= 5 and now < failure['until']:
+                raise HTTPException(429, 'Password change temporarily rate limited.')
+            user = accounts.db.execute('SELECT salt,hash FROM users WHERE username=?', (actor['username'],)).fetchone()
+            valid = secrets.compare_digest(password_hash(change.current_password, user['salt']), user['hash'])
+            with accounts.db:
+                if not valid:
+                    accounts.db.execute('DELETE FROM failures WHERE username=? AND until<=?', (counter_key,now))
+                    accounts.db.execute('INSERT INTO failures VALUES(?,1,?) ON CONFLICT(username) DO UPDATE SET count=count+1', (counter_key,now+300))
+                    accounts.log(actor['username'], 'password.change.denied')
+                elif change.current_password != change.new_password:
+                    salt = secrets.token_bytes(16)
+                    hashed = password_hash(change.new_password, salt)
+                    accounts.db.execute('UPDATE users SET salt=?,hash=? WHERE username=?', (salt,hashed,actor['username']))
+                    accounts.db.execute('DELETE FROM sessions WHERE username=?', (actor['username'],))
+                    accounts.db.execute('DELETE FROM failures WHERE username IN (?,?)', (actor['username'],counter_key))
+                    accounts.log(actor['username'], 'password.changed')
+            if not valid:
+                raise HTTPException(403, 'Current password was not verified.')
+            if change.current_password == change.new_password:
+                raise HTTPException(409, 'New password must differ.')
+        return {'password_changed': True, 'reauthentication_required': True}
     @app.post('/api/v1/operators/users/{username}/disable')
     def disable(username: str, authorization: str | None = Header(default=None)):
         accounts = app.state.accounts
@@ -235,15 +276,50 @@ def operator_server(database, tls_directory, port=8772, registry_origin='https:/
     return uvicorn.Server(config)
 
 
+def recover_account(database, username, password):
+    """Offline OS-file administrator recovery; never creates or re-enables users."""
+    credentials = Login(username=username, password=password)
+    if not database.is_file():
+        raise FileNotFoundError('Existing account database required.')
+    accounts = Accounts(database)
+    try:
+        with accounts.lock, accounts.db:
+            user = accounts.db.execute('SELECT active FROM users WHERE username=?', (credentials.username,)).fetchone()
+            if not user or not user['active']:
+                raise ValueError('Recovery requires an existing enabled account.')
+            salt = secrets.token_bytes(16)
+            hashed = password_hash(credentials.password, salt)
+            accounts.db.execute('UPDATE users SET salt=?,hash=? WHERE username=?', (salt,hashed,credentials.username))
+            accounts.db.execute('DELETE FROM sessions WHERE username=?', (credentials.username,))
+            accounts.db.execute('DELETE FROM failures WHERE username IN (?,?)', (credentials.username,'password:'+credentials.username))
+            accounts.log('offline-recovery', 'password.recovered', credentials.username)
+    finally:
+        accounts.db.close()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--directory', type=Path, default=Path('.runtime/operators'))
     parser.add_argument('--tls-directory', type=Path)
     parser.add_argument('--bootstrap', action='store_true')
+    parser.add_argument('--recover', metavar='USERNAME')
     parser.add_argument('--username', default='admin')
     args = parser.parse_args()
-    if args.bootstrap:
-        user = NewUser(username=args.username, password=getpass.getpass('New administrator password: '), role='admin')
+    if args.bootstrap and args.recover:
+        parser.error('--bootstrap and --recover are mutually exclusive.')
+    if args.bootstrap or args.recover:
+        password = getpass.getpass('New password: ')
+        if password != getpass.getpass('Confirm new password: '):
+            parser.error('Passwords did not match.')
+        try:
+            credentials = Login(username=args.recover or args.username, password=password)
+        except ValueError:
+            parser.error('Invalid username or password length (15–128 characters required).')
+    if args.recover:
+        recover_account(args.directory/'accounts.sqlite3', credentials.username, credentials.password)
+        print('Recovered existing enabled account; all prior sessions were revoked.')
+    elif args.bootstrap:
+        user = NewUser(username=credentials.username, password=credentials.password, role='admin')
         args.directory.mkdir(parents=True, exist_ok=False, mode=0o700)
         accounts = Accounts(args.directory/'accounts.sqlite3')
         try:

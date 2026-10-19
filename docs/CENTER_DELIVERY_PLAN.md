@@ -6,9 +6,9 @@ needed to continue authorized software work.
 
 | Stage | Delivery | Gate and status |
 |---|---|---|
-| A | Human accounts, admin/operator enforcement, expiry/logout/disable audit | Implemented; software acceptance in this delivery |
-| B | HTTPS center UI and mTLS read/enrollment gateway | Initial implementation; local software checks, certificate trust setup required |
-| C | Connection/identity recovery and administration workflow | Remaining: admin UI, password recovery/change, station certificate action audit, outage/recovery acceptance |
+| A | Human accounts, admin/operator enforcement, expiry/logout/disable audit | Delivered; 124 backend / 84 frontend / 20 browser checks, CI passed |
+| B | HTTPS center UI and mTLS read/enrollment gateway | Delivered local foundation; browser certificate trust setup remains a deployment step |
+| C | Connection/identity recovery and administration workflow | User/admin UI, password change and offline account recovery implemented; station certificate action audit and separate-PC recovery remain pending |
 | D | Separate-PC LAN deployment | Remaining: explicit host/origin/certificate configuration and two-PC acceptance; current services remain loopback |
 | E | Physical ESP32 sensor acceptance | Blocked on actual board connection/calibration; synthetic fixtures do not pass this gate |
 | F | Internet operations | Remaining: chosen hosting/domain, production PKI, monitoring/rate hardening, encrypted backup recovery |

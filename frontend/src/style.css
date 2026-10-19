@@ -2064,6 +2064,12 @@ footer button {
 
 .fleet-lab {padding:24px;}
 .operator-center h3 {overflow-wrap:anywhere;}
+.operator-center {margin-bottom:24px;}
+.operator-administration details {margin-top:18px;padding:16px;border:1px solid var(--border);border-radius:8px;}
+.operator-administration summary {cursor:pointer;font-weight:600;}
+.operator-administration li {overflow-wrap:anywhere;margin:10px 0;}
+.operator-administration li button {margin:8px;}
+.operator-audit {max-height:320px;overflow:auto;padding-left:24px;}
 .fleet-lab .thresholds {display:grid;grid-template-columns:minmax(180px,240px) minmax(220px,1fr);gap:18px;}
 .fleet-lab input, .fleet-lab select {width:100%;max-width:100%;min-width:0;}
 @media(max-width:640px){.fleet-lab {padding:18px;}.fleet-lab .thresholds {grid-template-columns:minmax(0,1fr);}}

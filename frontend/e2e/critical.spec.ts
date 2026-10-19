@@ -1,5 +1,64 @@
 import { test, expect } from '@playwright/test';
 
+test('operator readings age out while a registry request is stalled', async ({ page }) => {
+  let reads = 0;
+  await page.route('https://127.0.0.1:8772/api/v1/operators/**', async route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path.endsWith('/login')) return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ token: 'test-only-age-session', username: 'observer', role: 'operator' }) });
+    reads += 1;
+    if (reads > 1) { await new Promise(resolve => setTimeout(resolve, 5000)); return route.abort().catch(() => {}); }
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ user: { username: 'observer', role: 'operator' }, registry: { schema_version: 1, devices: [{ device: { serial: 'STALE-SENSOR', name: 'Bench', model: 'Synthetic', station: 'station-a', firmware: 'SIM' }, state: 'fresh', age_s: 2, measurement: { source: 'synthetic', temperature_c: 24, humidity_percent: 45, pressure_pa: 101325 } }] } }) });
+  });
+  await page.getByRole('button', { name: 'Sivil filo prototipi', exact: true }).click();
+  await page.getByLabel('Merkez kullanıcı adı', { exact: true }).fill('observer');
+  await page.getByLabel('Merkez parolası', { exact: true }).fill('test-only long passphrase');
+  await page.getByRole('button', { name: 'Merkeze giriş yap', exact: true }).click();
+  const card = page.locator('.operator-center article').filter({ hasText: 'STALE-SENSOR' });
+  await expect(card).toContainText('Sıcaklık: 24 °C');
+  await expect(card).toContainText('Veri durumu: Gecikmiş');
+  await expect(card).toContainText('Sıcaklık: — °C');
+  await expect(page.getByRole('heading', { name: 'STALE-SENSOR', exact: true })).toHaveCount(0, { timeout: 8000 });
+});
+
+test('admin can review users, disable a selected account and change password without automatic retries', async ({ page }) => {
+  const users = [{ username: 'admin', role: 'admin', active: true }];
+  const mutations: string[] = [];
+  await page.route('https://127.0.0.1:8772/api/v1/operators/**', route => {
+    const request = route.request(), path = new URL(request.url()).pathname.replace('/api/v1/operators', '');
+    let body: unknown = {};
+    if (path === '/login') body = { token: 'test-only-admin-session', username: 'admin', role: 'admin' };
+    if (path === '/registry') body = { user: { username: 'admin', role: 'admin' }, registry: { schema_version: 1, devices: [] } };
+    if (path === '/audit') body = [{ id: 1, utc_ms: 1792270000000, actor: 'admin', event: 'login.accepted', subject: '' }];
+    if (path === '/users' && request.method() === 'GET') body = users;
+    if (path === '/users' && request.method() === 'POST') { const data = request.postDataJSON(); users.push({ username: data.username, role: data.role, active: true }); mutations.push(path); body = data; }
+    if (path === '/users/worker/disable') { users[1].active = false; mutations.push(path); body = { disabled: true }; }
+    if (path === '/password') { mutations.push(path); body = { password_changed: true, reauthentication_required: true }; }
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
+  });
+  await page.getByRole('button', { name: 'Sivil filo prototipi', exact: true }).click();
+  await page.getByRole('textbox', { name: 'Merkez kullanıcı adı', exact: true }).fill('admin');
+  await page.getByLabel('Merkez parolası', { exact: true }).fill('test-only long passphrase');
+  await page.getByRole('button', { name: 'Merkeze giriş yap', exact: true }).click();
+  await page.getByText('Kullanıcı ve güvenlik yönetimi', { exact: true }).click();
+  await page.getByLabel('Yeni kullanıcı adı', { exact: true }).fill('worker');
+  await page.getByLabel('Başlangıç parolası', { exact: true }).fill('test-only initial password');
+  await page.getByRole('button', { name: 'Kullanıcı oluştur', exact: true }).click();
+  await expect(page.getByLabel('Başlangıç parolası', { exact: true })).toHaveValue('');
+  await page.getByRole('button', { name: 'worker hesabını kapat', exact: true }).click();
+  expect(mutations).toEqual(['/users']);
+  await page.getByRole('button', { name: 'Seçilen hesabı kapatmayı onayla', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'worker hesabını kapat', exact: true })).toHaveCount(0);
+  await page.getByText('Hesap parolasını değiştir', { exact: true }).click();
+  await page.getByLabel('Mevcut hesap parolası', { exact: true }).fill('test-only long passphrase');
+  await page.getByLabel('Yeni hesap parolası', { exact: true }).fill('test-only replacement password');
+  await page.getByLabel('Yeni parola tekrarı', { exact: true }).fill('test-only replacement password');
+  await page.getByRole('button', { name: 'Parolayı değiştir ve oturumları kapat', exact: true }).click();
+  await expect(page.getByRole('alert').filter({ hasText: 'Parola değişti' })).toBeVisible();
+  await expect(page.getByLabel('Merkez parolası', { exact: true })).toHaveValue('');
+  expect(mutations).toEqual(['/users', '/users/worker/disable', '/password']);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('operator center clears password, isolates roles and removes readings after session expiry', async ({ page }) => {
   let expired = false;
   await page.route('https://127.0.0.1:8772/api/v1/operators/**', route => {

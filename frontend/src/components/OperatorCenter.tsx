@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { OperatorAdministration } from './OperatorAdministration';
 
 interface User { username: string; role: 'admin' | 'operator' }
 interface RegistryView {
@@ -21,7 +22,14 @@ export function OperatorCenter() {
   const [view, setView] = useState<RegistryView | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [receivedAt, setReceivedAt] = useState(0), [clock, setClock] = useState(0);
   const operation = useRef(false);
+
+  useEffect(() => {
+    if (!token) return;
+    const timer = setInterval(() => setClock(performance.now()), 250);
+    return () => clearInterval(timer);
+  }, [token]);
 
   useEffect(() => {
     if (!token) return;
@@ -39,7 +47,7 @@ export function OperatorCenter() {
         const next: RegistryView = await response.json();
         if (next.registry?.schema_version !== 1 || !Array.isArray(next.registry.devices) || !['admin', 'operator'].includes(next.user?.role)) throw Error('Sicil yanıtı uyumsuz.');
         next.registry.devices = next.registry.devices.map(row => ({ ...row, measurement: row.state === 'fresh' ? row.measurement : null }));
-        if (!disposed) { setView(next); setError(''); }
+        if (!disposed) { const receipt = performance.now(); setReceivedAt(receipt); setClock(receipt); setView(next); setError(''); }
       } catch {
         if (!disposed) { setView(null); setError('Güvenli sicil bağlantısı kurulamadı. Servis ve yerel sertifika güvenini kontrol edin; güncel ölçüm gösterilemiyor.'); }
       } finally { pending = false; }
@@ -86,14 +94,19 @@ export function OperatorCenter() {
     </>}
     {busy && <p role="status">Hesap işlemi doğrulanıyor…</p>}
     {error && <p role="alert">{error}</p>}
+    {token && user && <OperatorAdministration token={token} username={user.username} role={user.role} onSessionEnd={message => { setToken(''); setUser(null); setView(null); setError(message); }} />}
     {view && <><p>{view.registry.devices.length} kayıtlı cihaz · Sunucudan alınan sicil</p>
       {!view.registry.devices.length && <p>Sicilde cihaz yok.</p>}
-      <div className="fleet-grid">{view.registry.devices.map(row => <article className="panel" key={row.device.serial}>
+      <div className="fleet-grid">{view.registry.devices.map(row => {
+        const age = row.age_s === null ? null : row.age_s + Math.max(0, clock - receivedAt) / 1000;
+        const state = age === null ? 'unknown' : age >= 10 ? 'disconnected' : age >= 3 && row.state === 'fresh' ? 'stale' : row.state;
+        const measurement = state === 'fresh' ? row.measurement : null;
+        return <article className="panel" key={row.device.serial}>
         <h3>{row.device.serial}</h3><p>{row.device.name} · {row.device.model}</p><p>{row.device.station} · {row.device.firmware}</p>
-        <p>Veri durumu: {{ fresh: 'Güncel', stale: 'Gecikmiş', disconnected: 'Bağlantı kesildi', unknown: 'Bilinmiyor' }[row.state] ?? 'Bilinmiyor'}</p>
-        <p>Kaynak: {row.measurement?.source === 'synthetic' ? 'Sentetik istasyon' : row.measurement?.source === 'serial' ? 'İstasyonun seri kaynak bildirimi' : 'Bilinmiyor'}</p>
-        <p>Sıcaklık: {row.measurement?.temperature_c ?? '—'} °C · Nem: {row.measurement?.humidity_percent ?? '—'} %</p>
-        <p>Basınç: {row.measurement?.pressure_pa ?? '—'} Pa · Ölçüm yaşı: {row.age_s === null ? '—' : row.age_s.toFixed(1) + ' s'}</p>
-      </article>)}</div></>}
+        <p>Veri durumu: {{ fresh: 'Güncel', stale: 'Gecikmiş', disconnected: 'Bağlantı kesildi', unknown: 'Bilinmiyor' }[state] ?? 'Bilinmiyor'}</p>
+        <p>Kaynak: {measurement?.source === 'synthetic' ? 'Sentetik istasyon' : measurement?.source === 'serial' ? 'İstasyonun seri kaynak bildirimi' : 'Bilinmiyor'}</p>
+        <p>Sıcaklık: {measurement?.temperature_c ?? '—'} °C · Nem: {measurement?.humidity_percent ?? '—'} %</p>
+        <p>Basınç: {measurement?.pressure_pa ?? '—'} Pa · Ölçüm yaşı: {age === null ? '—' : age.toFixed(1) + ' s'}</p>
+      </article>; })}</div></>}
   </section>;
 }

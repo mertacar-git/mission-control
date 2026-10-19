@@ -1,6 +1,6 @@
 # Human accounts and HTTPS center gateway
 
-18 October 2026. Civilian metadata/sensor registry only. Local software foundation,
+19 October 2026. Civilian metadata/sensor registry only. Local software foundation,
 not two-PC deployment or an aircraft-control authorization system.
 
 ## Start
@@ -41,12 +41,31 @@ remaining server session expires within its original 15-minute lifetime.
 | Publish station measurements or issue flight commands | No | No |
 
 Endpoints: `/api/v1/operators/login`, `/me`, `/logout`, `/users`,
-`/users/{username}/disable`, `/audit`, `/registry`, `/devices`.
-User/account administration currently uses the HTTPS API; the UI is login/read-only.
+`/users/{username}/disable`, `/password`, `/audit`, `/registry`, `/devices`.
+Administrators can list/create users, review account disable and read security
+events from the center UI. Operators can read the registry and change their own
+password; the admin section is absent for them and the API also enforces that role.
 Disabling a user deletes its active sessions and also checks enabled state on every
 request. Roles are returned by the backend; browser simulation role selection has
-no effect on a human account. Self-disable is rejected. There is no password-change,
-recovery, MFA or external identity provider in this initial delivery.
+no effect on a human account. Self-disable is rejected. Password change requires
+the current password, rejects reuse, is limited after five failures in 300 seconds
+and atomically revokes every session for that account. A storage/audit failure
+rolls back password and session changes together. Offline recovery is available
+to the OS administrator with access to the account database; MFA and an external
+identity provider are not implemented.
+
+For a forgotten password, stop the local operator service, then run:
+
+```sh
+python -m mission_control.operator_accounts --directory .runtime/operators --recover admin
+```
+
+The command prompts twice without echo. It only resets an existing enabled user,
+preserves the role, revokes all sessions, clears login/password-change failure
+counters and records `password.recovered` under `offline-recovery`. It never
+creates a missing database/user or re-enables a disabled account. Restart the
+service and sign in explicitly. Protect OS file access: this is offline database
+administration, not an unauthenticated HTTP recovery endpoint.
 
 The gateway authenticates downstream using its center certificate against the
 fixed loopback HTTPS registry, checks the human role before metadata mutation,
@@ -55,6 +74,11 @@ stays at the gateway; no station/private key or downstream credential reaches th
 browser. Local CORS permits only the existing localhost/127.0.0.1 UI ports.
 An unavailable/revoked registry produces an error with no current measurements.
 The UI polls only reads; it never automatically retries writes or flight commands.
+Between responses, displayed measurement age advances using the browser's
+monotonic elapsed time plus the server-reported sample age. At three seconds
+fresh readings are hidden as stale, including while a request is stalled. Request
+failure clears the snapshot. This does not calculate network latency or prove a
+compromised station's sample time.
 
 Legacy HTTP/mTLS APIs, offline CA tools and SITL controller leases keep their own
 authorization boundaries. This account service does not redefine those privileges.
@@ -89,8 +113,10 @@ and revoked-center denial. Browser tests cover desktop/mobile login, token stora
 isolation, password cleanup and expiry clearing. Mocked UI tests do not establish
 browser CA trust or real two-computer acceptance.
 
-Next: administration UI/recovery, identity-action audit, outage/recovery cases,
+Next: identity-action audit, separate-PC outage/recovery cases,
 station-local credential deployment and two-PC LAN acceptance. See
 [ordered delivery plan](CENTER_DELIVERY_PLAN.md).
 
 Password profile reference: [OWASP password storage guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html).
+
+![Actual local login view; no user credentials entered](media/operator-center-login.png)

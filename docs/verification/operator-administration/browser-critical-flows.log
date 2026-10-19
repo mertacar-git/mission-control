@@ -1,0 +1,49 @@
+
+> mission-control-ui@1.9.0 test:e2e
+> playwright test
+
+
+Running 22 tests using 1 worker
+
+  ✓   1 [desktop] › e2e/critical.spec.ts:3:1 › admin can review users, disable a selected account and change password without automatic retries (1.6s)
+  ✓   2 [desktop] › e2e/critical.spec.ts:42:1 › operator center clears password, isolates roles and removes readings after session expiry (2.6s)
+  ✓   3 [desktop] › e2e/critical.spec.ts:72:1 › offline planning, undo, explicit upload review and demo flight commands (2.5s)
+  ✓   4 [desktop] › e2e/critical.spec.ts:119:1 › published SITL experiment opens isolated replay with working charts (1.7s)
+  ✓   5 [desktop] › e2e/critical.spec.ts:163:1 › five-record report, portable HTML and explicit conditions (2.1s)
+  ✓   6 [desktop] › e2e/critical.spec.ts:197:1 › serial sample remains an independent source and preserves missing fields (2.2s)
+  ✓   7 [desktop] › e2e/critical.spec.ts:252:1 › failed experiment evidence request shows an error rather than fabricated results (2.0s)
+[WebServer] 11:15:26 PM [vite] http proxy error: /api/v1/missions
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:15:26 PM [vite] http proxy error: /api/v1/status
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:15:26 PM [vite] http proxy error: /api/v1/scenarios
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+  ✓   8 [desktop] › e2e/critical.spec.ts:273:1 › unavailable experiment backend blocks mutations and retry recovers (1.6s)
+  ✓   9 [desktop] › e2e/critical.spec.ts:317:1 › sensor contract replay shows sensor gaps and never invents flight measurements (1.4s)
+  ✓  10 [desktop] › e2e/critical.spec.ts:364:1 › civilian fleet demo isolates approval from observations and foreign station requests (1.2s)
+  ✓  11 [desktop] › e2e/critical.spec.ts:383:1 › authenticated registry view keeps scoped credentials in memory and clears unavailable measurements (2.8s)
+  ✓  12 [mobile-390] › e2e/critical.spec.ts:3:1 › admin can review users, disable a selected account and change password without automatic retries (2.2s)
+  ✓  13 [mobile-390] › e2e/critical.spec.ts:42:1 › operator center clears password, isolates roles and removes readings after session expiry (2.7s)
+  ✓  14 [mobile-390] › e2e/critical.spec.ts:72:1 › offline planning, undo, explicit upload review and demo flight commands (2.1s)
+  ✓  15 [mobile-390] › e2e/critical.spec.ts:119:1 › published SITL experiment opens isolated replay with working charts (1.5s)
+  ✓  16 [mobile-390] › e2e/critical.spec.ts:163:1 › five-record report, portable HTML and explicit conditions (1.9s)
+  ✓  17 [mobile-390] › e2e/critical.spec.ts:197:1 › serial sample remains an independent source and preserves missing fields (1.7s)
+  ✓  18 [mobile-390] › e2e/critical.spec.ts:252:1 › failed experiment evidence request shows an error rather than fabricated results (900ms)
+[WebServer] 11:15:47 PM [vite] http proxy error: /api/v1/missions
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:15:47 PM [vite] http proxy error: /api/v1/status
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:15:47 PM [vite] http proxy error: /api/v1/scenarios
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+  ✓  19 [mobile-390] › e2e/critical.spec.ts:273:1 › unavailable experiment backend blocks mutations and retry recovers (1.3s)
+  ✓  20 [mobile-390] › e2e/critical.spec.ts:317:1 › sensor contract replay shows sensor gaps and never invents flight measurements (776ms)
+  ✓  21 [mobile-390] › e2e/critical.spec.ts:364:1 › civilian fleet demo isolates approval from observations and foreign station requests (1.5s)
+  ✓  22 [mobile-390] › e2e/critical.spec.ts:383:1 › authenticated registry view keeps scoped credentials in memory and clears unavailable measurements (2.4s)
+
+  22 passed (42.2s)
