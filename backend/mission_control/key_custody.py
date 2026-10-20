@@ -54,3 +54,24 @@ def key_password(path):
         raise PermissionError('Private key must not be accessible to group/other users.')
     # Legacy unencrypted test keys remain readable; migration is never implicit.
     return None
+
+
+def write_secret(path, value):
+    """Exclusive local token exchange: DPAPI on Windows, mode 0600 elsewhere."""
+    path = Path(path)
+    encoded = value.encode('utf-8')
+    body = b'DPAPI1\n'+dpapi(encoded) if os.name == 'nt' else b'PRIVATE1\n'+encoded
+    with os.fdopen(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'wb') as stream:
+        stream.write(body)
+
+
+def read_secret(path):
+    path = Path(path)
+    if os.name != 'nt' and path.stat().st_mode & 0o077:
+        raise PermissionError('Token file must be private to its owner.')
+    body = path.read_bytes()
+    if body.startswith(b'DPAPI1\n'):
+        return dpapi(body[7:], decrypt=True).decode('utf-8')
+    if os.name != 'nt' and body.startswith(b'PRIVATE1\n'):
+        return body[9:].decode('utf-8')
+    raise ValueError('Protected token format required.')

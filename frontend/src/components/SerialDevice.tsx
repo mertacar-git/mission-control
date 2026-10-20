@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { controller } from '../api';
 import { SerialExperimentLab } from './SerialExperimentLab';
+import { operatorBase } from '../operatorApi';
 import { download } from '../analysis';
 import {
   parseSerialRecording,
@@ -36,7 +37,6 @@ interface SerialPort {
   description: string;
   serial_number: string | null;
 }
-const base = 'http://127.0.0.1:8767';
 const labels: Record<string, string> = {
   fresh: 'Güncel',
   stale: 'Gecikmiş',
@@ -50,9 +50,10 @@ const labels: Record<string, string> = {
   failed: 'Başarısız',
   interrupted: 'Kesintiye uğradı',
 };
-export function SerialDevice({ local }: { local: boolean }) {
+export function SerialDevice({ local, gatewayToken, preferredPort }: { local: boolean; gatewayToken?: string; preferredPort?: string }) {
+  const apiBase = gatewayToken ? operatorBase + '/serial' : 'http://127.0.0.1:8767/api/v1/serial';
   const [draftToken, setDraftToken] = useState(''),
-    [token, setToken] = useState(''),
+    [token, setToken] = useState(gatewayToken ?? ''),
     [status, setStatus] = useState<SerialStatus | null>(null),
     [ports, setPorts] = useState<SerialPort[]>([]),
     [port, setPort] = useState(''),
@@ -74,7 +75,7 @@ export function SerialDevice({ local }: { local: boolean }) {
     key = token,
     raw = false,
   ) {
-    const response = await fetch(base + '/api/v1/serial' + path, {
+    const response = await fetch(apiBase + path, {
       method,
       signal: AbortSignal.timeout(raw ? 10000 : 3000),
       headers: {
@@ -92,6 +93,14 @@ export function SerialDevice({ local }: { local: boolean }) {
     }
     return raw ? response.text() : response.json();
   }
+  useEffect(() => {
+    if (!gatewayToken) return;
+    let disposed = false;
+    void Promise.all([request('/status'),request('/ports'),request('/recordings')]).then(([next,available,recordings])=>{
+      if (!disposed) {setStatus(next);setPorts(available);setArchive(recordings);setPort(available.some((item: SerialPort)=>item.port===preferredPort) ? preferredPort! : '');}
+    }).catch(()=>{if(!disposed)setError('Seri alıcıya ulaşılamıyor. Başlatıcıyı kontrol edin.');});
+    return ()=>{disposed=true;};
+  }, [gatewayToken,preferredPort]);
   async function perform(fn: () => Promise<void>) {
     if (busy) return;
     setBusy(true);
@@ -127,6 +136,7 @@ export function SerialDevice({ local }: { local: boolean }) {
     let disposed = false;
     let ws: WebSocket | null = null;
     const openSocket = () => {
+      if (gatewayToken) return;
       const socket = new WebSocket('ws://127.0.0.1:8767/ws/serial');
       ws = socket;
       socket.onopen = () =>
@@ -224,7 +234,7 @@ export function SerialDevice({ local }: { local: boolean }) {
         MCT1 ve MCS1 baytları CRC ve sıra kontrolünden geçer. Eksik sensörler
         boş kalır. Seri alıcı uçuş komutu göndermez.
       </p>
-      {local ? (
+      {local && gatewayToken ? <p>Merkez hesabı üzerinden yerel seri alıcıya erişiliyor. Erişim anahtarı tarayıcıya aktarılmaz. Portu doğrulayıp kaydı açıkça başlatın.</p> : local ? (
         <>
           <div className="serial-settings">
             <label>
@@ -439,7 +449,7 @@ export function SerialDevice({ local }: { local: boolean }) {
             telemetry ? `${telemetry.boot_id} / ${telemetry.sequence}` : '—',
           ],
           ['Cihaz zamanı', telemetry ? telemetry.source_time_ms + ' ms' : '—'],
-        ].map(([name, v]) => (
+        ].filter(([name]) => !gatewayToken || !['Göreli irtifa','Yer hızı','Gerilim','Enlem','Boylam'].includes(String(name))).map(([name, v]) => (
           <div key={name}>
             <small>{name}</small>
             <strong>{v}</strong>
@@ -497,6 +507,7 @@ export function SerialDevice({ local }: { local: boolean }) {
         </pre>
       </details>
       <div className="row-actions">
+        {!gatewayToken && <>
         <button
           disabled={busy}
           onClick={() =>
@@ -528,6 +539,7 @@ export function SerialDevice({ local }: { local: boolean }) {
         >
           Sentetik sensör sözleşmesi örneğini aç
         </button>
+        </>}
         {replay && (
           <button
             onClick={() => {
@@ -595,7 +607,7 @@ export function SerialDevice({ local }: { local: boolean }) {
           </div>
         </>
       )}
-      {local && token && status?.transport === 'synthetic' && (
+      {local && token && !gatewayToken && status?.transport === 'synthetic' && (
         <SerialExperimentLab
           request={request}
           onOpen={(id) =>

@@ -20,3 +20,9 @@ CA/file administration. The legacy registry remains a separately scoped service.
 
 See [account/gateway setup](OPERATOR_CENTER.md), [CSR enrollment](STATION_ENROLLMENT.md),
 [FSL contract](FSL_IMPLEMENTATION.md) and [sensor acceptance](SENSOR_NODE.md).
+
+## Integrated single-PC sensor delivery
+
+The usable center adds separate **Merkez**, **Örnek filo** and development views, UI enrollment/search and stable diagnostics. The MCS1 bridge carries validated receiver snapshots through existing mTLS/FSL without opening COM again. The new Windows launcher separates setup from start, serves production UI through the HTTPS center and exchanges its receiver token privately.
+
+See [single-PC setup and limits](USABLE_CENTER.md) and phase evidence in `verification/usable-center-phase1`, `verification/usable-center-phase2` and `verification/usable-center-phase3`. The latter is software acceptance only: local synthetic bytes, real local TLS and desktop/mobile UI. Browser OS trust enrollment, a second PC, physical sensor calibration, LAN and Internet remain separate deployment/acceptance items. Stage C certificate-administration auditing is still pending; this delivery does not close it.

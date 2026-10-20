@@ -64,3 +64,21 @@ def test_human_https_socket_login_without_station_private_key(tmp_path):
         service.should_exit = True
         thread.join(10)
         assert not thread.is_alive()
+
+def test_registry_transport_and_certificate_errors_keep_detail_and_stable_codes(tmp_path):
+    import ssl
+    database=tmp_path/'users.db';bootstrap(database)
+    app=create_operator_app(database)
+    with TestClient(app,base_url='https://localhost') as client:
+        headers=login(client)
+        def unavailable(request):raise httpx.ConnectError('No listener')
+        app.state.registry_client=httpx.Client(base_url='https://127.0.0.1:8771',transport=httpx.MockTransport(unavailable))
+        result=client.get('/api/v1/operators/registry',headers=headers)
+        assert result.status_code==503 and result.json()['code']=='registry_unavailable' and isinstance(result.json()['detail'],str)
+        app.state.registry_client.close()
+        def invalid_certificate(request):
+            try:raise ssl.SSLCertVerificationError('test certificate rejection')
+            except ssl.SSLCertVerificationError as cause:raise httpx.ConnectError('TLS failed') from cause
+        app.state.registry_client=httpx.Client(base_url='https://127.0.0.1:8771',transport=httpx.MockTransport(invalid_certificate))
+        result=client.get('/api/v1/operators/registry',headers=headers)
+        assert result.status_code==503 and result.json()['code']=='registry_tls_invalid'

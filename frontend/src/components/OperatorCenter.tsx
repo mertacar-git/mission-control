@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { OperatorAdministration } from './OperatorAdministration';
 import { DeviceEnrollment } from './DeviceEnrollment';
 import { operatorBase, operatorError } from '../operatorApi';
+import { CenterSensorPrototype } from './CenterSensorPrototype';
 
 interface User { username: string; role: 'admin' | 'operator' }
 interface RegistryView {
@@ -17,6 +18,7 @@ interface RegistryView {
   }[] };
 }
 const base = operatorBase;
+const sensorNumber = (value: number | null | undefined) => value == null ? '—' : value.toFixed(3);
 
 export function OperatorCenter() {
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
@@ -117,8 +119,8 @@ export function OperatorCenter() {
           <p>Ekipman: {row.device.equipment?.join(', ') || 'Belirtilmedi'}</p>
           <p>Ölçüm protokolü: {measurement?.sensor_protocol ?? '—'} · Akış: {measurement?.stream_id ?? '—'}</p>
           <p>Ölçüm firmware kodu: {measurement?.firmware_code ?? '—'}</p>
-          <p>İvme X / Y / Z: {measurement?.acceleration_x_ms2 ?? '—'} / {measurement?.acceleration_y_ms2 ?? '—'} / {measurement?.acceleration_z_ms2 ?? '—'} m/s²</p>
-          <p>Açısal hız X / Y / Z: {measurement?.angular_velocity_x_rads ?? '—'} / {measurement?.angular_velocity_y_rads ?? '—'} / {measurement?.angular_velocity_z_rads ?? '—'} rad/s</p>
+          <p>İvme X / Y / Z: {sensorNumber(measurement?.acceleration_x_ms2)} / {sensorNumber(measurement?.acceleration_y_ms2)} / {sensorNumber(measurement?.acceleration_z_ms2)} m/s²</p>
+          <p>Açısal hız X / Y / Z: {sensorNumber(measurement?.angular_velocity_x_rads)} / {sensorNumber(measurement?.angular_velocity_y_rads)} / {sensorNumber(measurement?.angular_velocity_z_rads)} rad/s</p>
           <p>Merkez en fazla 5 Hz güncel görüntü alır. Tam paket kaydı Seri cihaz arşivindedir. Seri kaynak bildirimi fiziksel sensör kimliği veya doğruluk kanıtı değildir.</p>
         </details>
         <p>Veri durumu: {{ fresh: 'Güncel', stale: 'Gecikmiş', disconnected: 'Bağlantı kesildi', unknown: 'Bilinmiyor' }[state] ?? 'Bilinmiyor'}</p>
@@ -126,5 +128,6 @@ export function OperatorCenter() {
         <p>Sıcaklık: {measurement?.temperature_c ?? '—'} °C · Nem: {measurement?.humidity_percent ?? '—'} %</p>
         <p>Basınç: {measurement?.pressure_pa ?? '—'} Pa · Ölçüm yaşı: {age === null ? '—' : age.toFixed(1) + ' s'}</p>
       </article>; })}</div></>}
+    {token && user && <CenterSensorPrototype token={token} />}
   </section>;
 }

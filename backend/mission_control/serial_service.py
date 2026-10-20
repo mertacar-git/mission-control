@@ -324,6 +324,7 @@ class SerialService:
                 experiment=description,
                 on_update=update,
                 quiet=True,
+                transport='synthetic' if self.synthetic else 'pyserial',
             )
             with self.lock:
                 self.current.update(status="completed", summary=summary)
@@ -563,9 +564,12 @@ def main():
         action="store_true",
         help="Expose only a labelled software test source; no OS port is opened",
     )
+    parser.add_argument('--token-file', type=Path, help='Read a protected local token; suppress token output')
+    parser.add_argument('--directory', type=Path)
     args = parser.parse_args()
-    app = create_serial_app(synthetic=args.synthetic)
-    print(
+    from .key_custody import read_secret
+    app = create_serial_app(args.directory, synthetic=args.synthetic, token=read_secret(args.token_file) if args.token_file else None)
+    if not args.token_file: print(
         "Local receiver token (paste only into the local Serial device page): "
         + app.state.access_token,
         flush=True,

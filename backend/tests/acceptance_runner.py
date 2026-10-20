@@ -28,8 +28,10 @@ def source_manifest(root):
         "backend/tests",
         "frontend/src",
         "frontend/e2e",
+        "frontend/acceptance",
         "frontend/public",
         "prototype",
+        "simulator",
         "tests/fixtures",
     ):
         for path in sorted((root / directory).rglob("*")):
@@ -44,6 +46,7 @@ def source_manifest(root):
     for relative in (
         "backend/requirements.txt",
         "backend/requirements-serial.txt",
+        "backend/requirements-center.txt",
         "frontend/package.json",
         "frontend/package-lock.json",
         "frontend/vite.config.ts",
@@ -323,6 +326,8 @@ def main(argv=None):
                 output / "browser-tests.xml",
             )
         )
+        checks.append(("prototype-browser", [sys.executable,"-m","tests.prototype_browser_runner"],
+            ROOT/"backend", 180, {**env,"MISSION_EVIDENCE_DIR":str(output/"prototype-browser")}, None))
     if args.suite in ("sitl", "all"):
         for name, module, limit in [
             ("sitl-baseline", "tests.integration_runner", 900),

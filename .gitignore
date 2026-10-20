@@ -12,3 +12,4 @@ playwright-report/
 .venv-bench/
 .venv-serial/
 .pio/
+.venv-center/

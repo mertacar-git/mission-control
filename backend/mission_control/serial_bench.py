@@ -158,6 +158,7 @@ def capture(
     experiment="Device origin not verified",
     on_update=None,
     quiet=False,
+    transport=None,
 ):
     if serial_factory is None:
         import serial
@@ -201,6 +202,7 @@ def capture(
                     port=port,
                     baud=baud,
                     experiment=experiment,
+                    **({'transport': transport} if transport is not None else {}),
                     started_at=datetime.now(timezone.utc).isoformat(),
                 )
             )

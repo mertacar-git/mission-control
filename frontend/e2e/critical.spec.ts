@@ -5,6 +5,7 @@ test('operator readings age out while a registry request is stalled', async ({ p
   await page.route('https://127.0.0.1:8772/api/v1/operators/**', async route => {
     const path = new URL(route.request().url()).pathname;
     if (path.endsWith('/login')) return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ token: 'test-only-age-session', username: 'observer', role: 'operator' }) });
+    if (path.endsWith('/prototype')) return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ configured: false }) });
     reads += 1;
     if (reads > 1) { await new Promise(resolve => setTimeout(resolve, 5000)); return route.abort().catch(() => {}); }
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ user: { username: 'observer', role: 'operator' }, registry: { schema_version: 1, devices: [{ device: { serial: 'STALE-SENSOR', name: 'Bench', model: 'Synthetic', station: 'station-a', firmware: 'SIM' }, state: 'fresh', age_s: 2, measurement: { source: 'synthetic', temperature_c: 24, humidity_percent: 45, pressure_pa: 101325 } }] } }) });

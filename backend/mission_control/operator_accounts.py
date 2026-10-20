@@ -125,7 +125,7 @@ class Accounts:
             return dict(username=row['username'], role=row['role'])
 
 
-def create_operator_app(database, clock=time.time, tls_directory=None, registry_origin='https://127.0.0.1:8771'):
+def create_operator_app(database, clock=time.time, tls_directory=None, registry_origin='https://127.0.0.1:8771', static_directory=None, serial_token_file=None, prototype_file=None):
     from urllib.parse import urlparse
     target = urlparse(registry_origin)
     if target.scheme != 'https' or target.hostname != '127.0.0.1' or target.path or target.query or target.fragment or target.username:
@@ -135,7 +135,13 @@ def create_operator_app(database, clock=time.time, tls_directory=None, registry_
         Path(database).parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         app.state.accounts = Accounts(database, clock)
         app.state.registry_client = None
+        app.state.serial_client = None
         try:
+            if serial_token_file is not None:
+                import httpx
+                from .key_custody import read_secret
+                app.state.serial_client = httpx.AsyncClient(base_url='http://127.0.0.1:8767',
+                    headers={'Authorization':'Bearer '+read_secret(serial_token_file)}, trust_env=False, follow_redirects=False, timeout=3)
             if tls_directory is not None:
                 import httpx
                 context = ssl.create_default_context(cafile=str(tls_directory/'ca.crt'))
@@ -145,13 +151,15 @@ def create_operator_app(database, clock=time.time, tls_directory=None, registry_
                 app.state.registry_client = httpx.Client(base_url=registry_origin, verify=context, trust_env=False, follow_redirects=False, timeout=3)
             yield
         finally:
+            if app.state.serial_client is not None:
+                await app.state.serial_client.aclose()
             if app.state.registry_client is not None:
                 app.state.registry_client.close()
             app.state.accounts.db.close()
     app = FastAPI(title='FLW VECTOR local human accounts', lifespan=lifespan)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=['localhost', '127.0.0.1'])
     app.add_middleware(CORSMiddleware, allow_origins=['http://127.0.0.1:5173','http://localhost:5173','http://127.0.0.1:8000','http://localhost:8000'],
-                       allow_methods=['GET','POST'], allow_headers=['Authorization','Content-Type'])
+                       allow_methods=['GET','POST','DELETE'], allow_headers=['Authorization','Content-Type','X-Control-Session'])
     @app.exception_handler(RequestValidationError)
     async def invalid_input(request, exception):
         # FastAPI's default error can echo rejected password input.
@@ -284,12 +292,17 @@ def create_operator_app(database, clock=time.time, tls_directory=None, registry_
             with accounts.db:
                 accounts.log(actor['username'], 'device.enrollment.accepted', device.serial)
         return result
+    from .operator_serial import install_serial_gateway
+    install_serial_gateway(app, prototype_file)
+    if static_directory is not None:
+        from fastapi.staticfiles import StaticFiles
+        app.mount('/', StaticFiles(directory=static_directory, html=True), name='production-ui')
     return app
 
 
-def operator_server(database, tls_directory, port=8772, registry_origin='https://127.0.0.1:8771'):
+def operator_server(database, tls_directory, port=8772, registry_origin='https://127.0.0.1:8771', **options):
     import uvicorn
-    config = uvicorn.Config(create_operator_app(database, tls_directory=tls_directory, registry_origin=registry_origin), host='127.0.0.1', port=port,
+    config = uvicorn.Config(create_operator_app(database, tls_directory=tls_directory, registry_origin=registry_origin, **options), host='127.0.0.1', port=port,
         access_log=False, proxy_headers=False, ws='none', ssl_certfile=str(tls_directory/'server.crt'),
         ssl_keyfile=str(tls_directory/'server.key'), ssl_keyfile_password=key_password(tls_directory/'server.key'))
     config.load()

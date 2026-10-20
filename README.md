@@ -223,3 +223,11 @@ station, signs only public requests and activates certificates separately.
 Two-computer network acceptance and human account management remain pending.
 
 [FLW Cryptography Policy v1](docs/FLW_CRYPTO_POLICY.md), [FSL v1 application protocol](docs/FSL_V1.md) and [threat model / acceptance matrix](docs/FSL_THREAT_MODEL.md) define the civilian registry/sensor security profile. The [local TLS 1.3/mTLS laboratory](docs/FLEET_TLS_LAB.md) verifies two synthetic stations and certificate identity. [FSL implementation and lifecycle](docs/FSL_IMPLEMENTATION.md) adds offline station renewal, Windows DPAPI-protected key passwords, certificate-bound sessions and durable transactional replay handling. Production identity lifecycle, LAN/Internet deployment and audited compliance remain pending. Existing USB CRC and legacy bearer controls remain unchanged.
+
+## Usable center and MCS1 sensor prototype
+
+[Setup, operator workflow, bridge behavior and acceptance boundaries](docs/USABLE_CENTER.md).
+Windows: run `simulator/run-prototype.ps1 -Action Setup` once, then `-Action Start`.
+The local HTTPS center serves the production UI; default source is explicitly synthetic.
+The serial receiver stays the only COM reader, and its validated MCS1 snapshots can
+reach the center through mTLS/FSL. Physical sensors and two-PC/LAN acceptance remain pending.

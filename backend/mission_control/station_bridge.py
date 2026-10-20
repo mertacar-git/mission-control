@@ -13,7 +13,7 @@ from .fleet_service import Strict
 from .fsl import FSLMeasurement
 from .serial_service import SerialStatus
 from .sensor_protocol import FIELDS
-from .key_custody import key_password
+from .key_custody import key_password, read_secret
 
 
 class BridgeConfig(Strict):
@@ -151,7 +151,7 @@ def main():
     parser.add_argument('--seconds', type=int, choices=range(1, 601), default=300)
     args = parser.parse_args()
     config = BridgeConfig.model_validate_json(args.config.read_text())
-    token = args.serial_token_file.read_text().strip()
+    token = read_secret(args.serial_token_file)
     with httpx.Client(base_url=config.receiver, headers={'Authorization':'Bearer '+token}, trust_env=False, follow_redirects=False, timeout=2) as receiver, httpx.Client(base_url=config.verified_center(), verify=tls_context(args.tls_directory, config.station_id), trust_env=False, follow_redirects=False, timeout=3) as center:
         bridge = StationBridge(config, receiver, center)
         try:

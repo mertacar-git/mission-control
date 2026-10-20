@@ -114,7 +114,8 @@ def test_two_station_processes_real_tls_and_revocation(tmp_path):
                 center.post('/api/v1/fleet/devices',json=dict(serial=serial,name=serial,model='MCS1',station=actor,firmware='SIM',equipment=[])).raise_for_status()
                 config=tmp_path/f'{actor}.json';config.write_text(BridgeConfig(station_id=actor,device_id=serial,stream_id='00112233445566778899aabbccddeeff',center=origin).model_dump_json())
                 token=tmp_path/f'{actor}.token'
-                with os.fdopen(os.open(token,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600),'w') as file:file.write('test-only-process-token')
+                from mission_control.key_custody import write_secret
+                write_secret(token,'test-only-process-token')
                 processes.append(subprocess.Popen([sys.executable,'-m','mission_control.station_bridge','--config',str(config),'--tls-directory',str(directory),'--serial-token-file',str(token),'--seconds','3'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True))
             deadline=time.monotonic()+8
             while time.monotonic()<deadline:

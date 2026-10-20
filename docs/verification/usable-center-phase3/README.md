@@ -1,0 +1,9 @@
+# Phase 3 acceptance
+
+Final software acceptance passed: 142 backend tests, 84 frontend tests, 26 critical production-browser cases, production build, HTTP/WebSocket, serial PTY, emulator subprocesses, and two additional real-service browser flows (desktop 1440 px and mobile 390 px). Source manifest was compared to the tested WSL tree after the run and matched. WSL source copy deliberately excludes .git; source hashes identify the tested inputs.
+
+The real-service browser flows register a device through UI, start the receiver, see synthetic MCS1 snapshots at the center, stop source, observe hidden stale values and separately open the raw serial recording. They use a test-only browser transport adapter: responses are fetched from actual owned HTTPS services with the run's CA and verified TLS 1.3, then fulfilled to headless Chromium. No browser certificate exception is installed. This proves UI/service integration, not OS/browser trust-store enrollment. Screenshots and adapter logs are in prototype-browser/.
+
+Windows: 8 targeted launcher/gateway tests passed (windows-tests.xml), covering protected exchange, occupied port, malformed/expired certificate, partial startup cleanup, HTTPS enrollment/capture/bridge/cut/replay, and stable registry transport/certificate diagnostics. PowerShell launcher parsed successfully. A fresh Python 3.12.10 Windows venv installed only requirements-center.txt: pymavlink and Shapely were absent; setup, PowerShell Check, verified service startup and owned cleanup passed. The reproducible smoke script is included (set PYTHONPATH to the repository backend when invoking it with that clean interpreter).
+
+Serial PTY raw evidence is explicitly synthetic. No real sensor, physical accuracy/calibration, second-PC, LAN, Internet, or new SITL behavior is accepted. Manual local CA trust enrollment remains a deployment step. No private key, runtime token or account database is included.
