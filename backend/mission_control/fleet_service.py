@@ -36,6 +36,15 @@ class Measurement(Strict):
     temperature_c: float | None = Field(default=None, ge=-40, le=85)
     pressure_pa: float | None = Field(default=None, ge=30000, le=110000)
     humidity_percent: float | None = Field(default=None, ge=0, le=100)
+    sensor_protocol: Literal['MCS1'] | None = None
+    stream_id: str | None = Field(default=None, pattern=r'^[0-9a-f]{32}$')
+    firmware_code: int | None = Field(default=None, ge=0, le=4294967295, strict=True)
+    acceleration_x_ms2: float | None = Field(default=None, ge=-200, le=200)
+    acceleration_y_ms2: float | None = Field(default=None, ge=-200, le=200)
+    acceleration_z_ms2: float | None = Field(default=None, ge=-200, le=200)
+    angular_velocity_x_rads: float | None = Field(default=None, ge=-40, le=40)
+    angular_velocity_y_rads: float | None = Field(default=None, ge=-40, le=40)
+    angular_velocity_z_rads: float | None = Field(default=None, ge=-40, le=40)
 
     @field_serializer('source_time_ms')
     def clock(self, value):

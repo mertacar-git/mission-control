@@ -1,0 +1,4 @@
+nominal: passed {'received': 25, 'accepted': 25, 'duplicates': 0, 'out_of_order': 0, 'corrupt': 0, 'foreign': 0, 'sequence_missing': 0, 'boots': 1}
+mixed: passed {'received': 22, 'accepted': 16, 'duplicates': 3, 'out_of_order': 1, 'corrupt': 2, 'foreign': 0, 'sequence_missing': 8, 'boots': 1}
+sensor_gap: passed {'received': 25, 'accepted': 25, 'duplicates': 0, 'out_of_order': 0, 'corrupt': 0, 'foreign': 0, 'sequence_missing': 0, 'boots': 1}
+restart: passed {'received': 25, 'accepted': 25, 'duplicates': 0, 'out_of_order': 0, 'corrupt': 0, 'foreign': 0, 'sequence_missing': 0, 'boots': 2}

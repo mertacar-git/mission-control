@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Mission Control acceptance</title><style>body{font:16px system-ui;max-width:1100px;margin:30px auto;padding:20px;background:#0c1721;color:#e3edf4}table{border-collapse:collapse;width:100%}td,th{border:1px solid #405064;padding:10px;text-align:left}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#65d1df}</style><h1>Mission Control acceptance · passed</h1><p>software · 2026-10-19T20:36:41.980823+00:00</p><p>Physical hardware: pending, outside this software/SITL acceptance.</p><table><thead><tr><th>Required check</th><th>Result</th><th>Wall seconds</th><th>Reason</th><th>Evidence</th></tr></thead><tbody><tr><th>backend-tests</th><td>passed</td><td>53.463</td><td></td><td><a href="backend-tests.log">Raw log</a></td></tr><tr><th>frontend-tests</th><td>passed</td><td>1.485</td><td></td><td><a href="frontend-tests.log">Raw log</a></td></tr><tr><th>production-build</th><td>passed</td><td>6.814</td><td></td><td><a href="production-build.log">Raw log</a></td></tr><tr><th>http-websocket</th><td>passed</td><td>1.286</td><td></td><td><a href="http-websocket.log">Raw log</a></td></tr><tr><th>serial-pty</th><td>passed</td><td>7.938</td><td></td><td><a href="serial-pty.log">Raw log</a></td></tr><tr><th>subprocess-emulator</th><td>passed</td><td>23.005</td><td></td><td><a href="subprocess-emulator.log">Raw log</a></td></tr><tr><th>browser-critical-flows</th><td>passed</td><td>47.093</td><td></td><td><a href="browser-critical-flows.log">Raw log</a></td></tr></tbody></table><h2>Version and execution context</h2><pre>{
+  &quot;schema_version&quot;: 1,
+  &quot;suite&quot;: &quot;software&quot;,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;started_utc&quot;: &quot;2026-10-19T20:36:41.980823+00:00&quot;,
+  &quot;ended_utc&quot;: &quot;2026-10-19T20:38:59.322828+00:00&quot;,
+  &quot;application_version&quot;: &quot;1.9.0&quot;,
+  &quot;python&quot;: &quot;3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]&quot;,
+  &quot;platform&quot;: &quot;Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39&quot;,
+  &quot;software_revision&quot;: null,
+  &quot;software_dirty&quot;: null,
+  &quot;hardware&quot;: &quot;pending; no physical board/sensor acceptance&quot;,
+  &quot;source_sha256&quot;: &quot;3f5bddf8681d7c0ccc74852d1ec33a291f056f30bb88be92238eb43ebaa94ea2&quot;,
+  &quot;dependencies&quot;: {
+    &quot;fastapi&quot;: &quot;0.115.12&quot;,
+    &quot;pydantic&quot;: &quot;2.11.5&quot;,
+    &quot;pymavlink&quot;: &quot;2.4.49&quot;,
+    &quot;shapely&quot;: &quot;2.1.2&quot;,
+    &quot;pyserial&quot;: &quot;3.5&quot;,
+    &quot;pytest&quot;: &quot;8.3.5&quot;
+  }
+}</pre></html>

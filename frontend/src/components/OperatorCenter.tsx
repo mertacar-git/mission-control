@@ -7,10 +7,13 @@ interface User { username: string; role: 'admin' | 'operator' }
 interface RegistryView {
   user: User;
   registry: { schema_version: 1; devices: {
-    device: { serial: string; name: string; model: string; station: string; firmware: string };
+    device: { serial: string; name: string; model: string; station: string; firmware: string; equipment?: string[] };
     state: 'fresh' | 'stale' | 'disconnected' | 'unknown';
     age_s: number | null;
-    measurement: { source: string; temperature_c: number | null; pressure_pa: number | null; humidity_percent: number | null } | null;
+    measurement: { source: string; temperature_c: number | null; pressure_pa: number | null; humidity_percent: number | null;
+      sensor_protocol?: string | null; stream_id?: string | null; firmware_code?: number | null;
+      acceleration_x_ms2?: number | null; acceleration_y_ms2?: number | null; acceleration_z_ms2?: number | null;
+      angular_velocity_x_rads?: number | null; angular_velocity_y_rads?: number | null; angular_velocity_z_rads?: number | null } | null;
   }[] };
 }
 const base = operatorBase;
@@ -110,7 +113,14 @@ export function OperatorCenter() {
         const measurement = state === 'fresh' ? row.measurement : null;
         return <article className="panel" key={row.device.serial}>
         <h3>{row.device.serial}</h3><p>{row.device.name} · {row.device.model}</p><p>{row.device.station} · {row.device.firmware}</p>
-        <details><summary>Cihaz ayrıntısı · {row.device.serial}</summary><p>Seri: {row.device.serial}</p><p>Firmware: {row.device.firmware}</p><p>Atama: {row.device.station}</p></details>
+        <details><summary>Cihaz ayrıntısı · {row.device.serial}</summary><p>Seri: {row.device.serial}</p><p>Kayıtlı firmware: {row.device.firmware}</p><p>Atama: {row.device.station}</p>
+          <p>Ekipman: {row.device.equipment?.join(', ') || 'Belirtilmedi'}</p>
+          <p>Ölçüm protokolü: {measurement?.sensor_protocol ?? '—'} · Akış: {measurement?.stream_id ?? '—'}</p>
+          <p>Ölçüm firmware kodu: {measurement?.firmware_code ?? '—'}</p>
+          <p>İvme X / Y / Z: {measurement?.acceleration_x_ms2 ?? '—'} / {measurement?.acceleration_y_ms2 ?? '—'} / {measurement?.acceleration_z_ms2 ?? '—'} m/s²</p>
+          <p>Açısal hız X / Y / Z: {measurement?.angular_velocity_x_rads ?? '—'} / {measurement?.angular_velocity_y_rads ?? '—'} / {measurement?.angular_velocity_z_rads ?? '—'} rad/s</p>
+          <p>Merkez en fazla 5 Hz güncel görüntü alır. Tam paket kaydı Seri cihaz arşivindedir. Seri kaynak bildirimi fiziksel sensör kimliği veya doğruluk kanıtı değildir.</p>
+        </details>
         <p>Veri durumu: {{ fresh: 'Güncel', stale: 'Gecikmiş', disconnected: 'Bağlantı kesildi', unknown: 'Bilinmiyor' }[state] ?? 'Bilinmiyor'}</p>
         <p>Kaynak: {measurement?.source === 'synthetic' ? 'Sentetik istasyon' : measurement?.source === 'serial' ? 'İstasyonun seri kaynak bildirimi' : 'Bilinmiyor'}</p>
         <p>Sıcaklık: {measurement?.temperature_c ?? '—'} °C · Nem: {measurement?.humidity_percent ?? '—'} %</p>

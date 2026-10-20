@@ -109,7 +109,7 @@ class SerialStatus(BaseModel):
 class SyntheticPort:
     """Explicitly opt-in software byte source, not an OS port or sensor."""
 
-    def __init__(self, profile="mixed", count=300, **kwargs):
+    def __init__(self, profile="mixed", count=300, port=None, **kwargs):
         self.started = time.monotonic()
         self.closed = False
         self.pending = b""
@@ -118,6 +118,20 @@ class SyntheticPort:
                 42, profile, count, bytes.fromhex("00112233445566778899aabbccddeeff")
             )
         )
+        if port == 'TEST:MCS1':
+            from .sensor_protocol import encode
+            boot = int(time.time())
+            def sensor_packets():
+                for i in range(count):
+                    values = [0.1, 0, 9.80665, 0, 0, 0.1, 23.5, 101325, 45]
+                    if profile == 'sensor_gap' and 5 <= i < 15:
+                        values[:6] = [None] * 6
+                    packet = encode(bytes.fromhex('00112233445566778899aabbccddeeff'),
+                                    boot, i, i*200, 256, values)
+                    if profile == 'mixed' and i % 17 == 10:
+                        packet = bytearray(packet); packet[46] ^= 1; packet = bytes(packet)
+                    yield i/5, packet
+            self.packets = iter(sensor_packets())
         self.next = next(self.packets, None)
 
     def read(self, size):
@@ -162,7 +176,8 @@ class SerialService:
                     port="TEST:MCT1",
                     description="Sentetik bilgisayar testi; seri sürücüsü kullanılmaz",
                     serial_number=None,
-                )
+                ),
+                dict(port='TEST:MCS1', description='Sentetik MCS1 sensör kaynağı; fiziksel sensör kullanılmaz', serial_number=None)
             ]
             if synthetic
             else local_ports()
