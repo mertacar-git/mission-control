@@ -28,6 +28,12 @@ try {
   await page.getByLabel('Merkez kullanıcı adı',{exact:true}).fill('admin');
   await page.getByLabel('Merkez parolası',{exact:true}).fill('test-only long passphrase 2026');
   await page.getByRole('button',{name:'Merkeze giriş yap',exact:true}).click();
+  await page.getByText('İstasyon sertifikaları ve işlem kaydı',{exact:true}).click();
+  await page.getByText('Bu kurulumda işlem günlüğü bulunmuyor. Geçmiş işlemler sonradan üretilmez.',{exact:true}).waitFor();
+  await page.getByRole('heading',{name:'station-a',exact:true}).waitFor();
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Certificate inventory overflow');
+  await page.screenshot({path:path.join(output,`certificates-${mobile}.png`),fullPage:true});
+  await page.getByText('İstasyon sertifikaları ve işlem kaydı',{exact:true}).click();
   await page.getByText('Cihaz kaydı oluştur',{exact:true}).click();
   for(const [label,value] of [['Cihaz seri numarası','MCS-BENCH-01'],['Cihaz adı','Sentetik tezgâh sensörü'],['Cihaz modeli','MCS1 prototip'],['Cihaz firmware sürümü','SIM 1']]) await page.getByLabel(label,{exact:true}).fill(value);
   await page.getByRole('button',{name:'Cihazı kaydet',exact:true}).click();

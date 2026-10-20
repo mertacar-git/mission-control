@@ -231,3 +231,7 @@ Windows: run `simulator/run-prototype.ps1 -Action Setup` once, then `-Action Sta
 The local HTTPS center serves the production UI; default source is explicitly synthetic.
 The serial receiver stays the only COM reader, and its validated MCS1 snapshots can
 reach the center through mTLS/FSL. Physical sensors and two-PC/LAN acceptance remain pending.
+
+The [offline station identity audit](docs/IDENTITY_AUDIT.md) adds a read-only
+administrator inventory and intent/completion records for existing activation
+and renewal tools. It does not add online certificate approval or a signing API.

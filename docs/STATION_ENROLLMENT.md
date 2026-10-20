@@ -75,3 +75,9 @@ Pending: authenticated human approval accounts and audit, deployment CA operatio
 Windows ACL/recovery acceptance, verified artifact transfer, separate-PC LAN tests
 and Internet configuration. This is offline enrollment software, not a production
 PKI service or proof of physical sensor authenticity.
+
+## Offline action journal and center inspection
+
+Validated activation and local renewal now write a shared intent/completion journal and archive only public certificates. Administrators can inspect identity fingerprints, certificate time status and operation outcomes in Merkez. [Journal format, uncertainty and explicit recovery](IDENTITY_AUDIT.md).
+
+The reported offline OS user is not a human-account approval. Existing signing/key custody and no-overwrite rules remain unchanged. Incomplete operations block another identity change until explicit offline reconciliation; damaged journals are not silently skipped.

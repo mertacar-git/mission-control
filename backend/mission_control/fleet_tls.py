@@ -100,21 +100,14 @@ def renew(directory, actor, authority, output):
         identities = json.loads((directory/'identities.json').read_text(encoding='utf-8'))
         if not isinstance(identities, dict) or not any(value == actor for value in identities.values()):
             raise ValueError('Station identity is not enrolled.')
+        from .identity_audit import ensure_mutation_allowed
+        ensure_mutation_allowed(directory)
         output.mkdir(parents=True, exist_ok=False, mode=0o700)
         fingerprint = issue(output, actor, key, ca)
         (output/'ca.crt').write_bytes(ca.public_bytes(serialization.Encoding.PEM))
-        identities = {k:v for k,v in identities.items() if v != actor}
-        identities[fingerprint] = actor
-        temporary = directory/('identities-'+secrets.token_hex(8)+'.tmp')
-        try:
-            with temporary.open('x', encoding='utf-8') as stream:
-                json.dump(identities, stream)
-                stream.flush()
-                os.fsync(stream.fileno())
-            os.replace(temporary, directory/'identities.json')
-        finally:
-            if temporary.exists():
-                temporary.unlink()
+        from .identity_audit import replace_identity
+        cert = x509.load_pem_x509_certificate((output/f'{actor}.crt').read_bytes())
+        replace_identity(directory, identities, actor, cert, 'renew')
 
 
 class PeerProtocol(H11Protocol):

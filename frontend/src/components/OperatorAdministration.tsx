@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { operatorBase } from '../operatorApi';
+import { StationIdentityAudit } from './StationIdentityAudit';
 
 interface User { username: string; role: 'admin' | 'operator'; active: boolean }
 interface Audit { id: number; utc_ms: number; actor: string; event: string; subject: string }
@@ -103,6 +104,7 @@ export function OperatorAdministration({ token, username, role, onSessionEnd }: 
       {!audit.length && <p>Gösterilecek güvenlik olayı yok.</p>}
       <ol className="operator-audit">{audit.map(event => <li key={event.id}>{new Date(event.utc_ms).toLocaleString('tr-TR')} · {event.actor} · {event.event}{event.subject ? ' · ' + event.subject : ''}</li>)}</ol>
     </details>}
+    {role === 'admin' && <StationIdentityAudit token={token} />}
     {busy && <p role="status">Hesap işlemi sürüyor…</p>}
     {error && <p role="alert">{error}</p>}
     {notice && <p role="status">{notice}</p>}

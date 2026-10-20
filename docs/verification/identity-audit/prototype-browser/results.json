@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "viewport": "desktop",
+      "status": "passed",
+      "transport": "verified TLS 1.3 adapter; OS/browser trust not accepted",
+      "physical_sensor": false
+    },
+    {
+      "viewport": "mobile",
+      "status": "passed",
+      "transport": "verified TLS 1.3 adapter; OS/browser trust not accepted",
+      "physical_sensor": false
+    }
+  ],
+  "hardware": "pending",
+  "second_pc": "pending"
+}

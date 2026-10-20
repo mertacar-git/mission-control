@@ -1,0 +1,73 @@
+........................................................................ [ 48%]
+...................................................................F.... [ 96%]
+.....                                                                    [100%]
+=================================== FAILURES ===================================
+___ test_closed_websockets_release_subscribers_without_waiting_for_telemetry ___
+
+    def test_closed_websockets_release_subscribers_without_waiting_for_telemetry():
+        app = create_app(":memory:")
+        with TestClient(app) as client:
+            for _ in range(2):
+>               with client.websocket_connect("/ws") as connection:
+
+tests/test_socket_lifecycle.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../.venv/lib/python3.12/site-packages/starlette/testclient.py:115: in __exit__
+    return self.exit_stack.__exit__(*args)
+/usr/lib/python3.12/contextlib.py:610: in __exit__
+    raise exc_details[1]
+/usr/lib/python3.12/contextlib.py:595: in __exit__
+    if cb(*exc_details):
+/usr/lib/python3.12/contextlib.py:478: in _exit_wrapper
+    callback(*args, **kwds)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = None, timeout = None
+
+    def result(self, timeout=None):
+        """Return the result of the call that the future represents.
+    
+        Args:
+            timeout: The number of seconds to wait for the result if the future
+                isn't done. If None, then there is no limit on the wait time.
+    
+        Returns:
+            The result of the call that the future represents.
+    
+        Raises:
+            CancelledError: If the future was cancelled.
+            TimeoutError: If the future didn't finish executing before the given
+                timeout.
+            Exception: If the call raised then that exception will be raised.
+        """
+        try:
+            with self._condition:
+                if self._state in [CANCELLED, CANCELLED_AND_NOTIFIED]:
+>                   raise CancelledError()
+E                   concurrent.futures._base.CancelledError
+
+/usr/lib/python3.12/concurrent/futures/_base.py:447: CancelledError
+=============================== warnings summary ===============================
+../.venv/lib/python3.12/site-packages/starlette/testclient.py:37
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/starlette/testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+tests/test_fleet_service.py::test_two_station_processes_report_three_enrolled_devices_over_http
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/websockets/legacy/__init__.py:6: DeprecationWarning: websockets.legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions
+    warnings.warn(  # deprecated in 14.0 - 2024-11-09
+
+tests/test_fleet_service.py::test_two_station_processes_report_three_enrolled_devices_over_http
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/uvicorn/protocols/websockets/websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated
+    from websockets.server import WebSocketServerProtocol
+
+tests/test_planning.py::test_backend_rejects_invalid_geometry_before_wire_upload_and_start_resume
+tests/test_planning.py::test_backend_rejects_invalid_geometry_before_wire_upload_and_start_resume
+  /home/flwitch/mission-control-clean-v18/.venv/lib/python3.12/site-packages/pydantic/main.py:463: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [input_value='connected', input_type=str])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /home/flwitch/vector-identity-audit-20261020/backend-tests.xml -
+=========================== short test summary info ============================
+FAILED tests/test_socket_lifecycle.py::test_closed_websockets_release_subscribers_without_waiting_for_telemetry
+1 failed, 148 passed, 5 warnings in 68.76s (0:01:08)

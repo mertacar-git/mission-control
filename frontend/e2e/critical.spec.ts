@@ -456,3 +456,33 @@ test('center enrollment, duplicate rejection and search stay separate from the e
   await expect(page.getByRole('heading', { name: 'MCS-BENCH-01', exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
 });
+
+test('station identity audit is read only and distinguishes incomplete work from applied changes', async ({page})=>{
+  let unavailable=false;
+  const fingerprint='a'.repeat(64);
+  await page.route('https://127.0.0.1:8772/api/v1/operators/**',route=>{
+    const path=new URL(route.request().url()).pathname;
+    let status=200,body:object=[];
+    if(path.endsWith('/login'))body={token:'test-only-cert-session',username:'admin',role:'admin'};
+    if(path.endsWith('/prototype'))body={configured:false};
+    if(path.endsWith('/registry'))body={user:{username:'admin',role:'admin'},registry:{schema_version:1,devices:[]}};
+    if(path.endsWith('/station-identities')){
+      status=unavailable?503:200;
+      body=unavailable?{code:'identity_audit_unavailable',detail:'Audit unavailable'}:{schema_version:1,scope:'offline-certificate-audit',human_approval:false,evaluated_utc_ms:1792530000000,identities:[{identity:'station-a',fingerprint,state:'expires_soon',expires_utc:'2026-10-21T00:00:00Z'}],operations:[{operation_id:'11111111-1111-4111-8111-111111111111',utc_ms:1792530000000,identity:'station-a',action:'activate',phase:'intent',actor_source:'offline-os',os_user:'test-admin',old_fingerprints:['b'.repeat(64)],new_fingerprint:fingerprint}],pending_operations:1,total_operations:1,audit_present:true};
+    }
+    return route.fulfill({status,contentType:'application/json',body:JSON.stringify(body)});
+  });
+  await page.getByRole('button',{name:'Merkez',exact:true}).click();
+  await page.getByLabel('Merkez kullanıcı adı',{exact:true}).fill('admin');
+  await page.getByLabel('Merkez parolası',{exact:true}).fill('test-only long passphrase');
+  await page.getByRole('button',{name:'Merkeze giriş yap',exact:true}).click();
+  await page.getByText('İstasyon sertifikaları ve işlem kaydı',{exact:true}).click();
+  await expect(page.getByText('Süre / iptal durumu: 24 saatten az kaldı',{exact:true})).toBeVisible();
+  await expect(page.getByText('1 tamamlanmamış işlem var.',{exact:false})).toBeVisible();
+  await expect(page.getByText('Sonuç kaydı eksik · inceleme gerekli',{exact:false})).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+  unavailable=true;
+  await page.getByRole('button',{name:'Sertifika durumunu yenile',exact:true}).click();
+  await expect(page.getByRole('alert')).toContainText('Sertifika sicili veya işlem kaydı okunamadı.');
+  await expect(page.getByRole('heading',{name:'station-a',exact:true})).toHaveCount(0);
+});

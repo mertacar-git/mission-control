@@ -114,18 +114,8 @@ def activate_identity(center, certificate_file, actor):
             raise ValueError('Station is not enrolled; activation cannot create roles.')
         if fingerprint in identities:
             raise ValueError('Certificate is already activated or assigned.')
-        identities = {key:value for key,value in identities.items() if value != actor}
-        identities[fingerprint] = actor
-        temporary = center/('identities-'+secrets.token_hex(8)+'.tmp')
-        try:
-            with temporary.open('x', encoding='utf-8') as stream:
-                json.dump(identities, stream)
-                stream.flush()
-                os.fsync(stream.fileno())
-            os.replace(temporary, center/'identities.json')
-        finally:
-            if temporary.exists():
-                temporary.unlink()
+        from .identity_audit import replace_identity
+        return replace_identity(center, identities, actor, cert, 'activate')
 
 
 def main():
@@ -146,7 +136,14 @@ def main():
         command.add_argument('--identity', choices=STATIONS, required=True)
     for command in (complete, activate):
         command.add_argument('--certificate', type=Path, required=True)
+    reconcile = commands.add_parser('audit-reconcile')
+    reconcile.add_argument('--center-directory', type=Path, required=True)
     args = parser.parse_args()
+    if args.action == 'audit-reconcile':
+        from .identity_audit import reconcile as reconcile_audit
+        count = reconcile_audit(args.center_directory)
+        print(f'Reconciled {count} pending operations from current mapping; historical completion remains unconfirmed.')
+        return
     if args.action == 'request':
         request_identity(args.directory, args.identity)
     elif args.action == 'sign':

@@ -255,6 +255,19 @@ def create_operator_app(database, clock=time.time, tls_directory=None, registry_
         with accounts.lock:
             accounts.authenticate(authorization, admin=True)
             return [dict(row) for row in accounts.db.execute('SELECT * FROM audit ORDER BY id DESC LIMIT 500')]
+    from .identity_audit import IdentitySnapshot, snapshot as identity_snapshot
+    @app.get('/api/v1/operators/station-identities', response_model=IdentitySnapshot)
+    def station_identities(authorization: str | None = Header(default=None)):
+        app.state.accounts.authenticate(authorization, admin=True)
+        if tls_directory is None:
+            raise OperatorError(503, 'Certificate directory is not configured.', 'identity_audit_unavailable')
+        try:
+            return identity_snapshot(tls_directory)
+        except FileExistsError:
+            raise OperatorError(409, 'An offline identity operation is active or requires lock recovery.', 'identity_operation_busy') from None
+        except (OSError,ValueError,TypeError,KeyError):
+            raise OperatorError(503, 'Certificate registry or audit is unreadable; no verified snapshot.', 'identity_audit_unavailable') from None
+
     def registry_request(method, path, payload=None):
         import httpx
         client = app.state.registry_client
