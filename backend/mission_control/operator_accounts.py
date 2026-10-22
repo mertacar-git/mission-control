@@ -65,6 +65,12 @@ class Accounts:
             CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY, utc_ms INTEGER, actor TEXT, event TEXT, subject TEXT);
             CREATE TABLE IF NOT EXISTS failures(username TEXT PRIMARY KEY, count INTEGER, until REAL);
             PRAGMA user_version=1;''')
+        from .certificate_approvals import initialize as initialize_approvals
+        try:
+            initialize_approvals(self)
+        except Exception:
+            self.db.close()
+            raise
         # Same cost for unknown users; no plaintext dummy password is persisted.
         self.dummy_salt, self.dummy_hash = secrets.token_bytes(16), secrets.token_bytes(32)
 
@@ -305,6 +311,8 @@ def create_operator_app(database, clock=time.time, tls_directory=None, registry_
             with accounts.db:
                 accounts.log(actor['username'], 'device.enrollment.accepted', device.serial)
         return result
+    from .certificate_approvals import install as install_approvals
+    install_approvals(app, tls_directory)
     from .operator_serial import install_serial_gateway
     install_serial_gateway(app, prototype_file)
     if static_directory is not None:

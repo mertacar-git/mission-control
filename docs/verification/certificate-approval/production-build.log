@@ -1,0 +1,20 @@
+
+> mission-control-ui@1.9.0 build
+> tsc --noEmit && vite build
+
+vite v6.1.0 building for production...
+transforming...
+✓ 2267 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                            0.62 kB │ gzip:   0.43 kB
+dist/assets/routeComparison-DiP21BnE.js   19.28 kB
+dist/assets/index-BKk7iJ9A.css            49.01 kB │ gzip:  13.71 kB
+dist/assets/FlightChart-B6ohnIz_.js      372.02 kB │ gzip: 109.38 kB
+dist/assets/index-CA3meRwc.js            516.10 kB │ gzip: 159.88 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.21s

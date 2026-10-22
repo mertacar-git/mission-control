@@ -34,6 +34,13 @@ try {
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Certificate inventory overflow');
   await page.screenshot({path:path.join(output,`certificates-${mobile}.png`),fullPage:true});
   await page.getByText('İstasyon sertifikaları ve işlem kaydı',{exact:true}).click();
+  const approvalResponse=page.waitForResponse(response=>response.url().endsWith('/api/v1/operators/station-approvals'));
+  await page.getByText('İstasyon sertifikası için yönetici onayı',{exact:true}).click();
+  assert((await approvalResponse).status()===200,'Real center approval inventory failed');
+  await page.getByText('Listelenen onay yok.',{exact:true}).waitFor();
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Approval inventory overflow');
+  await page.screenshot({path:path.join(output,`approvals-${mobile}.png`),fullPage:true});
+  await page.getByText('İstasyon sertifikası için yönetici onayı',{exact:true}).click();
   await page.getByText('Cihaz kaydı oluştur',{exact:true}).click();
   for(const [label,value] of [['Cihaz seri numarası','MCS-BENCH-01'],['Cihaz adı','Sentetik tezgâh sensörü'],['Cihaz modeli','MCS1 prototip'],['Cihaz firmware sürümü','SIM 1']]) await page.getByLabel(label,{exact:true}).fill(value);
   await page.getByRole('button',{name:'Cihazı kaydet',exact:true}).click();

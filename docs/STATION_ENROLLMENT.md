@@ -81,3 +81,9 @@ PKI service or proof of physical sensor authenticity.
 Validated activation and local renewal now write a shared intent/completion journal and archive only public certificates. Administrators can inspect identity fingerprints, certificate time status and operation outcomes in Merkez. [Journal format, uncertainty and explicit recovery](IDENTITY_AUDIT.md).
 
 The reported offline OS user is not a human-account approval. Existing signing/key custody and no-overwrite rules remain unchanged. Incomplete operations block another identity change until explicit offline reconciliation; damaged journals are not silently skipped.
+
+## Account-linked approval
+
+For authenticated administrator approval before offline activation, use the
+[session-bound certificate approval workflow](CERTIFICATE_APPROVAL.md). Legacy
+OS-authorized commands retain their separate local administration boundary.

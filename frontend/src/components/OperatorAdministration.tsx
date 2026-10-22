@@ -1,3 +1,4 @@
+import { CertificateApprovals } from './CertificateApprovals';
 import { useEffect, useRef, useState } from 'react';
 import { operatorBase } from '../operatorApi';
 import { StationIdentityAudit } from './StationIdentityAudit';
@@ -105,6 +106,7 @@ export function OperatorAdministration({ token, username, role, onSessionEnd }: 
       <ol className="operator-audit">{audit.map(event => <li key={event.id}>{new Date(event.utc_ms).toLocaleString('tr-TR')} · {event.actor} · {event.event}{event.subject ? ' · ' + event.subject : ''}</li>)}</ol>
     </details>}
     {role === 'admin' && <StationIdentityAudit token={token} />}
+    {role === 'admin' && <CertificateApprovals token={token} />}
     {busy && <p role="status">Hesap işlemi sürüyor…</p>}
     {error && <p role="alert">{error}</p>}
     {notice && <p role="status">{notice}</p>}

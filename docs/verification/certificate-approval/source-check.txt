@@ -1,0 +1,6 @@
+Application source manifest matched before commit.
+SHA-256: 9a8d0abd7bc8db6548e2fdfd23d0e70dd00b015dba5b8cda34fea0216d55fe16
+158 backend / 84 frontend / 30 critical browser + 2 real-service prototype flows passed.
+20 Windows targeted backend checks passed.
+Physical/LAN/Internet and OS/browser trust acceptance remain pending.
+After acceptance, CertificateApprovals.tsx line endings were normalized for Git. Canonical content matched the exercised WSL file; final-commit GitHub CI is additional verification.

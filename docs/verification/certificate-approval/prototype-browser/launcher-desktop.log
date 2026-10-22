@@ -1,0 +1,2 @@
+READY SYNTHETIC https://127.0.0.1:8772 · enroll MCS-BENCH-01 to station-a
+Trust the local CA explicitly using the documented procedure; do not bypass browser certificate warnings. Ctrl+C stops only these owned services.

@@ -235,3 +235,9 @@ reach the center through mTLS/FSL. Physical sensors and two-PC/LAN acceptance re
 The [offline station identity audit](docs/IDENTITY_AUDIT.md) adds a read-only
 administrator inventory and intent/completion records for existing activation
 and renewal tools. It does not add online certificate approval or a signing API.
+## Administrator approval for station certificate changes
+
+The center provides a public-certificate review and session-bound administrator
+approval. Activation remains an explicit offline command; no CA signing or
+private-key upload is exposed. See [the approval workflow](docs/CERTIFICATE_APPROVAL.md)
+and [software evidence](docs/verification/certificate-approval/README.md).

@@ -486,3 +486,39 @@ test('station identity audit is read only and distinguishes incomplete work from
   await expect(page.getByRole('alert')).toContainText('Sertifika sicili veya işlem kaydı okunamadı.');
   await expect(page.getByRole('heading',{name:'station-a',exact:true})).toHaveCount(0);
 });
+
+test('certificate approval requires review and invalidates edited inputs', async ({page},testInfo)=>{
+  let approvals:object[]=[];let posts=0;
+  await page.route('https://127.0.0.1:8772/api/v1/operators/**',route=>{
+    const path=new URL(route.request().url()).pathname;let body:object=[];let status=200;
+    if(path.endsWith('/login'))body={token:'test-only-approval',username:'admin',role:'admin'};
+    if(path.endsWith('/prototype'))body={configured:false};
+    if(path.endsWith('/registry'))body={user:{username:'admin',role:'admin'},registry:{schema_version:1,devices:[]}};
+    if(path.endsWith('/station-approvals/preview'))body={station_id:'station-a',new_fingerprint:'a'.repeat(64),old_fingerprints:['b'.repeat(64)],expires_utc:'2027-01-01T00:00:00Z'};
+    if(path.endsWith('/station-approvals')){
+      if(route.request().method()==='POST'){
+        posts++;status=201;body={id:'11111111-1111-4111-8111-111111111111',station_id:'station-a',approved_by:'admin',state:'approved',expires_utc_ms:1792600000000,operation_id:null};approvals=[body];
+      }else body=approvals;
+    }
+    return route.fulfill({status,contentType:'application/json',body:JSON.stringify(body)});
+  });
+  await page.getByRole('button',{name:'Merkez',exact:true}).click();
+  await page.getByLabel('Merkez kullanıcı adı',{exact:true}).fill('admin');
+  await page.getByLabel('Merkez parolası',{exact:true}).fill('test-only long passphrase');
+  await page.getByRole('button',{name:'Merkeze giriş yap',exact:true}).click();
+  await page.getByText('İstasyon sertifikası için yönetici onayı',{exact:true}).click();
+  await page.getByLabel('Açık sertifika (PEM)',{exact:true}).fill('TEST ONLY PUBLIC CERTIFICATE');
+  await expect(page.getByRole('textbox', {name: 'Açık sertifika (PEM)', exact: true})).toHaveValue('TEST ONLY PUBLIC CERTIFICATE');
+  await page.getByLabel('Değişiklik gerekçesi',{exact:true}).fill('Station maintenance');
+  await page.getByRole('button',{name:'Sertifikayı incele',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Bu sertifika değişikliğini onayla',exact:true})).toBeVisible();
+  await page.getByLabel('Değişiklik gerekçesi',{exact:true}).fill('Updated maintenance reason');
+  await expect(page.getByRole('button',{name:'Bu sertifika değişikliğini onayla',exact:true})).toHaveCount(0);
+  expect(posts).toBe(0);
+  await page.getByRole('button',{name:'Sertifikayı incele',exact:true}).click();
+  await page.getByRole('button',{name:'Bu sertifika değişikliğini onayla',exact:true}).click();
+  await expect(page.getByRole('status')).toContainText('Onay kaydedildi');
+  expect(posts).toBe(1);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+  await page.screenshot({path:testInfo.outputPath('certificate-approval.png'),fullPage:true});
+});

@@ -1,0 +1,57 @@
+
+> mission-control-ui@1.9.0 test:e2e
+> playwright test
+
+
+Running 30 tests using 1 worker
+
+  ✓   1 [desktop] › e2e/critical.spec.ts:3:1 › operator readings age out while a registry request is stalled (6.7s)
+  ✓   2 [desktop] › e2e/critical.spec.ts:24:1 › admin can review users, disable a selected account and change password without automatic retries (1.0s)
+  ✓   3 [desktop] › e2e/critical.spec.ts:63:1 › operator center clears password, isolates roles and removes readings after session expiry (2.4s)
+  ✓   4 [desktop] › e2e/critical.spec.ts:93:1 › offline planning, undo, explicit upload review and demo flight commands (1.4s)
+  ✓   5 [desktop] › e2e/critical.spec.ts:140:1 › published SITL experiment opens isolated replay with working charts (1.7s)
+  ✓   6 [desktop] › e2e/critical.spec.ts:184:1 › five-record report, portable HTML and explicit conditions (857ms)
+  ✓   7 [desktop] › e2e/critical.spec.ts:218:1 › serial sample remains an independent source and preserves missing fields (1.0s)
+  ✓   8 [desktop] › e2e/critical.spec.ts:273:1 › failed experiment evidence request shows an error rather than fabricated results (784ms)
+[WebServer] 11:55:10 AM [vite] http proxy error: /api/v1/missions
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:55:10 AM [vite] http proxy error: /api/v1/status
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:55:10 AM [vite] http proxy error: /api/v1/scenarios
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+  ✓   9 [desktop] › e2e/critical.spec.ts:294:1 › unavailable experiment backend blocks mutations and retry recovers (770ms)
+  ✓  10 [desktop] › e2e/critical.spec.ts:338:1 › sensor contract replay shows sensor gaps and never invents flight measurements (946ms)
+  ✓  11 [desktop] › e2e/critical.spec.ts:385:1 › civilian fleet demo isolates approval from observations and foreign station requests (1.5s)
+  ✓  12 [desktop] › e2e/critical.spec.ts:404:1 › authenticated registry view keeps scoped credentials in memory and clears unavailable measurements (2.4s)
+  ✓  13 [desktop] › e2e/critical.spec.ts:418:1 › center enrollment, duplicate rejection and search stay separate from the example fleet (922ms)
+  ✓  14 [desktop] › e2e/critical.spec.ts:460:1 › station identity audit is read only and distinguishes incomplete work from applied changes (815ms)
+  ✓  15 [desktop] › e2e/critical.spec.ts:490:1 › certificate approval requires review and invalidates edited inputs (1.0s)
+  ✓  16 [mobile-390] › e2e/critical.spec.ts:3:1 › operator readings age out while a registry request is stalled (6.2s)
+  ✓  17 [mobile-390] › e2e/critical.spec.ts:24:1 › admin can review users, disable a selected account and change password without automatic retries (1.1s)
+  ✓  18 [mobile-390] › e2e/critical.spec.ts:63:1 › operator center clears password, isolates roles and removes readings after session expiry (2.4s)
+  ✓  19 [mobile-390] › e2e/critical.spec.ts:93:1 › offline planning, undo, explicit upload review and demo flight commands (1.2s)
+  ✓  20 [mobile-390] › e2e/critical.spec.ts:140:1 › published SITL experiment opens isolated replay with working charts (920ms)
+  ✓  21 [mobile-390] › e2e/critical.spec.ts:184:1 › five-record report, portable HTML and explicit conditions (1.1s)
+  ✓  22 [mobile-390] › e2e/critical.spec.ts:218:1 › serial sample remains an independent source and preserves missing fields (1.1s)
+  ✓  23 [mobile-390] › e2e/critical.spec.ts:273:1 › failed experiment evidence request shows an error rather than fabricated results (999ms)
+[WebServer] 11:55:35 AM [vite] http proxy error: /api/v1/missions
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:55:35 AM [vite] http proxy error: /api/v1/status
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+[WebServer] 11:55:35 AM [vite] http proxy error: /api/v1/scenarios
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+  ✓  24 [mobile-390] › e2e/critical.spec.ts:294:1 › unavailable experiment backend blocks mutations and retry recovers (1.1s)
+  ✓  25 [mobile-390] › e2e/critical.spec.ts:338:1 › sensor contract replay shows sensor gaps and never invents flight measurements (934ms)
+  ✓  26 [mobile-390] › e2e/critical.spec.ts:385:1 › civilian fleet demo isolates approval from observations and foreign station requests (1.5s)
+  ✓  27 [mobile-390] › e2e/critical.spec.ts:404:1 › authenticated registry view keeps scoped credentials in memory and clears unavailable measurements (2.4s)
+  ✓  28 [mobile-390] › e2e/critical.spec.ts:418:1 › center enrollment, duplicate rejection and search stay separate from the example fleet (1.2s)
+  ✓  29 [mobile-390] › e2e/critical.spec.ts:460:1 › station identity audit is read only and distinguishes incomplete work from applied changes (1.1s)
+  ✓  30 [mobile-390] › e2e/critical.spec.ts:490:1 › certificate approval requires review and invalidates edited inputs (929ms)
+
+  30 passed (50.0s)

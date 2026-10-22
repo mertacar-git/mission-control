@@ -70,8 +70,14 @@ def sign_request(authority, request_file, actor, output):
 
 
 def validate_certificate(certificate_file, trusted_ca, actor):
-    cert = x509.load_pem_x509_certificate(read_public(certificate_file))
-    ca = x509.load_pem_x509_certificate(read_public(trusted_ca))
+    return validate_certificate_bytes(read_public(certificate_file), read_public(trusted_ca), actor)
+
+
+def validate_certificate_bytes(certificate_body, ca_body, actor):
+    if len(certificate_body)>16384 or b'PRIVATE KEY' in certificate_body:
+        raise ValueError('Only a bounded public certificate is accepted.')
+    cert = x509.load_pem_x509_certificate(certificate_body)
+    ca = x509.load_pem_x509_certificate(ca_body)
     cert.verify_directly_issued_by(ca)
     now = datetime.now(timezone.utc)
     public = cert.public_key()
@@ -138,7 +144,15 @@ def main():
         command.add_argument('--certificate', type=Path, required=True)
     reconcile = commands.add_parser('audit-reconcile')
     reconcile.add_argument('--center-directory', type=Path, required=True)
+    approved = commands.add_parser('activate-approved')
+    approved.add_argument('--center-directory', type=Path, required=True)
+    approved.add_argument('--accounts-db', type=Path, required=True)
+    approved.add_argument('--approval-id', required=True)
     args = parser.parse_args()
+    if args.action == 'activate-approved':
+        from .certificate_approvals import activate_approved
+        print(json.dumps(activate_approved(args.center_directory, args.accounts_db, args.approval_id)))
+        return
     if args.action == 'audit-reconcile':
         from .identity_audit import reconcile as reconcile_audit
         count = reconcile_audit(args.center_directory)
